@@ -1,0 +1,50 @@
+<ul id="stats">
+    <li>{{info.tiles}} tiles</li>
+    <li>{{info.mines}} mines</li>
+    <li>{{info.flagged}} flagged tiles</li>
+    <li>{{info.tiles - info.mines - info.cleared}} left to clear</li>
+</ul>
+
+<ul id="board">
+    <li 
+        class="tile"
+        ng-repeat="tile in tiles" 
+        ng-class="{
+            nth     : tile.y === 0,
+            flagged : tile.isFlagged === true,
+            mine    : tile.isMine === true,
+            clear   : tile.isClear === true,
+            zero    : tile.isClear === true && tile.adjacentMines == 0
+        }"
+        ng-click="checkTile($event, tile.x, tile.y)"
+    >
+
+        <span ng-if="tile.isClear != true">
+        </span>
+
+        <span 
+            ng-if="
+                tile.isClear != true && 
+                tile.isFlagged == true"
+            >
+            ?
+        </span>
+
+        <span 
+            ng-if="
+                tile.isClear == true && 
+                tile.isMine == true"
+            >
+            X
+        </span>
+
+        <span 
+            ng-if="
+                tile.isClear == true && 
+                tile.isMine == false"
+            >
+            {{tile.adjacentMines}}
+        </span>
+
+     </li>
+</ul>

@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en" ng-app="minesweeperApp" ng-controller="Board">
+<head>
+    <meta charset="utf-8">
+    <title>Minesweeper</title>
+    <link rel="stylesheet" href="Resources/build/build.css"/>
+    <script src="Resources/js/lib/angular.min.js"></script>
+    <script src="Resources/js/lib/angular-route.min.js"></script>
+    <script src="Resources/js/app/app.js"></script>
+    <script src="Resources/js/app/controllers.js"></script>
+</head>
+<body>
+    <h1>minesweeper</h1>
+    <div ng-view></div>
+
+    <div id="dashboard">
+        <div class="new-game button">new game</div>
+        <div class="select-tile button">select one for me</div>
+        <div class="instructions button">instructions</div>
+    </div>
+</body>
+</html>
