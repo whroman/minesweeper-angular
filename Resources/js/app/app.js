@@ -31,7 +31,6 @@ app.factory('board', function() {
             numOfFlags  : 0,
             numOfClears : 0,
             refresh : function() {
-                console.log(this)
                 this.numOfTiles  = 0;
                 this.numOfClears = 0;
                 this.numOfFlags  = 0;
@@ -85,7 +84,7 @@ app.factory('board', function() {
             for (var y = 0; y < sizeY; y++) {
 
                 for (var x = 0; x < sizeX; x++) {
-                    this.tiles[x + '-' + y] = {
+                    tiles[x + '-' + y] = {
                         x : x,
                         y : y,
                         isMine  : false,
@@ -96,25 +95,42 @@ app.factory('board', function() {
                 }
             }
 
-            for (var mineNum = 0; mineNum < numOfMines; mineNum++) {
-                var mineX = Math.floor(Math.random() * sizeX)
-                var mineY = Math.floor(Math.random() * sizeY)
+            while (numOfMines--) {
+                var mineX = Math.floor(Math.random() * sizeX);
+                var mineY = Math.floor(Math.random() * sizeY);
+                var tile = get(mineX, mineY);
 
-                get(mineX, mineY).isMine = true;
-                tallyAdjacentMines(mineX, mineY);
+                if (tile.isMine === true) {
+                    numOfMines++
+                } else {
+                    tile.isMine = true;
+                }
+                
+                tallyAdjacentMines(mineX, mineY);                
             }
 
             info.refresh()
 
             return this
         };
+
+        function loadGame(loadedTiles) {
+
+            tiles = loadedTiles;
+
+            info.refresh();
+
+            return this;
+        };
         
         function tallyAdjacentMines(x, y) {
             for (var key = 0; key < adjacentTiles.length; key++) {
+                
                 var tile = get(
                     x + adjacentTiles[key][0], 
                     y + adjacentTiles[key][1]
                 );
+                
                 if (tile != undefined) {
                     tile.adjacentMines++
                 }
@@ -122,7 +138,6 @@ app.factory('board', function() {
         };
 
         function clearTile(tile) {
-
 
             tile.isClear = true;
             tile.isFlagged = false;
@@ -154,8 +169,8 @@ app.factory('board', function() {
         };
 
         function checkTile(x, y, event) {
-
             var tile = get(x, y)
+
 
             if (event.shiftKey === true || event.altKey === true) {
                 toggleFlag(tile);
@@ -165,9 +180,10 @@ app.factory('board', function() {
         }
 
         return {
-            newGame : newGame,
-            info    : info,
-            tiles   : tiles,
+            newGame     : newGame,
+            loadGame    : loadGame, 
+            info        : info,
+            tiles       : tiles,
             checkTile   : checkTile,
         };
 

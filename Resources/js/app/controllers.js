@@ -9,15 +9,17 @@ app
 .controller(
     'Board', 
     function($scope, board, storage) {
+        var currentBoard = undefined;
+        
+        currentBoard = board.newGame(5, 7, 5)
 
-        var newBoard = board.newGame(5, 7, 5)
+        $scope.tiles = currentBoard.tiles;
 
-        $scope.tiles = newBoard.tiles;
-        $scope.info = newBoard.info;
+        $scope.info = currentBoard.info;
 
         $scope.checkTile = function(event, x, y) {
 
-            newBoard.checkTile(x, y, event);
+            currentBoard.checkTile(x, y, event);
 
             $scope.info.refresh();
 
