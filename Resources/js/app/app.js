@@ -30,6 +30,7 @@ app.factory('board', function() {
             numOfMines  : 0,
             numOfFlags  : 0,
             numOfClears : 0,
+
             refresh : function() {
                 this.numOfTiles  = 0;
                 this.numOfClears = 0;
@@ -67,15 +68,9 @@ app.factory('board', function() {
             [-1,  1], [ 0,  1], [ 1,  1],
         ]
 
-        function resumeGame(savedTiles) {
-            tiles = savedTiles;
-
-            return this
-        }
-
         function get(x, y) {
-            var key = x + '-' + y,
-                tile = tiles[key];
+            var key = x + '-' + y;
+            var tile = tiles[key];
 
             return tile
         };
@@ -114,9 +109,10 @@ app.factory('board', function() {
             return this
         };
 
-        function loadGame(loadedTiles) {
-
-            tiles = loadedTiles;
+        function loadGame(savedTiles) {
+            console.log(tiles, savedTiles)
+            tiles = savedTiles;
+            console.log(tiles, savedTiles)
 
             info.refresh();
 
@@ -177,7 +173,10 @@ app.factory('board', function() {
             } else {
                 clearTile(tile);
             }
-        }
+
+            return tiles
+
+        };
 
         return {
             newGame     : newGame,
