@@ -1,7 +1,11 @@
-var app = angular.module('minesweeperApp', [
-    'minesweeperCtrl',
-    'ngRoute'
-]);
+var app = angular.module(
+    'minesweeperApp', 
+    // Dependencies
+    [
+        'minesweeperCtrl',
+        'ngRoute',
+    ]
+);
 
 app.config(
     function($routeProvider, $locationProvider) {
@@ -20,37 +24,55 @@ app.factory('board', function() {
 
         var tiles = {};
 
-        var boardInfo = {};
+        var info = {
 
-        var check = [
+            numOfTiles  : 0,
+            numOfMines  : 0,
+            numOfFlags  : 0,
+            numOfClears : 0,
+            refresh : function() {
+                console.log(this)
+                this.numOfTiles  = 0;
+                this.numOfClears = 0;
+                this.numOfFlags  = 0;
+                this.numOfMines  = 0;
+
+                for (tile in tiles) {
+
+                    // All Tiles
+                    this.numOfTiles++
+
+                    // Cleared Tiles
+                    if (tiles[tile].isClear === true) {
+                        this.numOfClears++
+                    }
+
+                    // Flagged Tiles
+                    if (tiles[tile].isFlagged === true) {
+                        this.numOfFlags++
+                    }
+
+                    // Mined Tiles
+                    if (tiles[tile].isMine === true) {
+                        this.numOfMines++
+                    }
+                }
+
+                return this
+            }
+        }
+
+        var adjacentTiles = [
             [-1, -1], [ 0, -1], [ 1, -1],
             [-1,  0],           [ 1,  0],
             [-1,  1], [ 0,  1], [ 1,  1],
         ]
 
-        function set(x, y, numOfMines) {
-            boardInfo = {
-                x   : x,
-                y   : y,
-                tiles   : x * y,
-                mines   : numOfMines,
-                flagged : 0,
-                cleared : 0,
-                refresh : function() {
-                    var count = 0;
-                    for (tile in tiles) {
+        function resumeGame(savedTiles) {
+            tiles = savedTiles;
 
-                        if (tiles[tile].isClear === true) {
-                            count++
-                        }
-                    }
-                    this.cleared = count
-
-                    return count
-                }
-            }
             return this
-        };
+        }
 
         function get(x, y) {
             var key = x + '-' + y,
@@ -59,10 +81,10 @@ app.factory('board', function() {
             return tile
         };
 
-        function create() {
-            for (var x = 0; x < this.info().x; x++) {
+        function newGame(sizeX, sizeY, numOfMines) {
+            for (var y = 0; y < sizeY; y++) {
 
-                for (var y = 0; y < this.info().y; y++) {
+                for (var x = 0; x < sizeX; x++) {
                     this.tiles[x + '-' + y] = {
                         x : x,
                         y : y,
@@ -74,22 +96,24 @@ app.factory('board', function() {
                 }
             }
 
-            for (var mineNum = 0; mineNum < info().mines; mineNum++) {
-                var mineX = Math.floor(Math.random() * info().x)
-                var mineY = Math.floor(Math.random() * info().y)
+            for (var mineNum = 0; mineNum < numOfMines; mineNum++) {
+                var mineX = Math.floor(Math.random() * sizeX)
+                var mineY = Math.floor(Math.random() * sizeY)
 
                 get(mineX, mineY).isMine = true;
                 tallyAdjacentMines(mineX, mineY);
             }
 
-            return tiles
+            info.refresh()
+
+            return this
         };
         
         function tallyAdjacentMines(x, y) {
-            for (var key = 0; key < check.length; key++) {
+            for (var key = 0; key < adjacentTiles.length; key++) {
                 var tile = get(
-                    x + check[key][0], 
-                    y + check[key][1]
+                    x + adjacentTiles[key][0], 
+                    y + adjacentTiles[key][1]
                 );
                 if (tile != undefined) {
                     tile.adjacentMines++
@@ -97,22 +121,17 @@ app.factory('board', function() {
             }
         };
 
-        function info() {
-            return boardInfo
-        };
-
         function clearTile(tile) {
 
 
             tile.isClear = true;
+            tile.isFlagged = false;
 
 
-            boardInfo.cleared++;
-
-            for (var key = 0; key < check.length; key++) {
+            for (var key = 0; key < adjacentTiles.length; key++) {
                 var neighbor = get(
-                    tile.x + check[key][0], 
-                    tile.y + check[key][1]
+                    tile.x + adjacentTiles[key][0], 
+                    tile.y + adjacentTiles[key][1]
                 );
 
                 if (neighbor != undefined) {            
@@ -124,20 +143,20 @@ app.factory('board', function() {
                     }
                 }
             }
-
         };
 
         function toggleFlag(tile) {
             if (tile.isFlagged === true) {
                 tile.isFlagged = false;
-                boardInfo.flagged--;
             } else {
                 tile.isFlagged = true;
-                boardInfo.flagged++;
             }
         };
 
-        function checkTile(tile, event) {
+        function checkTile(x, y, event) {
+
+            var tile = get(x, y)
+
             if (event.shiftKey === true || event.altKey === true) {
                 toggleFlag(tile);
             } else {
@@ -146,9 +165,7 @@ app.factory('board', function() {
         }
 
         return {
-            set : set,
-            get : get,
-            create  : create,
+            newGame : newGame,
             info    : info,
             tiles   : tiles,
             checkTile   : checkTile,
