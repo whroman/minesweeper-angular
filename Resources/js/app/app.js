@@ -26,6 +26,8 @@ app.factory('board', function() {
 
         var info = {
 
+            x   : 0,
+            y   : 0,
             numOfTiles  : 0,
             numOfMines  : 0,
             numOfFlags  : 0,
@@ -37,24 +39,35 @@ app.factory('board', function() {
                 this.numOfFlags  = 0;
                 this.numOfMines  = 0;
 
-                for (tile in tiles) {
+                for (key in tiles) {
+                    var tile = tiles[key]
 
                     // All Tiles
                     this.numOfTiles++
 
                     // Cleared Tiles
-                    if (tiles[tile].isClear === true) {
+                    if (tile.isClear === true) {
                         this.numOfClears++
                     }
 
                     // Flagged Tiles
-                    if (tiles[tile].isFlagged === true) {
+                    if (tile.isFlagged === true) {
                         this.numOfFlags++
                     }
 
                     // Mined Tiles
-                    if (tiles[tile].isMine === true) {
+                    if (tile.isMine === true) {
                         this.numOfMines++
+                    }
+
+                    // Largest X (Size of board)
+                    if (tile.x > this.x) {
+                        this.x = tile.x
+                    }
+
+                    // Largest Y (Size of board)
+                    if (tile.y > this.y) {
+                        this.y = tile.y
                     }
                 }
 
@@ -90,18 +103,12 @@ app.factory('board', function() {
                 }
             }
 
-            while (numOfMines--) {
-                var mineX = Math.floor(Math.random() * sizeX);
-                var mineY = Math.floor(Math.random() * sizeY);
-                var tile = get(mineX, mineY);
+            info.refresh()
 
-                if (tile.isMine === true) {
-                    numOfMines++
-                } else {
-                    tile.isMine = true;
-                }
+            while (numOfMines--) {
+                var tile = randomSafeTile();
                 
-                tallyAdjacentMines(mineX, mineY);                
+                tallyAdjacentMines(tile);                
             }
 
             info.refresh()
@@ -110,25 +117,24 @@ app.factory('board', function() {
         };
 
         function loadGame(savedTiles) {
-            console.log(tiles, savedTiles)
             tiles = savedTiles;
-            console.log(tiles, savedTiles)
-
             info.refresh();
 
             return this;
         };
         
-        function tallyAdjacentMines(x, y) {
+        function tallyAdjacentMines(tile) {
+            var x = tile.x;
+            var y = tile.y;
             for (var key = 0; key < adjacentTiles.length; key++) {
                 
-                var tile = get(
+                var neighborTile = get(
                     x + adjacentTiles[key][0], 
                     y + adjacentTiles[key][1]
                 );
                 
-                if (tile != undefined) {
-                    tile.adjacentMines++
+                if (neighborTile != undefined) {
+                    neighborTile.adjacentMines++
                 }
             }
         };
@@ -178,12 +184,40 @@ app.factory('board', function() {
 
         };
 
+        function randomSafeTile() {
+            var availTiles = [];
+
+            for (key in tiles) {
+                var tile = tiles[key];
+
+                if (tile.isClear === false && tile.isMine === false) {
+                    availTiles.push(tile);
+                }
+
+            }
+
+            var randomTile = availTiles[ Math.floor(Math.random() * availTiles.length) ];
+
+            return randomTile;
+
+        }
+
+        function autoSelect(num) {
+            while (num--) {
+                var tile = randomSafeTile();
+                clearTile(tile);
+            }
+
+            return tiles
+        } 
+
         return {
             newGame     : newGame,
             loadGame    : loadGame, 
             info        : info,
             tiles       : tiles,
             checkTile   : checkTile,
+            autoSelect  : autoSelect
         };
 
     }

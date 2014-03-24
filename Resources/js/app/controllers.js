@@ -34,5 +34,11 @@ app
 
             currentBoard.info.refresh();
         }
+
+        $scope.autoSelect = function(num) {
+            $scope.tiles = currentBoard.autoSelect(num);
+
+            currentBoard.info.refresh();
+        }
     }
 );
