@@ -1,11 +1,12 @@
-var gulp    = require('gulp');
-var util = require('gulp-util');
-var sass    = require('gulp-ruby-sass');
-var rename  = require('gulp-rename');
-var coffee = require('gulp-coffee');
-var connect = require('gulp-connect');
-var concat = require('gulp-concat');
-var uglify = require('gulp-uglify');
+var gulp    = require('gulp')
+var util    = require('gulp-util')
+var sass    = require('gulp-ruby-sass')
+var rename  = require('gulp-rename')
+var coffee  = require('gulp-coffee')
+var connect = require('gulp-connect')
+var concat  = require('gulp-concat')
+var uglify  = require('gulp-uglify')
+var processhtml  = require('gulp-processhtml')
 
 var config = {
     scss    : {
@@ -36,7 +37,7 @@ path.js = {
     watch   : path.root + 'js/**/*.js',
     modules : path.root + 'js/modules/',
     lib     : path.root + 'js/lib/',
-    dest    : path.build + 'build.js',
+    build    : path.build + 'build.js',
 }
 
 path.js.compile = [
@@ -52,6 +53,11 @@ path.js.compile = [
 path.coffee = {
     src   : [path.root + 'coffee/modules/**/*.coffee'],
     dest    : path.js.modules,
+}
+
+path.html = {
+    src     : ['../dev.html'],
+    build   : '../index.html'
 }
 
 gulp.task(
@@ -108,9 +114,13 @@ gulp.task(
             path.js.compile
         )
         .pipe(
-            concat(path.js.dest)
+            concat(path.js.build)
         )
-
+        .pipe(
+            uglify({
+                mangle: false
+            })
+        )
         .pipe(
             gulp.dest('./')
         )
@@ -140,10 +150,34 @@ gulp.task(
         gulp.watch(
             path.js.watch, ['compile-js']
         )
+        gulp.watch(
+            path.html.src, ['html']
+        )
     }
 );
 
 gulp.task(
+    'html', 
+    function() {
+        gulp
+        .src(
+            path.html.src
+        )
+        .pipe(
+            processhtml(path.html.build)
+        )
+        .pipe(
+            gulp.dest('./')
+        )
+    }
+); 
+
+gulp.task(
     'default', 
-    ['sass', 'coffee', 'compile-js', 'watch', 'connect']
+    ['sass', 'coffee', 'compile-js', 'html', 'watch', 'connect']
+); 
+
+gulp.task(
+    'dev', 
+    ['default']
 ); 

@@ -3,8 +3,11 @@ var minesweeperApp;
 minesweeperApp = angular.module('minesweeperApp', ['minesweeperCtrl', 'ngRoute']);
 
 minesweeperApp.config(function($routeProvider, $locationProvider) {
-  $routeProvider.when('/', {
-    templateUrl: './Resources/view/board.html',
+  $routeProvider.when('/:any*', {
+    templateUrl: 'Resources/view/board.html',
+    controller: 'Board'
+  }).when('/', {
+    templateUrl: 'Resources/view/board.html',
     controller: 'Board'
   });
   return $locationProvider.html5Mode(true);
@@ -13,7 +16,7 @@ minesweeperApp.config(function($routeProvider, $locationProvider) {
 minesweeperApp.factory('board', function() {
   var board;
   board = function() {
-    var adjacentTiles, autoSelect, checkTile, clearTile, get, info, loadGame, newGame, randomSafeTile, tallyAdjacentMines, tiles, toggleFlag;
+    var adjacentTiles, autoSelect, checkTile, clearNeighbors, clearTile, get, info, loadGame, newGame, randomSafeTile, tallyAdjacentMines, tiles, toggleFlag;
     tiles = {};
     info = {
       numOfTiles: 0,
@@ -65,7 +68,7 @@ minesweeperApp.factory('board', function() {
       for (mineNum = _k = 0; 0 <= numOfMines ? _k <= numOfMines : _k >= numOfMines; mineNum = 0 <= numOfMines ? ++_k : --_k) {
         tile = randomSafeTile();
         tile.isMine = true;
-        this.tallyAdjacentMines(tile);
+        tallyAdjacentMines(tile);
       }
       this.info.refresh();
       return this;
@@ -92,9 +95,12 @@ minesweeperApp.factory('board', function() {
       return _results;
     };
     clearTile = function(tile) {
-      var adjacentTile, neighbor, _i, _len, _results;
       tile.isClear = true;
       tile.isFlagged = false;
+      return clearNeighbors(tile);
+    };
+    clearNeighbors = function(tile) {
+      var adjacentTile, neighbor, _i, _len, _results;
       _results = [];
       for (_i = 0, _len = adjacentTiles.length; _i < _len; _i++) {
         adjacentTile = adjacentTiles[_i];
@@ -154,11 +160,7 @@ minesweeperApp.factory('board', function() {
       info: info,
       tiles: tiles,
       checkTile: checkTile,
-      toggleFlag: toggleFlag,
-      clearTile: clearTile,
-      autoSelect: autoSelect,
-      get: get,
-      tallyAdjacentMines: tallyAdjacentMines
+      autoSelect: autoSelect
     };
   };
   return board();

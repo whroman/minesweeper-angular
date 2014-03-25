@@ -9,6 +9,7 @@
     "gulp-util": "~2.2.14",
     "gulp-coffee": "~1.4.1",
     "gulp-concat": "~2.2.0",
-    "gulp-uglify": "~0.2.1"
+    "gulp-uglify": "~0.2.1",
+    "gulp-processhtml": "0.0.3"
   }
 }

@@ -2,8 +2,13 @@ minesweeperApp = angular.module 'minesweeperApp', ['minesweeperCtrl', 'ngRoute']
 
 minesweeperApp.config(
     ($routeProvider, $locationProvider) ->
-        $routeProvider.when '/', {
-                templateUrl : './Resources/view/board.html'
+        $routeProvider
+            .when '/:any*', {
+                templateUrl : 'Resources/view/board.html'
+                controller  : 'Board'
+            }
+            .when '/', {
+                templateUrl : 'Resources/view/board.html'
                 controller  : 'Board'
             }
 
@@ -73,7 +78,7 @@ minesweeperApp.factory 'board', () ->
 
                 tile.isMine = true
 
-                this.tallyAdjacentMines tile
+                tallyAdjacentMines tile
 
             this.info.refresh()
 
@@ -98,7 +103,9 @@ minesweeperApp.factory 'board', () ->
             tile.isClear = true
             tile.isFlagged = false
 
+            clearNeighbors tile
 
+        clearNeighbors = (tile) ->
             for adjacentTile in adjacentTiles
 
                 neighbor = get tile.x + adjacentTile[0], tile.y + adjacentTile[1]
@@ -106,7 +113,6 @@ minesweeperApp.factory 'board', () ->
                 if neighbor?
                     if neighbor.adjacentMines == 0 && neighbor.isClear == false && neighbor.isMine == false
                         clearTile neighbor
-
 
         toggleFlag = (tile) ->
             if (tile.isFlagged == true)
@@ -151,11 +157,7 @@ minesweeperApp.factory 'board', () ->
             info        : info
             tiles       : tiles
             checkTile   : checkTile
-            toggleFlag  : toggleFlag
-            clearTile   : clearTile
             autoSelect  : autoSelect
-            get         : get
-            tallyAdjacentMines  : tallyAdjacentMines
         }
 
     return board()
