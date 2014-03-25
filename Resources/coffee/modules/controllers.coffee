@@ -19,8 +19,7 @@ minesweeperCtrl
 
         $scope.checkTile = (event, x, y) =>
             $scope.tiles = currentBoard.checkTile x, y, event
-            currentBoard.info.refresh $scope.tiles
+            
 
         $scope.autoSelect = (num) ->
             $scope.tiles = currentBoard.autoSelect num 
-            currentBoard.info.refresh $scope.tiles

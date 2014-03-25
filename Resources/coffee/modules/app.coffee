@@ -100,7 +100,7 @@ minesweeperApp.factory 'board', () ->
 
         clearTile = (tile) ->
 
-            noMineFirstClick(tile)
+            noMineFirstClick tile
 
             tile.isClear = true
             tile.isFlagged = false
@@ -141,6 +141,8 @@ minesweeperApp.factory 'board', () ->
             else
                 clearTile tile
 
+            info.refresh()
+            
             return tiles
 
         randomSafeTile = () ->
@@ -157,6 +159,8 @@ minesweeperApp.factory 'board', () ->
                 tile = randomSafeTile()
                 clearTile tile 
 
+            info.refresh()
+            
             return tiles
 
         return {

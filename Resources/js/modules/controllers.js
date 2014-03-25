@@ -17,12 +17,10 @@ minesweeperCtrl.controller('Board', function($scope, board, storage) {
   $scope.info = currentBoard.info;
   $scope.checkTile = (function(_this) {
     return function(event, x, y) {
-      $scope.tiles = currentBoard.checkTile(x, y, event);
-      return currentBoard.info.refresh($scope.tiles);
+      return $scope.tiles = currentBoard.checkTile(x, y, event);
     };
   })(this);
   return $scope.autoSelect = function(num) {
-    $scope.tiles = currentBoard.autoSelect(num);
-    return currentBoard.info.refresh($scope.tiles);
+    return $scope.tiles = currentBoard.autoSelect(num);
   };
 });

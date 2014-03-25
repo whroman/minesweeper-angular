@@ -142,6 +142,7 @@ minesweeperApp.factory('board', function() {
       } else {
         clearTile(tile);
       }
+      info.refresh();
       return tiles;
     };
     randomSafeTile = function() {
@@ -161,6 +162,7 @@ minesweeperApp.factory('board', function() {
         tile = randomSafeTile();
         clearTile(tile);
       }
+      info.refresh();
       return tiles;
     };
     return {
