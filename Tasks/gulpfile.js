@@ -100,9 +100,6 @@ gulp.task(
                 path.coffee.dest
             )
         )
-        .pipe(
-            connect.reload()
-        )
     }
 );
 
@@ -123,9 +120,6 @@ gulp.task(
         )
         .pipe(
             gulp.dest('./')
-        )
-        .pipe(
-            connect.reload()
         )
     }
 )
