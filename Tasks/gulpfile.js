@@ -42,6 +42,9 @@ path.js = {
 path.js.compile = [
     path.js.lib + 'angular.min.js',
     path.js.lib + 'angular-route.min.js',
+    path.js.lib + 'angular-cookies.min.js',
+    path.js.lib + 'angularLocalStorage.js',
+    
     path.js.modules + 'app.js',
     path.js.modules + 'controllers.js',
 ]

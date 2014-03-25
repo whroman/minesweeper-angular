@@ -1,18 +1,25 @@
-app = angular.module 'minesweeperCtrl', []
+minesweeperCtrl = angular.module 'minesweeperCtrl', ['angularLocalStorage']
 
-app
+minesweeperCtrl
 .controller 'Board', 
-    ($scope, board) ->
+    ($scope, board, storage) ->
+        currentBoard = undefined
+        tiles = undefined
 
-        newBoard = board.newGame(5, 7, 5)
+        if storage.get('tiles') == null
+            currentBoard = board.newGame 5, 7, 5
+        else
+            currentBoard = board.loadGame storage.get('tiles')
 
-        # console.log newBoard.info
+        storage.bind $scope, 'tiles', currentBoard.tiles
 
-        $scope.tiles = newBoard.tiles
+        $scope.tiles = currentBoard.tiles
+        $scope.info = currentBoard.info
 
-        $scope.info = newBoard.info
+        $scope.checkTile = (event, x, y) =>
+            $scope.tiles = currentBoard.checkTile x, y, event
+            currentBoard.info.refresh $scope.tiles
 
-        $scope.checkTile = (event, x, y) ->
-            newBoard.checkTile x, y, event
-
-            $scope.info.refresh()
+        $scope.autoSelect = (num) ->
+            $scope.tiles = currentBoard.autoSelect num 
+            currentBoard.info.refresh $scope.tiles

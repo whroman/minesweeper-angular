@@ -222,11 +222,191 @@ d)});return a||g[null]&&s(g[null],{params:{},pathParams:{}})}function l(a,d){var
 "$animate"]})(window,window.angular);
 //# sourceMappingURL=angular-route.min.js.map
 
-var app;
+/*
+ AngularJS v1.2.0-rc.2
+ (c) 2010-2012 Google, Inc. http://angularjs.org
+ License: MIT
+*/
+(function(p,f,n){'use strict';f.module("ngCookies",["ng"]).factory("$cookies",["$rootScope","$browser",function(d,b){var c={},g={},h,k=!1,l=f.copy,m=f.isUndefined;b.addPollFn(function(){var a=b.cookies();h!=a&&(h=a,l(a,g),l(a,c),k&&d.$apply())})();k=!0;d.$watch(function(){var a,e,d;for(a in g)m(c[a])&&b.cookies(a,n);for(a in c)(e=c[a],f.isString(e))?e!==g[a]&&(b.cookies(a,e),d=!0):f.isDefined(g[a])?c[a]=g[a]:delete c[a];if(d)for(a in e=b.cookies(),c)c[a]!==e[a]&&(m(e[a])?delete c[a]:c[a]=e[a])});
+return c}]).factory("$cookieStore",["$cookies",function(d){return{get:function(b){return(b=d[b])?f.fromJson(b):b},put:function(b,c){d[b]=f.toJson(c)},remove:function(b){delete d[b]}}}])})(window,window.angular);
+/*
+//@ sourceMappingURL=angular-cookies.min.js.map
+*/
+/*
+ * Angular.js localStorage module
+ * https://github.com/agrublev/angularLocalStorage
+ */
 
-app = angular.module('minesweeperApp', ['minesweeperCtrl', 'ngRoute']);
+(function (window, angular, undefined) {
+    'use strict';
 
-app.config(function($routeProvider, $locationProvider) {
+    angular.module('angularLocalStorage', ['ngCookies']).factory('storage', ['$parse', '$cookieStore', '$window', '$log', function ($parse, $cookieStore, $window, $log) {
+        /**
+         * Global Vars
+         */
+        var storage = (typeof $window.localStorage === 'undefined') ? undefined : $window.localStorage;
+        var supported = typeof storage !== 'undefined';
+
+        var privateMethods = {
+            /**
+             * Pass any type of a string from the localStorage to be parsed so it returns a usable version (like an Object)
+             * @param res - a string that will be parsed for type
+             * @returns {*} - whatever the real type of stored value was
+             */
+            parseValue: function (res) {
+                var val;
+                try {
+                    val = angular.fromJson(res);
+                    if (typeof val === 'undefined') {
+                        val = res;
+                    }
+                    if (val === 'true') {
+                        val = true;
+                    }
+                    if (val === 'false') {
+                        val = false;
+                    }
+                    if ($window.parseFloat(val) === val && !angular.isObject(val)) {
+                        val = $window.parseFloat(val);
+                    }
+                } catch (e) {
+                    val = res;
+                }
+                return val;
+            }
+        };
+
+        var publicMethods = {
+            /**
+             * Set - let's you set a new localStorage key pair set
+             * @param key - a string that will be used as the accessor for the pair
+             * @param value - the value of the localStorage item
+             * @returns {*} - will return whatever it is you've stored in the local storage
+             */
+            set: function (key, value) {
+                if (!supported) {
+                    try {
+                        $cookieStore.put(key, value);
+                        return value;
+                    } catch(e) {
+                        $log.log('Local Storage not supported, make sure you have angular-cookies enabled.');
+                    }
+                }
+                var saver = angular.toJson(value);
+                storage.setItem(key, saver);
+                return privateMethods.parseValue(saver);
+            },
+
+            /**
+             * Get - let's you get the value of any pair you've stored
+             * @param key - the string that you set as accessor for the pair
+             * @returns {*} - Object,String,Float,Boolean depending on what you stored
+             */
+            get: function (key) {
+                if (!supported) {
+                    try {
+                        return privateMethods.parseValue($.cookie(key));
+                    } catch (e) {
+                        return null;
+                    }
+                }
+                var item = storage.getItem(key);
+                return privateMethods.parseValue(item);
+            },
+
+            /**
+             * Remove - let's you nuke a value from localStorage
+             * @param key - the accessor value
+             * @returns {boolean} - if everything went as planned
+             */
+            remove: function (key) {
+                if (!supported) {
+                    try {
+                        $cookieStore.remove(key);
+                        return true;
+                    } catch (e) {
+                        return false;
+                    }
+                }
+                storage.removeItem(key);
+                return true;
+            },
+
+            /**
+             * Bind - let's you directly bind a localStorage value to a $scope variable
+             * @param {Angular $scope} $scope - the current scope you want the variable available in
+             * @param {String} key - the name of the variable you are binding
+             * @param {Object} opts - (optional) custom options like default value or unique store name
+             * Here are the available options you can set:
+             * * defaultValue: the default value
+             * * storeName: add a custom store key value instead of using the scope variable name
+             * @returns {*} - returns whatever the stored value is
+             */
+            bind: function ($scope, key, opts) {
+                var defaultOpts = {
+                    defaultValue: '',
+                    storeName: ''
+                };
+                // Backwards compatibility with old defaultValue string
+                if (angular.isString(opts)) {
+                    opts = angular.extend({},defaultOpts,{defaultValue:opts});
+                } else {
+                    // If no defined options we use defaults otherwise extend defaults
+                    opts = (angular.isUndefined(opts)) ? defaultOpts : angular.extend(defaultOpts,opts);
+                }
+
+                // Set the storeName key for the localStorage entry
+                // use user defined in specified
+                var storeName = opts.storeName || key;
+
+                // If a value doesn't already exist store it as is
+                if (!publicMethods.get(storeName)) {
+                    publicMethods.set(storeName, opts.defaultValue);
+                }
+
+                // If it does exist assign it to the $scope value
+                $parse(key).assign($scope, publicMethods.get(storeName));
+
+                // Register a listener for changes on the $scope value
+                // to update the localStorage value
+                $scope.$watch(key, function (val) {
+                    if (angular.isDefined(val)) {
+                        publicMethods.set(storeName, val);
+                    }
+                }, true);
+
+                return publicMethods.get(storeName);
+            },
+            /**
+             * Unbind - let's you unbind a variable from localStorage while removing the value from both
+             * the localStorage and the local variable and sets it to null
+             * @param $scope - the scope the variable was initially set in
+             * @param key - the name of the variable you are unbinding
+             * @param storeName - (optional) if you used a custom storeName you will have to specify it here as well
+             */
+            unbind: function($scope,key,storeName) {
+                storeName = storeName || key;
+                $parse(key).assign($scope, null);
+                $scope.$watch(key, function () { });
+                publicMethods.remove(storeName);
+            },
+            /**
+             * Clear All - let's you clear out ALL localStorage variables, use this carefully!
+             */
+            clearAll: function() {
+                storage.clear();
+            }
+        };
+
+        return publicMethods;
+    }]);
+
+})(window, window.angular);
+var minesweeperApp;
+
+minesweeperApp = angular.module('minesweeperApp', ['minesweeperCtrl', 'ngRoute']);
+
+minesweeperApp.config(function($routeProvider, $locationProvider) {
   $routeProvider.when('/', {
     templateUrl: './Resources/view/board.html',
     controller: 'Board'
@@ -234,17 +414,17 @@ app.config(function($routeProvider, $locationProvider) {
   return $locationProvider.html5Mode(true);
 });
 
-app.factory('board', function() {
+minesweeperApp.factory('board', function() {
   var board;
   board = function() {
-    var adjacentTiles, checkTile, clearTile, get, info, newGame, resumeGame, tallyAdjacentMines, tiles, toggleFlag;
+    var adjacentTiles, autoSelect, checkTile, clearTile, get, info, loadGame, newGame, randomSafeTile, tallyAdjacentMines, tiles, toggleFlag;
     tiles = {};
     info = {
       numOfTiles: 0,
       numOfMines: 0,
       numOfFlags: 0,
       numOfClears: 0,
-      refresh: function() {
+      refresh: function(tiles) {
         var key, tile;
         this.numOfTiles = 0;
         this.numOfClears = 0;
@@ -267,20 +447,16 @@ app.factory('board', function() {
       }
     };
     adjacentTiles = [[-1, -1], [0, -1], [1, -1], [-1, 0], [1, 0], [-1, 1], [0, 1], [1, 1]];
-    resumeGame = function(savedTiles) {
-      tiles = savedTiles;
-      return this;
-    };
     get = function(x, y) {
       var key;
       key = x + '-' + y;
-      return tiles[key];
+      return this.tiles[key];
     };
     newGame = function(sizeX, sizeY, numOfMines) {
-      var mineNum, mineX, mineY, x, y, _i, _j, _k;
+      var mineNum, tile, x, y, _i, _j, _k;
       for (y = _i = 0; 0 <= sizeY ? _i <= sizeY : _i >= sizeY; y = 0 <= sizeY ? ++_i : --_i) {
         for (x = _j = 0; 0 <= sizeX ? _j <= sizeX : _j >= sizeX; x = 0 <= sizeX ? ++_j : --_j) {
-          tiles[x + '-' + y] = {
+          this.tiles[x + '-' + y] = {
             x: x,
             y: y,
             isMine: false,
@@ -291,21 +467,27 @@ app.factory('board', function() {
         }
       }
       for (mineNum = _k = 0; 0 <= numOfMines ? _k <= numOfMines : _k >= numOfMines; mineNum = 0 <= numOfMines ? ++_k : --_k) {
-        mineX = Math.floor(Math.random() * sizeX);
-        mineY = Math.floor(Math.random() * sizeY);
-        get(mineX, mineY).isMine = true;
-        tallyAdjacentMines(mineX, mineY);
+        tile = randomSafeTile();
+        tile.isMine = true;
+        this.tallyAdjacentMines(tile);
       }
-      info.refresh();
+      this.info.refresh(this.tiles);
       return this;
     };
-    tallyAdjacentMines = function(x, y) {
-      var adjacentTile, tile, _i, _len, _results;
+    loadGame = function(savedTiles) {
+      this.tiles = savedTiles;
+      this.info.refresh(this.tiles);
+      return this;
+    };
+    tallyAdjacentMines = function(tile) {
+      var adjacentTile, x, y, _i, _len, _results;
+      x = tile.x;
+      y = tile.y;
       _results = [];
       for (_i = 0, _len = adjacentTiles.length; _i < _len; _i++) {
         adjacentTile = adjacentTiles[_i];
-        tile = get(x + adjacentTile[0], y + adjacentTile[1]);
-        if (tile !== void 0) {
+        tile = this.get(x + adjacentTile[0], y + adjacentTile[1]);
+        if (tile != null) {
           _results.push(tile.adjacentMines++);
         } else {
           _results.push(void 0);
@@ -320,10 +502,10 @@ app.factory('board', function() {
       _results = [];
       for (_i = 0, _len = adjacentTiles.length; _i < _len; _i++) {
         adjacentTile = adjacentTiles[_i];
-        neighbor = get(tile.x + adjacentTile[0], tile.y + adjacentTile[1]);
-        if (neighbor !== void 0) {
+        neighbor = this.get(tile.x + adjacentTile[0], tile.y + adjacentTile[1]);
+        if (neighbor != null) {
           if (neighbor.adjacentMines === 0 && neighbor.isClear === false && neighbor.isMine === false) {
-            _results.push(clearTile(neighbor));
+            _results.push(this.clearTile(neighbor));
           } else {
             _results.push(void 0);
           }
@@ -334,42 +516,81 @@ app.factory('board', function() {
       return _results;
     };
     toggleFlag = function(tile) {
-      if (tile.isFlagged === true) {
-        return tile.isFlagged = false;
-      } else {
-        return tile.isFlagged = true;
-      }
+      var _ref;
+      tile.isFlagged = (_ref = tile.isFlagged === true) != null ? _ref : {
+        "false": true
+      };
+      return tile;
     };
     checkTile = function(x, y, event) {
       var tile;
-      tile = get(x, y);
+      tile = this.get(x, y);
       if (event.shiftKey === true || event.altKey === true) {
-        return toggleFlag(tile);
+        this.toggleFlag(tile);
       } else {
-        return clearTile(tile);
+        this.clearTile(tile);
       }
+      return this.tiles;
+    };
+    randomSafeTile = function() {
+      var availTiles, key, randomTile, tile;
+      availTiles = [];
+      for (key in tiles) {
+        tile = tiles[key];
+        if (tile.isClear === false && tile.isMine === false) {
+          availTiles.push(tile);
+        }
+      }
+      return randomTile = availTiles[Math.floor(Math.random() * availTiles.length)];
+    };
+    autoSelect = function(num) {
+      var tile;
+      while (num--) {
+        tile = randomSafeTile();
+        this.clearTile(tile);
+      }
+      return tiles;
     };
     return {
       newGame: newGame,
+      loadGame: loadGame,
       info: info,
       tiles: tiles,
-      checkTile: checkTile
+      checkTile: checkTile,
+      toggleFlag: toggleFlag,
+      clearTile: clearTile,
+      autoSelect: autoSelect,
+      get: get,
+      tallyAdjacentMines: tallyAdjacentMines
     };
   };
   return board();
 });
 
-var app;
+var minesweeperCtrl;
 
-app = angular.module('minesweeperCtrl', []);
+minesweeperCtrl = angular.module('minesweeperCtrl', ['angularLocalStorage']);
 
-app.controller('Board', function($scope, board) {
-  var newBoard;
-  newBoard = board.newGame(5, 7, 5);
-  $scope.tiles = newBoard.tiles;
-  $scope.info = newBoard.info;
-  return $scope.checkTile = function(event, x, y) {
-    newBoard.checkTile(x, y, event);
-    return $scope.info.refresh();
+minesweeperCtrl.controller('Board', function($scope, board, storage) {
+  var currentBoard, tiles;
+  currentBoard = void 0;
+  tiles = void 0;
+  if (storage.get('tiles') === null) {
+    currentBoard = board.newGame(5, 7, 5);
+  } else {
+    currentBoard = board.loadGame(storage.get('tiles'));
+  }
+  storage.bind($scope, 'tiles', currentBoard.tiles);
+  $scope.tiles = currentBoard.tiles;
+  $scope.info = currentBoard.info;
+  $scope.checkTile = (function(_this) {
+    return function(event, x, y) {
+      $scope.tiles = currentBoard.checkTile(x, y, event);
+      return currentBoard.info.refresh($scope.tiles);
+    };
+  })(this);
+  return $scope.autoSelect = function(num) {
+    $scope.tiles = currentBoard.autoSelect(num);
+    return currentBoard.info.refresh($scope.tiles);
   };
 });
