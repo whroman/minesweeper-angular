@@ -10,6 +10,7 @@ minesweeperCtrl
             currentBoard = board.newGame 5, 7, 5
         else
             currentBoard = board.loadGame storage.get('tiles')
+            currentBoard.tiles = storage.get 'tiles'
 
         storage.bind $scope, 'tiles', currentBoard.tiles
 

@@ -424,7 +424,7 @@ minesweeperApp.factory('board', function() {
       numOfMines: 0,
       numOfFlags: 0,
       numOfClears: 0,
-      refresh: function(tiles) {
+      refresh: function() {
         var key, tile;
         this.numOfTiles = 0;
         this.numOfClears = 0;
@@ -450,13 +450,13 @@ minesweeperApp.factory('board', function() {
     get = function(x, y) {
       var key;
       key = x + '-' + y;
-      return this.tiles[key];
+      return tiles[key];
     };
     newGame = function(sizeX, sizeY, numOfMines) {
       var mineNum, tile, x, y, _i, _j, _k;
       for (y = _i = 0; 0 <= sizeY ? _i <= sizeY : _i >= sizeY; y = 0 <= sizeY ? ++_i : --_i) {
         for (x = _j = 0; 0 <= sizeX ? _j <= sizeX : _j >= sizeX; x = 0 <= sizeX ? ++_j : --_j) {
-          this.tiles[x + '-' + y] = {
+          tiles[x + '-' + y] = {
             x: x,
             y: y,
             isMine: false,
@@ -471,12 +471,12 @@ minesweeperApp.factory('board', function() {
         tile.isMine = true;
         this.tallyAdjacentMines(tile);
       }
-      this.info.refresh(this.tiles);
+      this.info.refresh();
       return this;
     };
     loadGame = function(savedTiles) {
-      this.tiles = savedTiles;
-      this.info.refresh(this.tiles);
+      tiles = savedTiles;
+      info.refresh();
       return this;
     };
     tallyAdjacentMines = function(tile) {
@@ -486,7 +486,7 @@ minesweeperApp.factory('board', function() {
       _results = [];
       for (_i = 0, _len = adjacentTiles.length; _i < _len; _i++) {
         adjacentTile = adjacentTiles[_i];
-        tile = this.get(x + adjacentTile[0], y + adjacentTile[1]);
+        tile = get(x + adjacentTile[0], y + adjacentTile[1]);
         if (tile != null) {
           _results.push(tile.adjacentMines++);
         } else {
@@ -502,10 +502,10 @@ minesweeperApp.factory('board', function() {
       _results = [];
       for (_i = 0, _len = adjacentTiles.length; _i < _len; _i++) {
         adjacentTile = adjacentTiles[_i];
-        neighbor = this.get(tile.x + adjacentTile[0], tile.y + adjacentTile[1]);
+        neighbor = get(tile.x + adjacentTile[0], tile.y + adjacentTile[1]);
         if (neighbor != null) {
           if (neighbor.adjacentMines === 0 && neighbor.isClear === false && neighbor.isMine === false) {
-            _results.push(this.clearTile(neighbor));
+            _results.push(clearTile(neighbor));
           } else {
             _results.push(void 0);
           }
@@ -516,21 +516,22 @@ minesweeperApp.factory('board', function() {
       return _results;
     };
     toggleFlag = function(tile) {
-      var _ref;
-      tile.isFlagged = (_ref = tile.isFlagged === true) != null ? _ref : {
-        "false": true
-      };
+      if (tile.isFlagged === true) {
+        tile.isFlagged = false;
+      } else {
+        tile.isFlagged = true;
+      }
       return tile;
     };
     checkTile = function(x, y, event) {
       var tile;
-      tile = this.get(x, y);
+      tile = get(x, y);
       if (event.shiftKey === true || event.altKey === true) {
-        this.toggleFlag(tile);
+        toggleFlag(tile);
       } else {
-        this.clearTile(tile);
+        clearTile(tile);
       }
-      return this.tiles;
+      return tiles;
     };
     randomSafeTile = function() {
       var availTiles, key, randomTile, tile;
@@ -547,7 +548,7 @@ minesweeperApp.factory('board', function() {
       var tile;
       while (num--) {
         tile = randomSafeTile();
-        this.clearTile(tile);
+        clearTile(tile);
       }
       return tiles;
     };
@@ -579,6 +580,7 @@ minesweeperCtrl.controller('Board', function($scope, board, storage) {
     currentBoard = board.newGame(5, 7, 5);
   } else {
     currentBoard = board.loadGame(storage.get('tiles'));
+    currentBoard.tiles = storage.get('tiles');
   }
   storage.bind($scope, 'tiles', currentBoard.tiles);
   $scope.tiles = currentBoard.tiles;

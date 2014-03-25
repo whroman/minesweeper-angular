@@ -20,7 +20,7 @@ minesweeperApp.factory 'board', () ->
             numOfMines  : 0
             numOfFlags  : 0
             numOfClears : 0
-            refresh : (tiles) ->
+            refresh : () ->
                 this.numOfTiles  = 0
                 this.numOfClears = 0
                 this.numOfFlags  = 0
@@ -54,12 +54,12 @@ minesweeperApp.factory 'board', () ->
 
         get = (x, y) ->
             key = x + '-' + y
-            return this.tiles[key]
+            return tiles[key]
 
         newGame = (sizeX, sizeY, numOfMines) ->
             for y in [0..sizeY]
                 for x in [0..sizeX]
-                    this.tiles[x + '-' + y] = {
+                    tiles[x + '-' + y] = {
                         x : x
                         y : y
                         isMine      : false
@@ -75,21 +75,21 @@ minesweeperApp.factory 'board', () ->
 
                 this.tallyAdjacentMines tile
 
-            this.info.refresh this.tiles
+            this.info.refresh()
 
             return this
 
         loadGame = (savedTiles) ->
-            this.tiles = savedTiles
-            this.info.refresh this.tiles
-
+            tiles = savedTiles
+            info.refresh()
+            
             return this
         
         tallyAdjacentMines = (tile) ->
             x = tile.x
             y = tile.y
             for adjacentTile in adjacentTiles
-                tile = this.get x + adjacentTile[0], y + adjacentTile[1]
+                tile = get x + adjacentTile[0], y + adjacentTile[1]
 
                 tile.adjacentMines++ if tile?
 
@@ -101,28 +101,33 @@ minesweeperApp.factory 'board', () ->
 
             for adjacentTile in adjacentTiles
 
-                neighbor = this.get tile.x + adjacentTile[0], tile.y + adjacentTile[1]
+                neighbor = get tile.x + adjacentTile[0], tile.y + adjacentTile[1]
 
                 if neighbor?
                     if neighbor.adjacentMines == 0 && neighbor.isClear == false && neighbor.isMine == false
-                        this.clearTile neighbor
+                        clearTile neighbor
 
 
         toggleFlag = (tile) ->
-            tile.isFlagged = tile.isFlagged == true ? false : true
+            if (tile.isFlagged == true)
+                tile.isFlagged = false
+            else
+                tile.isFlagged = true
+
+            # tile.isFlagged = tile.isFlagged == true ? false : true
 
             return tile
 
         checkTile = (x, y, event) ->
 
-            tile = this.get x, y
+            tile = get x, y
 
             if event.shiftKey == true || event.altKey == true
-                this.toggleFlag tile
+                toggleFlag tile
             else
-                this.clearTile tile
+                clearTile tile
 
-            return this.tiles
+            return tiles
 
         randomSafeTile = () ->
             availTiles = [];
@@ -136,7 +141,7 @@ minesweeperApp.factory 'board', () ->
         autoSelect = (num) ->
             while num--
                 tile = randomSafeTile()
-                this.clearTile tile 
+                clearTile tile 
 
             return tiles
 
