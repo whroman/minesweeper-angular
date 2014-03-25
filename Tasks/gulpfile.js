@@ -1,46 +1,121 @@
 var gulp    = require('gulp');
+var util = require('gulp-util');
 var sass    = require('gulp-ruby-sass');
 var rename  = require('gulp-rename');
+var coffee = require('gulp-coffee');
 var connect = require('gulp-connect');
+var concat = require('gulp-concat');
+var uglify = require('gulp-uglify');
 
+var config = {
+    scss    : {
+        style   : 'compressed',
+    },
+    coffee  : {
+        bare    : true,
+    },
+}
 
+var path = {
+    root    : '../Resources/'
+}
 
-var root = '../Resources/';
-var build = root + 'build/'
+path.build = path.root + 'build/';
 
-var scss = {
-    init    : root + 'scss/init.scss',
-    watch   : root + 'scss/**/*.scss',
-    build   : {
-        dirname     : build,
+path.scss = {
+    src     : [path.root + 'scss/init.scss'],
+    watch   : path.root + 'scss/**/*.scss',
+    dest    : {
+        dirname     : path.build,
         basename    : 'build',
-        extname     : '.css'        
-    }
+        extname     : '.css',
+    },
+}
+
+path.js = {
+    watch   : path.root + 'js/**/*.js',
+    modules : path.root + 'js/modules/',
+    lib     : path.root + 'js/lib/',
+    dest    : path.build + 'build.js',
+}
+
+path.js.compile = [
+    path.js.lib + 'angular.min.js',
+    path.js.lib + 'angular-route.min.js',
+    path.js.modules + 'app.js',
+    path.js.modules + 'controllers.js',
+]
+
+path.coffee = {
+    src   : [path.root + 'coffee/modules/**/*.coffee'],
+    dest    : path.js.modules,
 }
 
 gulp.task(
     'sass', 
     function() {
         gulp
-            .src(
-                [
-                    scss.init
-                ]
-            )
-            .pipe(
-                sass({
-                    style   : 'compressed'
-                })
-            )
-            .pipe(
-                rename( scss.build )
-            )
-            .pipe(
-                gulp.dest('./')
-            )
-            .pipe(connect.reload())
+        .src(
+            path.scss.src
+        )
+        .pipe(
+            sass( config.scss )
+        )
+        .pipe(
+            rename( path.scss.dest )
+        )
+        .pipe(
+            gulp.dest('./')
+        )
+        .pipe(
+            connect.reload()
+        )
     }
 );
+
+
+gulp.task(
+    'coffee',
+    function() {
+        gulp
+        .src(
+            path.coffee.src
+        )
+        .pipe(
+            coffee(
+                config.coffee
+            ).on('error', util.log)
+        )
+        .pipe(
+            gulp.dest(
+                path.coffee.dest
+            )
+        )
+        .pipe(
+            connect.reload()
+        )
+    }
+);
+
+gulp.task(
+    'compile-js',
+    function() {
+        gulp
+        .src(
+            path.js.compile
+        )
+        .pipe(
+            concat(path.js.dest)
+        )
+
+        .pipe(
+            gulp.dest('./')
+        )
+        .pipe(
+            connect.reload()
+        )
+    }
+)
 
 gulp.task(
     'connect', 
@@ -50,17 +125,22 @@ gulp.task(
     })
 );
 
-
 gulp.task(
     'watch', 
     function() {
         gulp.watch(
-            scss.watch, ['sass']
-        );
+            path.scss.watch, ['sass']
+        )
+        gulp.watch(
+            path.coffee.src, ['coffee']
+        )
+        gulp.watch(
+            path.js.watch, ['compile-js']
+        )
     }
 );
 
 gulp.task(
     'default', 
-    ['sass', 'watch', 'connect']
+    ['sass', 'coffee', 'compile-js', 'watch', 'connect']
 ); 
