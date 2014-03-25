@@ -1,11 +1,11 @@
-var app = angular.module(
+var minesweeperCtrl = angular.module(
     'minesweeperCtrl', 
     [
-        'angularLocalStorage'
+        'angularLocalStorage',
     ]
 );
 
-app
+minesweeperCtrl
 .controller(
     'Board', 
     function($scope, board, storage) {

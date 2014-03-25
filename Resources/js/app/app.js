@@ -1,4 +1,4 @@
-var app = angular.module(
+var minesweeperApp = angular.module(
     'minesweeperApp', 
     // Dependencies
     [
@@ -7,7 +7,7 @@ var app = angular.module(
     ]
 );
 
-app.config(
+minesweeperApp.config(
     function($routeProvider, $locationProvider) {
         $routeProvider
             .when('/', {
@@ -19,7 +19,7 @@ app.config(
     }
 );
 
-app.factory('board', function() {
+minesweeperApp.factory('board', function() {
     var board = function(){
 
         var tiles = {};
@@ -108,6 +108,8 @@ app.factory('board', function() {
             while (numOfMines--) {
                 var tile = randomSafeTile();
                 
+                tile.isMine = true;
+
                 tallyAdjacentMines(tile);                
             }
 
