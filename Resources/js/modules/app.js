@@ -16,7 +16,7 @@ minesweeperApp.config(function($routeProvider, $locationProvider) {
 minesweeperApp.factory('board', function() {
   var board;
   board = function() {
-    var adjacentTiles, autoSelect, checkTile, clearNeighbors, clearTile, get, info, loadGame, newGame, randomSafeTile, tallyAdjacentMines, tiles, toggleFlag;
+    var adjacentTiles, autoSelect, checkTile, clearNeighbors, clearTile, get, info, loadGame, newGame, noMineFirstClick, randomSafeTile, tallyAdjacentMines, tiles, toggleFlag;
     tiles = {};
     info = {
       numOfTiles: 0,
@@ -95,9 +95,16 @@ minesweeperApp.factory('board', function() {
       return _results;
     };
     clearTile = function(tile) {
+      noMineFirstClick(tile);
       tile.isClear = true;
       tile.isFlagged = false;
       return clearNeighbors(tile);
+    };
+    noMineFirstClick = function(tile) {
+      if (info.numOfClears === 0 && tile.isMine === true) {
+        tile.isMine = false;
+        return randomSafeTile().isMine = true;
+      }
     };
     clearNeighbors = function(tile) {
       var adjacentTile, neighbor, _i, _len, _results;

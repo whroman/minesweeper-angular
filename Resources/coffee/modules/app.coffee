@@ -100,10 +100,17 @@ minesweeperApp.factory 'board', () ->
 
         clearTile = (tile) ->
 
+            noMineFirstClick(tile)
+
             tile.isClear = true
             tile.isFlagged = false
 
             clearNeighbors tile
+
+        noMineFirstClick = (tile) ->
+            if info.numOfClears == 0 && tile.isMine == true
+                tile.isMine = false
+                randomSafeTile().isMine = true
 
         clearNeighbors = (tile) ->
             if tile.adjacentMines == 0
