@@ -106,13 +106,14 @@ minesweeperApp.factory 'board', () ->
             clearNeighbors tile
 
         clearNeighbors = (tile) ->
-            for adjacentTile in adjacentTiles
+            if tile.adjacentMines == 0
+                for adjacentTile in adjacentTiles
 
-                neighbor = get tile.x + adjacentTile[0], tile.y + adjacentTile[1]
+                    neighbor = get tile.x + adjacentTile[0], tile.y + adjacentTile[1]
 
-                if neighbor?
-                    if neighbor.adjacentMines == 0 && neighbor.isClear == false && neighbor.isMine == false
-                        clearTile neighbor
+                    if neighbor?
+                        if neighbor.adjacentMines == 0 && neighbor.isClear == false && neighbor.isMine == false
+                            clearTile neighbor
 
         toggleFlag = (tile) ->
             if (tile.isFlagged == true)

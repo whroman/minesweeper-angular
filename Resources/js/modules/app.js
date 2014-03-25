@@ -101,21 +101,23 @@ minesweeperApp.factory('board', function() {
     };
     clearNeighbors = function(tile) {
       var adjacentTile, neighbor, _i, _len, _results;
-      _results = [];
-      for (_i = 0, _len = adjacentTiles.length; _i < _len; _i++) {
-        adjacentTile = adjacentTiles[_i];
-        neighbor = get(tile.x + adjacentTile[0], tile.y + adjacentTile[1]);
-        if (neighbor != null) {
-          if (neighbor.adjacentMines === 0 && neighbor.isClear === false && neighbor.isMine === false) {
-            _results.push(clearTile(neighbor));
+      if (tile.adjacentMines === 0) {
+        _results = [];
+        for (_i = 0, _len = adjacentTiles.length; _i < _len; _i++) {
+          adjacentTile = adjacentTiles[_i];
+          neighbor = get(tile.x + adjacentTile[0], tile.y + adjacentTile[1]);
+          if (neighbor != null) {
+            if (neighbor.adjacentMines === 0 && neighbor.isClear === false && neighbor.isMine === false) {
+              _results.push(clearTile(neighbor));
+            } else {
+              _results.push(void 0);
+            }
           } else {
             _results.push(void 0);
           }
-        } else {
-          _results.push(void 0);
         }
+        return _results;
       }
-      return _results;
     };
     toggleFlag = function(tile) {
       if (tile.isFlagged === true) {
