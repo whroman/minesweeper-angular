@@ -139,10 +139,7 @@ gulp.task(
             path.scss.watch, ['sass']
         )
         gulp.watch(
-            path.coffee.src, ['coffee']
-        )
-        gulp.watch(
-            path.js.watch, ['compile-js']
+            path.coffee.src, ['coffee', 'compile-js']
         )
         gulp.watch(
             path.html.src, ['html']
