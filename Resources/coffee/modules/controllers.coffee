@@ -26,7 +26,7 @@ minesweeperCtrl
             val : '8'
             options : {
                 from    : 5
-                to      : 20
+                to      : 15
                 step    : 1
             }
         }
@@ -43,9 +43,9 @@ minesweeperCtrl
         $scope.newGameInfo.mines    = {
             val : '20'
             options : {
-                from    : 10
-                to      : 50
-                step    : 1
+                from    : Math.floor( Math.pow($scope.newGameInfo.x.val, 2) / 4 )
+                to      : Math.floor( Math.pow($scope.newGameInfo.x.val, 2) / 2 )
+                step    : $scope.newGameInfo.x.options.step
             }
         }
 

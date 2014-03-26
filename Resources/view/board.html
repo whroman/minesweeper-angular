@@ -135,6 +135,9 @@
             you lost...
         </span>
     </div>
+    <div>
+        {{newGameInfo.x.val * newGameInfo.y.val}} tiles
+    </div>
 
     <div class="sliders">
         <div class="slider">
@@ -183,7 +186,7 @@
     <div>
         <div 
             class="button"
-            ng-click="newGame(10,10,10)"
+            ng-click="newGame(newGameInfo.x.val, newGameInfo.y.val, newGameInfo.mines.val)"
             >
             start!
         </div>
