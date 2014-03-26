@@ -13,6 +13,9 @@ minesweeperCtrl.controller('Board', function($scope, board, storage) {
   storage.bind($scope, 'tiles', currentBoard.tiles);
   $scope.tiles = currentBoard.tiles;
   $scope.info = currentBoard.info.refresh($scope.tiles);
+  $scope.overlay = {
+    instructions: false
+  };
   $scope.checkTile = function(event, x, y) {
     $scope.tiles = currentBoard.checkTile(x, y, event);
     return $scope.info.refresh($scope.tiles);
@@ -21,9 +24,17 @@ minesweeperCtrl.controller('Board', function($scope, board, storage) {
     $scope.tiles = currentBoard.autoSelect(num);
     return $scope.info.refresh($scope.tiles);
   };
-  return $scope.newGame = function(sizeX, sizeY, numOfMines) {
+  $scope.newGame = function(sizeX, sizeY, numOfMines) {
     currentBoard = board.newGame(sizeX, sizeY, numOfMines);
     $scope.tiles = currentBoard.tiles;
     return $scope.info = currentBoard.info.refresh($scope.tiles);
+  };
+  return $scope.toggleOverlay = function(name) {
+    console.log($scope.overlay[name]);
+    if ($scope.overlay[name] === true) {
+      return $scope.overlay[name] = false;
+    } else {
+      return $scope.overlay[name] = true;
+    }
   };
 });

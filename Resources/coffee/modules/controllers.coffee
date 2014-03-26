@@ -14,6 +14,10 @@ minesweeperCtrl
 
         $scope.tiles = currentBoard.tiles
         $scope.info = currentBoard.info.refresh $scope.tiles
+        
+        $scope.overlay = {
+            instructions    : false
+        }
 
         $scope.checkTile = (event, x, y) ->
             $scope.tiles = currentBoard.checkTile x, y, event
@@ -29,3 +33,9 @@ minesweeperCtrl
             $scope.tiles = currentBoard.tiles
             $scope.info = currentBoard.info.refresh $scope.tiles
 
+        $scope.toggleOverlay = (name) ->
+            console.log($scope.overlay[name])
+            if ($scope.overlay[name] == true)
+                $scope.overlay[name] = false
+            else
+                $scope.overlay[name] = true
