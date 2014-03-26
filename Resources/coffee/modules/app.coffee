@@ -71,8 +71,8 @@ minesweeperApp.factory 'board', () ->
             return this.tiles[key]
 
         newGame = (sizeX, sizeY, numOfMines) ->
-            for y in [0..sizeY]
-                for x in [0..sizeX]
+            for y in [0..sizeY - 1]
+                for x in [0..sizeX - 1]
                     this.tiles[x + '-' + y] = {
                         x : x
                         y : y
@@ -82,7 +82,7 @@ minesweeperApp.factory 'board', () ->
                         adjacentMines   : 0
                     }
 
-            for mineNum in [0..numOfMines]
+            for mineNum in [1..numOfMines]
                 tile = this.randomSafeTile()
                 tile.isMine = true
                 this.tallyAdjacentMines tile

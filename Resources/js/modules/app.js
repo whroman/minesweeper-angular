@@ -60,9 +60,9 @@ minesweeperApp.factory('board', function() {
       return this.tiles[key];
     };
     newGame = function(sizeX, sizeY, numOfMines) {
-      var mineNum, tile, x, y, _i, _j, _k;
-      for (y = _i = 0; 0 <= sizeY ? _i <= sizeY : _i >= sizeY; y = 0 <= sizeY ? ++_i : --_i) {
-        for (x = _j = 0; 0 <= sizeX ? _j <= sizeX : _j >= sizeX; x = 0 <= sizeX ? ++_j : --_j) {
+      var mineNum, tile, x, y, _i, _j, _k, _ref, _ref1;
+      for (y = _i = 0, _ref = sizeY - 1; 0 <= _ref ? _i <= _ref : _i >= _ref; y = 0 <= _ref ? ++_i : --_i) {
+        for (x = _j = 0, _ref1 = sizeX - 1; 0 <= _ref1 ? _j <= _ref1 : _j >= _ref1; x = 0 <= _ref1 ? ++_j : --_j) {
           this.tiles[x + '-' + y] = {
             x: x,
             y: y,
@@ -73,7 +73,7 @@ minesweeperApp.factory('board', function() {
           };
         }
       }
-      for (mineNum = _k = 0; 0 <= numOfMines ? _k <= numOfMines : _k >= numOfMines; mineNum = 0 <= numOfMines ? ++_k : --_k) {
+      for (mineNum = _k = 1; 1 <= numOfMines ? _k <= numOfMines : _k >= numOfMines; mineNum = 1 <= numOfMines ? ++_k : --_k) {
         tile = this.randomSafeTile();
         tile.isMine = true;
         this.tallyAdjacentMines(tile);

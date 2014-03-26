@@ -50,7 +50,12 @@
 </ul>
 
 <div id="dashboard">
-    <div class="new-game button">new game</div>
+    <div 
+        class="new-game button"
+        ng-click="newGame(10, 10, 2)"
+        >
+        new game
+    </div>
     <div 
         class="select-tile button"
         ng-click="autoSelect(1)"

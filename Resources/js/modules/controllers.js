@@ -3,9 +3,8 @@ var minesweeperCtrl;
 minesweeperCtrl = angular.module('minesweeperCtrl', ['angularLocalStorage']);
 
 minesweeperCtrl.controller('Board', function($scope, board, storage) {
-  var currentBoard, tiles;
+  var currentBoard;
   currentBoard = void 0;
-  tiles = void 0;
   if (storage.get('tiles') === null) {
     currentBoard = board.newGame(5, 7, 5);
   } else {
@@ -14,14 +13,17 @@ minesweeperCtrl.controller('Board', function($scope, board, storage) {
   storage.bind($scope, 'tiles', currentBoard.tiles);
   $scope.tiles = currentBoard.tiles;
   $scope.info = currentBoard.info.refresh($scope.tiles);
-  $scope.checkTile = (function(_this) {
-    return function(event, x, y) {
-      $scope.tiles = currentBoard.checkTile(x, y, event);
-      return $scope.info.refresh($scope.tiles);
-    };
-  })(this);
-  return $scope.autoSelect = function(num) {
+  $scope.checkTile = function(event, x, y) {
+    $scope.tiles = currentBoard.checkTile(x, y, event);
+    return $scope.info.refresh($scope.tiles);
+  };
+  $scope.autoSelect = function(num) {
     $scope.tiles = currentBoard.autoSelect(num);
     return $scope.info.refresh($scope.tiles);
+  };
+  return $scope.newGame = function(sizeX, sizeY, numOfMines) {
+    currentBoard = board.newGame(sizeX, sizeY, numOfMines);
+    $scope.tiles = currentBoard.tiles;
+    return $scope.info = currentBoard.info.refresh($scope.tiles);
   };
 });

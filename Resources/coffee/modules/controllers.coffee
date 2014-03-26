@@ -4,7 +4,6 @@ minesweeperCtrl
 .controller 'Board', 
     ($scope, board, storage) ->
         currentBoard = undefined
-        tiles = undefined
 
         if storage.get('tiles') == null
             currentBoard = board.newGame 5, 7, 5
@@ -16,7 +15,7 @@ minesweeperCtrl
         $scope.tiles = currentBoard.tiles
         $scope.info = currentBoard.info.refresh $scope.tiles
 
-        $scope.checkTile = (event, x, y) =>
+        $scope.checkTile = (event, x, y) ->
             $scope.tiles = currentBoard.checkTile x, y, event
             $scope.info.refresh $scope.tiles
             
@@ -24,3 +23,9 @@ minesweeperCtrl
         $scope.autoSelect = (num) ->
             $scope.tiles = currentBoard.autoSelect num 
             $scope.info.refresh $scope.tiles
+
+        $scope.newGame = (sizeX, sizeY, numOfMines) -> 
+            currentBoard = board.newGame sizeX, sizeY, numOfMines
+            $scope.tiles = currentBoard.tiles
+            $scope.info = currentBoard.info.refresh $scope.tiles
+
