@@ -68,7 +68,7 @@
 <div 
     id="overlay"
     ng-class="{
-        show    : showInstructions === true
+        show    : showInstructions === true || info.win === true
     }"
     ng-click="showInstructions = false "
     >
@@ -93,4 +93,19 @@
         <span class="code">alt + click</span>
         will flag a tile, helping you to remember where you think a mine is hidden
     </div>
+</div>
+
+<div
+    ng-if="info.win == true"
+    id="win" 
+    class="message"
+>
+    <div class="border-bottom">win!</div>
+    <div class="border-bottom">
+        how about another round?
+    </div>
+    <div class="border-bottom">
+        <span class="code">click</span> to reveal the squares of the grid
+    </div>
+    <div class="border-bottom">your first click will never land on a mine</div>
 </div>

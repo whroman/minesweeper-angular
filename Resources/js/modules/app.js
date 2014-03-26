@@ -19,6 +19,8 @@ minesweeperApp.factory('board', function() {
     var adjacentTiles, autoSelect, checkTile, clearNeighbors, clearTile, get, info, loadGame, newGame, noMineFirstClick, randomSafeTile, tallyAdjacentMines, tiles, toggleFlag;
     tiles = {};
     info = {
+      loss: false,
+      win: false,
       numOfTiles: 0,
       numOfMines: 0,
       numOfFlags: 0,
@@ -41,6 +43,12 @@ minesweeperApp.factory('board', function() {
           if (tile.isMine === true) {
             this.numOfMines++;
           }
+          if (tile.isMine === true && tile.isClear === true) {
+            this.loss = true;
+          }
+        }
+        if (this.loss === false && info.numOfTiles - info.numOfMines - info.numOfClears === 0) {
+          this.win = true;
         }
         return this;
       }
