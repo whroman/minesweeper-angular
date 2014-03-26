@@ -72,7 +72,7 @@
 
 <div 
     id="overlay"
-    ng-if="overlay.instructions == true || info.win == true || overlay.newGame == true"
+    ng-if="overlay.instructions == true || overlay.newGame == true || info.win == true || info.loss == true"
     ng-click="overlayReset()"
     >
 
@@ -109,15 +109,21 @@
 </div>
 
 <div
-    ng-if="info.win == true || overlay.newGame == true"
+    ng-if="info.win == true || info.loss == true || overlay.newGame == true"
     id="win" 
     class="message"
 >
     <div
-        ng-if="info.win == true"
+        ng-if="info.win == true && info.loss == false"
         class="border-bottom"
         >
         you won!
+    </div>
+    <div
+        ng-if="info.loss == true && info.win == false"
+        class="border-bottom"
+        >
+        you lost...
     </div>
     <div
         ng-if="overlay.newGame == true"

@@ -103,7 +103,7 @@ minesweeperApp.factory('board', function() {
       return _results;
     };
     clearTile = function(tile) {
-      noMineFirstClick(tile);
+      this.noMineFirstClick(tile);
       tile.isClear = true;
       tile.isFlagged = false;
       return this.clearNeighbors(tile);
@@ -182,8 +182,9 @@ minesweeperApp.factory('board', function() {
       autoSelect: autoSelect,
       get: get,
       randomSafeTile: randomSafeTile,
+      clearNeighbors: clearNeighbors,
       tallyAdjacentMines: tallyAdjacentMines,
-      clearNeighbors: clearNeighbors
+      noMineFirstClick: noMineFirstClick
     };
   };
   return board();
