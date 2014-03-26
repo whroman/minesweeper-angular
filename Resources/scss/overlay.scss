@@ -77,18 +77,44 @@
 
     .jslider {
         top: 1.5em;
+    
+        .jslider-bg i {
+            background-image: none;
+            background-color: #999;
+
+            &.l {
+                border-top-left-radius: 18px;
+                border-bottom-left-radius: 18px;
+            }
+
+            &.r {
+                border-top-right-radius: 18px;
+                border-bottom-right-radius: 18px;
+            }
+        }
+
+        .jslider-label {
+            top: -22px;
+        }
+        .jslider-value {
+            top: -23px;
+            color: #666;
+        }
     }
 
     .jslider_round .jslider-pointer {
         background-image: none;
-        background-color: #666;
+        background-color: #FFF;
+        border: 4px solid #999;
+        width: 10px;
+        height: 10px;
         border-radius: 100%;
         z-index: 2;
-    }
-    .jslider .jslider-label {
-        top: -22px;
-    }
-    .jslider .jslider-value {
-        top: -23px;
+
+        &.jslider-pointer-hover,
+        &:hover {
+            background-color: #666;
+            border-color: #666;
+        }
     }
 }

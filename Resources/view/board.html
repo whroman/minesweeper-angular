@@ -113,24 +113,26 @@
     id="win" 
     class="message"
 >
-    <div
-        ng-if="info.win == true && info.loss == false"
-        class="border-bottom"
+    <div class="border-bottom">
+        <span
+            class="title"
+            ng-if="overlay.newGame == true && info.win == false && info.loss == false"
         >
-        you won!
-    </div>
-    <div
-        ng-if="info.loss == true && info.win == false"
-        class="border-bottom"
-        >
-        you lost...
-    </div>
-    <div
-        ng-if="overlay.newGame == true"
-        class="border-bottom"
-        >
-        <span class="title">
             new game?
+        </span>
+
+        <span
+            class="title"
+            ng-if="info.win == true && info.loss == false"
+        >
+            you won!
+        </span>
+
+        <span
+            class="title"
+            ng-if="info.win == true && info.loss == false"
+        >
+            you lost...
         </span>
     </div>
 
