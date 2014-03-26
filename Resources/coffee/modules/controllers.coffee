@@ -16,7 +16,8 @@ minesweeperCtrl
         $scope.info = currentBoard.info.refresh $scope.tiles
         
         $scope.overlay = {
-            instructions    : false
+            instructions: false
+            newGame     : false
         }
 
         $scope.checkTile = (event, x, y) ->
@@ -26,16 +27,22 @@ minesweeperCtrl
 
         $scope.autoSelect = (num) ->
             $scope.tiles = currentBoard.autoSelect num 
-            $scope.info.refresh $scope.tiles
+            $scope.info.refresh currentBoard.tiles
 
         $scope.newGame = (sizeX, sizeY, numOfMines) -> 
             currentBoard = board.newGame sizeX, sizeY, numOfMines
             $scope.tiles = currentBoard.tiles
-            $scope.info = currentBoard.info.refresh $scope.tiles
+            $scope.info = currentBoard.info.refresh currentBoard.tiles
+
+            $scope.overlayReset()
 
         $scope.toggleOverlay = (name) ->
-            console.log($scope.overlay[name])
-            if ($scope.overlay[name] == true)
-                $scope.overlay[name] = false
-            else
-                $scope.overlay[name] = true
+            if ($scope.info.win == false && $scope.info.loss == false)
+                if ($scope.overlay[name] == true)
+                    $scope.overlay[name] = false
+                else
+                    $scope.overlay[name] = true
+
+        $scope.overlayReset = () ->
+            for key, panel of $scope.overlay
+                $scope.overlay[key] = false

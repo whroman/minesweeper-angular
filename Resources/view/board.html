@@ -52,7 +52,7 @@
 <div id="dashboard">
     <div 
         class="new-game button"
-        ng-click="newGame(10, 10, 2)"
+        ng-click="toggleOverlay('newGame')"
         >
         new game
     </div>
@@ -72,15 +72,15 @@
 
 <div 
     id="overlay"
-    ng-if="overlay.instructions == true"
-    ng-click="toggleOverlay('instructions')"
+    ng-if="overlay.instructions == true || info.win == true || overlay.newGame == true"
+    ng-click="overlayReset()"
     >
 
 </div>
 
 <div
-    ng-if="overlay.instructions == true"
     id="instructions" 
+    ng-if="overlay.instructions == true"
     class="message"
 >
     <div class="border-bottom">how to play</div>
@@ -109,17 +109,28 @@
 </div>
 
 <div
-    ng-if="info.win == true"
+    ng-if="info.win == true || overlay.newGame == true"
     id="win" 
     class="message"
 >
-    <div class="border-bottom">you won!</div>
+    <div
+        ng-if="info.win == true"
+        class="border-bottom"
+        >
+        you won!
+    </div>
+    <div
+        ng-if="overlay.newGame == true"
+        class="border-bottom"
+        >
+        new game?
+    </div>
     <div>
-        <div class="button">
-            resume current 
-        </div>
-        <div class="button">
-            start new game
+        <div 
+            class="button"
+            ng-click="newGame(10,10,10)"
+            >
+            start!
         </div>
     </div>
 </div>

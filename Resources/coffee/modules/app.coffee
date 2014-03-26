@@ -28,6 +28,8 @@ minesweeperApp.factory 'board', () ->
             numOfFlags  : 0
             numOfClears : 0
             refresh : (tiles) ->
+                this.loss    = false
+                this.win     = false
                 this.numOfTiles  = 0
                 this.numOfClears = 0
                 this.numOfFlags  = 0
@@ -50,9 +52,11 @@ minesweeperApp.factory 'board', () ->
                     if tile.isMine == true
                         this.numOfMines++
 
+                    # Check Game Loss
                     if tile.isMine == true && tile.isClear == true
                         this.loss = true
 
+                # Check Game Win
                 if this.loss == false && info.numOfTiles - info.numOfMines - info.numOfClears == 0
                     this.win = true
 
@@ -146,9 +150,7 @@ minesweeperApp.factory 'board', () ->
             return this.tiles
 
         randomSafeTile = () ->
-            availTiles = [];
-
-            console.log this, this.tiles
+            availTiles = []
 
             for key, tile of this.tiles
                 if tile.isClear == false && tile.isMine == false

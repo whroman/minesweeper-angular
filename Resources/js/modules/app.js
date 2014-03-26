@@ -27,6 +27,8 @@ minesweeperApp.factory('board', function() {
       numOfClears: 0,
       refresh: function(tiles) {
         var key, tile;
+        this.loss = false;
+        this.win = false;
         this.numOfTiles = 0;
         this.numOfClears = 0;
         this.numOfFlags = 0;
@@ -153,7 +155,6 @@ minesweeperApp.factory('board', function() {
     randomSafeTile = function() {
       var availTiles, key, randomTile, tile, _ref;
       availTiles = [];
-      console.log(this, this.tiles);
       _ref = this.tiles;
       for (key in _ref) {
         tile = _ref[key];
