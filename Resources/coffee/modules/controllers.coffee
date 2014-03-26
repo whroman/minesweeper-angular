@@ -1,4 +1,4 @@
-minesweeperCtrl = angular.module 'minesweeperCtrl', ['angularLocalStorage']
+minesweeperCtrl = angular.module 'minesweeperCtrl', ['angularLocalStorage', 'ngSlider']
 
 minesweeperCtrl
 .controller 'Board', 
@@ -18,6 +18,35 @@ minesweeperCtrl
         $scope.overlay = {
             instructions: false
             newGame     : false
+        }
+
+        $scope.newGameInfo = {}
+
+        $scope.newGameInfo.x    = {
+            val : '8'
+            options : {
+                from    : 5
+                to      : 20
+                step    : 1
+            }
+        }
+
+        $scope.newGameInfo.y    = {
+            val : $scope.newGameInfo.x.val
+            options : {
+                from    : $scope.newGameInfo.x.options.from
+                to      : $scope.newGameInfo.x.options.to
+                step    : $scope.newGameInfo.x.options.step
+            }
+        }
+
+        $scope.newGameInfo.mines    = {
+            val : '20'
+            options : {
+                from    : 10
+                to      : 50
+                step    : 1
+            }
         }
 
         $scope.checkTile = (event, x, y) ->

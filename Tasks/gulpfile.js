@@ -42,11 +42,13 @@ path.js = {
 
 path.js.compile = [
     path.js.lib + 'angular.min.js',
+    path.js.lib + 'jquery.min.js',
+    path.js.lib + 'angular-sanitize.js',
     path.js.lib + 'angular-route.min.js',
     path.js.lib + 'angular-cookies.min.js',
     path.js.lib + 'angularLocalStorage.js',
-    path.js.lib + 'angular-touch.js',
-    path.js.lib + 'angular-slider.js',
+    path.js.lib + 'ng-slider.js',
+
     
     path.js.modules + 'app.js',
     path.js.modules + 'controllers.js',

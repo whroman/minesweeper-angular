@@ -129,14 +129,69 @@
         ng-if="overlay.newGame == true"
         class="border-bottom"
         >
-        new game?
+        <span class="title">
+            new game?
+        </span>
     </div>
+
+    <div class="sliders">
+        <div class="slider">
+            <div>
+                {{newGameInfo.x.val}} tiles wide
+            </div>
+            <input
+                slider
+                id="slider-tile-x"
+                class="slider"
+                ng-model="newGameInfo.x.val" 
+                options="newGameInfo.x.options"
+                type="text"
+            />
+        </div>
+
+        <div class="slider">
+            <div>
+                {{newGameInfo.y.val}} tiles tall
+            </div>
+            <input
+                slider
+                id="slider-tile-y"
+                class="slider"
+                ng-model="newGameInfo.y.val" 
+                options="newGameInfo.y.options"
+                type="text"
+            />
+        </div>
+
+        <div class="slider">
+            <div>
+                {{newGameInfo.mines.val}} mines
+            </div>
+            <input
+                slider
+                id="slider-mines"
+                class="slider"
+                ng-model="newGameInfo.mines.val" 
+                options="newGameInfo.mines.options"
+                type="text"
+            />
+        </div>
+    </div>
+
     <div>
         <div 
             class="button"
             ng-click="newGame(10,10,10)"
             >
             start!
+        </div>
+
+        <div 
+            ng-if="overlay.newGame == true"
+            class="button"
+            ng-click="overlayReset"
+            >
+            resume!
         </div>
     </div>
 </div>

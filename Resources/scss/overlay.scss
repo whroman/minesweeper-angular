@@ -43,13 +43,13 @@
 
     .border-bottom {
         border-bottom: 1px solid #999;
-        margin-bottom: 0.2em;
-        padding-bottom: 0.2em;
+        margin-bottom: 0.5em;
+        padding-bottom: 0.5em;
     }
 
-    .button{
+    .button {
         border-radius: 16px;
-        margin: 10px 0 3px 0;
+        margin: 0.7em 0.5em 0.5em 0.5em;
         padding: 0.1em 0.8em 0.2em 0.8em;
         font-weight: 100;
         font-size: 1.1em;
@@ -63,4 +63,32 @@
     padding: 0 5px;
     font-family: courier, monospace;
     letter-spacing: 0;
+}
+
+.sliders {
+    width: 80%;
+    margin: 0 10% 1em 10%;
+}
+
+.slider {
+    width: 100%;
+    margin: 0.75em 0 1em 0;
+    display: inline-block;
+
+    .jslider {
+        top: 1.5em;
+    }
+
+    .jslider_round .jslider-pointer {
+        background-image: none;
+        background-color: #666;
+        border-radius: 100%;
+        z-index: 2;
+    }
+    .jslider .jslider-label {
+        top: -22px;
+    }
+    .jslider .jslider-value {
+        top: -23px;
+    }
 }
