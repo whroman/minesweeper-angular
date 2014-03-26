@@ -10,17 +10,18 @@ minesweeperCtrl.controller('Board', function($scope, board, storage) {
     currentBoard = board.newGame(5, 7, 5);
   } else {
     currentBoard = board.loadGame(storage.get('tiles'));
-    currentBoard.tiles = storage.get('tiles');
   }
   storage.bind($scope, 'tiles', currentBoard.tiles);
   $scope.tiles = currentBoard.tiles;
-  $scope.info = currentBoard.info;
+  $scope.info = currentBoard.info.refresh($scope.tiles);
   $scope.checkTile = (function(_this) {
     return function(event, x, y) {
-      return $scope.tiles = currentBoard.checkTile(x, y, event);
+      $scope.tiles = currentBoard.checkTile(x, y, event);
+      return $scope.info.refresh($scope.tiles);
     };
   })(this);
   return $scope.autoSelect = function(num) {
-    return $scope.tiles = currentBoard.autoSelect(num);
+    $scope.tiles = currentBoard.autoSelect(num);
+    return $scope.info.refresh($scope.tiles);
   };
 });

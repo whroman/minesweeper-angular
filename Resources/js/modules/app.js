@@ -25,7 +25,7 @@ minesweeperApp.factory('board', function() {
       numOfMines: 0,
       numOfFlags: 0,
       numOfClears: 0,
-      refresh: function() {
+      refresh: function(tiles) {
         var key, tile;
         this.numOfTiles = 0;
         this.numOfClears = 0;
@@ -57,13 +57,13 @@ minesweeperApp.factory('board', function() {
     get = function(x, y) {
       var key;
       key = x + '-' + y;
-      return tiles[key];
+      return this.tiles[key];
     };
     newGame = function(sizeX, sizeY, numOfMines) {
       var mineNum, tile, x, y, _i, _j, _k;
       for (y = _i = 0; 0 <= sizeY ? _i <= sizeY : _i >= sizeY; y = 0 <= sizeY ? ++_i : --_i) {
         for (x = _j = 0; 0 <= sizeX ? _j <= sizeX : _j >= sizeX; x = 0 <= sizeX ? ++_j : --_j) {
-          tiles[x + '-' + y] = {
+          this.tiles[x + '-' + y] = {
             x: x,
             y: y,
             isMine: false,
@@ -74,16 +74,14 @@ minesweeperApp.factory('board', function() {
         }
       }
       for (mineNum = _k = 0; 0 <= numOfMines ? _k <= numOfMines : _k >= numOfMines; mineNum = 0 <= numOfMines ? ++_k : --_k) {
-        tile = randomSafeTile();
+        tile = this.randomSafeTile();
         tile.isMine = true;
-        tallyAdjacentMines(tile);
+        this.tallyAdjacentMines(tile);
       }
-      this.info.refresh();
       return this;
     };
     loadGame = function(savedTiles) {
-      tiles = savedTiles;
-      info.refresh();
+      this.tiles = savedTiles;
       return this;
     };
     tallyAdjacentMines = function(tile) {
@@ -93,7 +91,7 @@ minesweeperApp.factory('board', function() {
       _results = [];
       for (_i = 0, _len = adjacentTiles.length; _i < _len; _i++) {
         adjacentTile = adjacentTiles[_i];
-        tile = get(x + adjacentTile[0], y + adjacentTile[1]);
+        tile = this.get(x + adjacentTile[0], y + adjacentTile[1]);
         if (tile != null) {
           _results.push(tile.adjacentMines++);
         } else {
@@ -106,12 +104,12 @@ minesweeperApp.factory('board', function() {
       noMineFirstClick(tile);
       tile.isClear = true;
       tile.isFlagged = false;
-      return clearNeighbors(tile);
+      return this.clearNeighbors(tile);
     };
     noMineFirstClick = function(tile) {
       if (info.numOfClears === 0 && tile.isMine === true) {
         tile.isMine = false;
-        return randomSafeTile().isMine = true;
+        return this.randomSafeTile().isMine = true;
       }
     };
     clearNeighbors = function(tile) {
@@ -120,10 +118,10 @@ minesweeperApp.factory('board', function() {
         _results = [];
         for (_i = 0, _len = adjacentTiles.length; _i < _len; _i++) {
           adjacentTile = adjacentTiles[_i];
-          neighbor = get(tile.x + adjacentTile[0], tile.y + adjacentTile[1]);
+          neighbor = this.get(tile.x + adjacentTile[0], tile.y + adjacentTile[1]);
           if (neighbor != null) {
             if (neighbor.adjacentMines === 0 && neighbor.isClear === false && neighbor.isMine === false) {
-              _results.push(clearTile(neighbor));
+              _results.push(this.clearTile(neighbor));
             } else {
               _results.push(void 0);
             }
@@ -144,20 +142,21 @@ minesweeperApp.factory('board', function() {
     };
     checkTile = function(x, y, event) {
       var tile;
-      tile = get(x, y);
+      tile = this.get(x, y);
       if (event.shiftKey === true || event.altKey === true) {
         toggleFlag(tile);
       } else {
-        clearTile(tile);
+        this.clearTile(tile);
       }
-      info.refresh();
-      return tiles;
+      return this.tiles;
     };
     randomSafeTile = function() {
-      var availTiles, key, randomTile, tile;
+      var availTiles, key, randomTile, tile, _ref;
       availTiles = [];
-      for (key in tiles) {
-        tile = tiles[key];
+      console.log(this, this.tiles);
+      _ref = this.tiles;
+      for (key in _ref) {
+        tile = _ref[key];
         if (tile.isClear === false && tile.isMine === false) {
           availTiles.push(tile);
         }
@@ -167,11 +166,10 @@ minesweeperApp.factory('board', function() {
     autoSelect = function(num) {
       var tile;
       while (num--) {
-        tile = randomSafeTile();
-        clearTile(tile);
+        tile = this.randomSafeTile();
+        this.clearTile(tile);
       }
-      info.refresh();
-      return tiles;
+      return this.tiles;
     };
     return {
       newGame: newGame,
@@ -179,7 +177,12 @@ minesweeperApp.factory('board', function() {
       info: info,
       tiles: tiles,
       checkTile: checkTile,
-      autoSelect: autoSelect
+      clearTile: clearTile,
+      autoSelect: autoSelect,
+      get: get,
+      randomSafeTile: randomSafeTile,
+      tallyAdjacentMines: tallyAdjacentMines,
+      clearNeighbors: clearNeighbors
     };
   };
   return board();

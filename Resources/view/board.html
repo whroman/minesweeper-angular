@@ -68,10 +68,13 @@
 <div 
     id="overlay"
     ng-class="{
-        show    : showInstructions === true || info.win === true
+        show    : showInstructions === true 
     }"
     ng-click="showInstructions = false "
     >
+
+        <!-- show    : showInstructions === true || info.win === true -->
+
 
 </div>
 
@@ -95,7 +98,7 @@
     </div>
 </div>
 
-<div
+<!-- <div
     ng-if="info.win == true"
     id="win" 
     class="message"
@@ -108,4 +111,4 @@
         <span class="code">click</span> to reveal the squares of the grid
     </div>
     <div class="border-bottom">your first click will never land on a mine</div>
-</div>
+</div> -->

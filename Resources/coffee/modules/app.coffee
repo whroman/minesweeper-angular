@@ -27,7 +27,7 @@ minesweeperApp.factory 'board', () ->
             numOfMines  : 0
             numOfFlags  : 0
             numOfClears : 0
-            refresh : () ->
+            refresh : (tiles) ->
                 this.numOfTiles  = 0
                 this.numOfClears = 0
                 this.numOfFlags  = 0
@@ -68,12 +68,12 @@ minesweeperApp.factory 'board', () ->
 
         get = (x, y) ->
             key = x + '-' + y
-            return tiles[key]
+            return this.tiles[key]
 
         newGame = (sizeX, sizeY, numOfMines) ->
             for y in [0..sizeY]
                 for x in [0..sizeX]
-                    tiles[x + '-' + y] = {
+                    this.tiles[x + '-' + y] = {
                         x : x
                         y : y
                         isMine      : false
@@ -83,19 +83,14 @@ minesweeperApp.factory 'board', () ->
                     }
 
             for mineNum in [0..numOfMines]
-                tile = randomSafeTile()
-
+                tile = this.randomSafeTile()
                 tile.isMine = true
-
-                tallyAdjacentMines tile
-
-            this.info.refresh()
+                this.tallyAdjacentMines tile
 
             return this
 
         loadGame = (savedTiles) ->
-            tiles = savedTiles
-            info.refresh()
+            this.tiles = savedTiles
             
             return this
         
@@ -103,7 +98,7 @@ minesweeperApp.factory 'board', () ->
             x = tile.x
             y = tile.y
             for adjacentTile in adjacentTiles
-                tile = get x + adjacentTile[0], y + adjacentTile[1]
+                tile = this.get x + adjacentTile[0], y + adjacentTile[1]
 
                 tile.adjacentMines++ if tile?
 
@@ -114,22 +109,22 @@ minesweeperApp.factory 'board', () ->
             tile.isClear = true
             tile.isFlagged = false
 
-            clearNeighbors tile
+            this.clearNeighbors tile
 
         noMineFirstClick = (tile) ->
             if info.numOfClears == 0 && tile.isMine == true
                 tile.isMine = false
-                randomSafeTile().isMine = true
+                this.randomSafeTile().isMine = true
 
         clearNeighbors = (tile) ->
             if tile.adjacentMines == 0
                 for adjacentTile in adjacentTiles
 
-                    neighbor = get tile.x + adjacentTile[0], tile.y + adjacentTile[1]
+                    neighbor = this.get tile.x + adjacentTile[0], tile.y + adjacentTile[1]
 
                     if neighbor?
                         if neighbor.adjacentMines == 0 && neighbor.isClear == false && neighbor.isMine == false
-                            clearTile neighbor
+                            this.clearTile neighbor
 
         toggleFlag = (tile) ->
             if (tile.isFlagged == true)
@@ -137,27 +132,25 @@ minesweeperApp.factory 'board', () ->
             else
                 tile.isFlagged = true
 
-            # tile.isFlagged = tile.isFlagged == true ? false : true
-
             return tile
 
         checkTile = (x, y, event) ->
 
-            tile = get x, y
+            tile = this.get x, y
 
             if event.shiftKey == true || event.altKey == true
                 toggleFlag tile
             else
-                clearTile tile
-
-            info.refresh()
+                this.clearTile tile
             
-            return tiles
+            return this.tiles
 
         randomSafeTile = () ->
             availTiles = [];
 
-            for key, tile of tiles
+            console.log this, this.tiles
+
+            for key, tile of this.tiles
                 if tile.isClear == false && tile.isMine == false
                     availTiles.push tile
 
@@ -165,12 +158,10 @@ minesweeperApp.factory 'board', () ->
 
         autoSelect = (num) ->
             while num--
-                tile = randomSafeTile()
-                clearTile tile 
-
-            info.refresh()
+                tile = this.randomSafeTile()
+                this.clearTile tile 
             
-            return tiles
+            return this.tiles
 
         return {
             newGame     : newGame
@@ -178,7 +169,12 @@ minesweeperApp.factory 'board', () ->
             info        : info
             tiles       : tiles
             checkTile   : checkTile
+            clearTile   : clearTile
             autoSelect  : autoSelect
+            get         : get
+            randomSafeTile  : randomSafeTile
+            tallyAdjacentMines  : tallyAdjacentMines
+            clearNeighbors  : clearNeighbors
         }
 
     return board()

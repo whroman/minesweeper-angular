@@ -10,16 +10,17 @@ minesweeperCtrl
             currentBoard = board.newGame 5, 7, 5
         else
             currentBoard = board.loadGame storage.get('tiles')
-            currentBoard.tiles = storage.get 'tiles'
 
         storage.bind $scope, 'tiles', currentBoard.tiles
 
         $scope.tiles = currentBoard.tiles
-        $scope.info = currentBoard.info
+        $scope.info = currentBoard.info.refresh $scope.tiles
 
         $scope.checkTile = (event, x, y) =>
             $scope.tiles = currentBoard.checkTile x, y, event
+            $scope.info.refresh $scope.tiles
             
 
         $scope.autoSelect = (num) ->
             $scope.tiles = currentBoard.autoSelect num 
+            $scope.info.refresh $scope.tiles
