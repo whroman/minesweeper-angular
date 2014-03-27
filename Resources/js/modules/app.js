@@ -78,6 +78,7 @@ minesweeperApp.factory('board', function(boardInfo, toggleFlag) {
     };
     newGame = function(sizeX, sizeY, numOfMines) {
       var mineNum, tile, x, y, _i, _j, _k, _ref, _ref1;
+      this.tiles = {};
       for (y = _i = 0, _ref = sizeY - 1; 0 <= _ref ? _i <= _ref : _i >= _ref; y = 0 <= _ref ? ++_i : --_i) {
         for (x = _j = 0, _ref1 = sizeX - 1; 0 <= _ref1 ? _j <= _ref1 : _j >= _ref1; x = 0 <= _ref1 ? ++_j : --_j) {
           this.tiles[x + '-' + y] = {

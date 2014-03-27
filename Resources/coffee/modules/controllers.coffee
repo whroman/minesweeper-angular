@@ -17,7 +17,7 @@ minesweeperCtrl
         storage.bind $scope, 'tiles'
 
         $scope.tiles = currentBoard.tiles
-        $scope.info = boardInfo.refresh $scope.tiles
+        $scope.info = boardInfo.refresh currentBoard.tiles
         
         $scope.overlay = {
             instructions: false

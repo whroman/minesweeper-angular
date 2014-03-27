@@ -83,6 +83,7 @@ minesweeperApp.factory 'board', (boardInfo, toggleFlag) ->
             return this.tiles[key]
 
         newGame = (sizeX, sizeY, numOfMines) ->
+            this.tiles = {}
             for y in [0..sizeY - 1]
                 for x in [0..sizeX - 1]
                     this.tiles[x + '-' + y] = {

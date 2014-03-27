@@ -1,5 +1,5 @@
 <ul id="stats">
-    <li>{{ info.numOfTiles }} tiles</li>
+    <li>a {{ info.numOfTiles }} tile game</li>
     <li>{{ info.numOfMines }} mines</li>
     <li>{{ info.numOfFlags }} flagged tiles</li>
     <li>{{ info.numOfTiles - info.numOfMines - info.numOfClears }} left to clear</li>
@@ -130,7 +130,7 @@
 
         <span
             class="title"
-            ng-if="info.win == true && info.loss == false"
+            ng-if="info.win == false && info.loss == true"
         >
             you lost...
         </span>
@@ -198,7 +198,7 @@
         <div 
             ng-if="overlay.newGame == true"
             class="button"
-            ng-click="overlayReset"
+            ng-click="overlayReset()"
             >
             resume!
         </div>
