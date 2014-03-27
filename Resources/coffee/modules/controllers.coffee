@@ -1,4 +1,8 @@
-minesweeperCtrl = angular.module 'minesweeperCtrl', ['angularLocalStorage', 'ngSlider']
+minesweeperCtrl = angular.module(
+    'minesweeperCtrl', 
+    # Dependencies
+    ['angularLocalStorage', 'ngSlider']
+)
 
 minesweeperCtrl
 .controller 'Board', 
@@ -10,7 +14,7 @@ minesweeperCtrl
         else
             currentBoard = board.loadGame storage.get('tiles')
 
-        storage.bind $scope, 'tiles', currentBoard.tiles
+        storage.bind $scope, 'tiles'
 
         $scope.tiles = currentBoard.tiles
         $scope.info = currentBoard.info.refresh $scope.tiles
@@ -27,9 +31,7 @@ minesweeperCtrl
             }
         }
 
-        $scope.newGameInfo.mines.options
-
-        $scope.newGameInfoRefresh = () ->
+        $scope.sliderRefresh = () ->
             currentVal = $scope.newGameInfo.mines.val
             newVal = Math.floor( $scope.newGameInfo.x.val * $scope.newGameInfo.y.val / 3 ).toString()
             newFrom = Math.floor( $scope.newGameInfo.x.val * $scope.newGameInfo.y.val / 4 )
@@ -62,7 +64,7 @@ minesweeperCtrl
             }
         }
 
-        $scope.newGameInfoRefresh()
+        $scope.sliderRefresh()
 
 
         $scope.checkTile = (event, x, y) ->

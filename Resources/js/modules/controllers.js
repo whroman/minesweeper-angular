@@ -10,7 +10,7 @@ minesweeperCtrl.controller('Board', function($scope, board, storage) {
   } else {
     currentBoard = board.loadGame(storage.get('tiles'));
   }
-  storage.bind($scope, 'tiles', currentBoard.tiles);
+  storage.bind($scope, 'tiles');
   $scope.tiles = currentBoard.tiles;
   $scope.info = currentBoard.info.refresh($scope.tiles);
   $scope.overlay = {
@@ -23,8 +23,7 @@ minesweeperCtrl.controller('Board', function($scope, board, storage) {
       options: void 0
     }
   };
-  $scope.newGameInfo.mines.options;
-  $scope.newGameInfoRefresh = function() {
+  $scope.sliderRefresh = function() {
     var currentVal, newFrom, newTo, newVal;
     currentVal = $scope.newGameInfo.mines.val;
     newVal = Math.floor($scope.newGameInfo.x.val * $scope.newGameInfo.y.val / 3).toString();
@@ -55,7 +54,7 @@ minesweeperCtrl.controller('Board', function($scope, board, storage) {
       step: $scope.newGameInfo.x.options.step
     }
   };
-  $scope.newGameInfoRefresh();
+  $scope.sliderRefresh();
   $scope.checkTile = function(event, x, y) {
     $scope.tiles = currentBoard.checkTile(x, y, event);
     return $scope.info.refresh($scope.tiles);

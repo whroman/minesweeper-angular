@@ -151,7 +151,7 @@
                 id="slider-tile-x"
                 class="slider"
                 ng-model="newGameInfo.x.val" 
-                ng-change="newGameInfoRefresh()"
+                ng-change="sliderRefresh()"
                 options="newGameInfo.x.options"
                 type="text"
             />
@@ -166,7 +166,7 @@
                 id="slider-tile-y"
                 class="slider"
                 ng-model="newGameInfo.y.val" 
-                ng-change="newGameInfoRefresh()"
+                ng-change="sliderRefresh()"
                 options="newGameInfo.y.options"
                 type="text"
             />
