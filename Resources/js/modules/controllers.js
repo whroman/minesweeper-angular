@@ -11,6 +11,7 @@ minesweeperCtrl.controller('Board', function($scope, board, storage) {
     currentBoard = board.loadGame(storage.get('tiles'));
   }
   storage.bind($scope, 'tiles');
+  console.log($scope.tiles, storage.get('tiles'));
   $scope.tiles = currentBoard.tiles;
   $scope.info = currentBoard.info.refresh($scope.tiles);
   $scope.overlay = {

@@ -21,11 +21,6 @@ minesweeperApp.factory 'board', () ->
         tiles = {}
 
         info = {
-            loss    : false
-            win     : false
-            numOfTiles  : 0
-            numOfMines  : 0
-            numOfFlags  : 0
             numOfClears : 0
             refresh : (tiles) ->
                 this.loss    = false

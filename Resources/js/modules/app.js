@@ -19,11 +19,6 @@ minesweeperApp.factory('board', function() {
     var adjacentTiles, autoSelect, checkTile, clearNeighbors, clearTile, get, info, loadGame, newGame, noMineFirstClick, randomSafeTile, tallyAdjacentMines, tiles, toggleFlag;
     tiles = {};
     info = {
-      loss: false,
-      win: false,
-      numOfTiles: 0,
-      numOfMines: 0,
-      numOfFlags: 0,
       numOfClears: 0,
       refresh: function(tiles) {
         var key, tile;
