@@ -20,18 +20,29 @@ minesweeperCtrl
             newGame     : false
         }
 
-        $scope.newGameInfo = {}
+        $scope.newGameInfo = {
+            mines   : {
+                val     : undefined,
+                options : undefined
+            }
+        }
+
+        $scope.newGameInfo.mines.options
 
         $scope.newGameInfoRefresh = () ->
-            console.log 'asd'
-            $scope.newGameInfo.mines    = {
-                val :  Math.floor( $scope.newGameInfo.x.val * $scope.newGameInfo.y.val / 3 ).toString()
-                options : {
-                    from    : Math.floor( $scope.newGameInfo.x.val * $scope.newGameInfo.y.val / 4 )
-                    to      : Math.floor( $scope.newGameInfo.x.val * $scope.newGameInfo.y.val / 2 )
-                    step    : $scope.newGameInfo.x.options.step
-                }
+            currentVal = $scope.newGameInfo.mines.val
+            newVal = Math.floor( $scope.newGameInfo.x.val * $scope.newGameInfo.y.val / 3 ).toString()
+            newFrom = Math.floor( $scope.newGameInfo.x.val * $scope.newGameInfo.y.val / 4 )
+            newTo = Math.floor( $scope.newGameInfo.x.val * $scope.newGameInfo.y.val / 2 )
+
+            $scope.newGameInfo.mines.options = {
+                from    : newFrom
+                to      : newTo
+                step    : $scope.newGameInfo.x.options.step
             }
+
+            if (currentVal == undefined || (currentVal < newFrom && currentVal > newTo))
+                $scope.newGameInfo.mines.val = newVal
 
         $scope.newGameInfo.x    = {
             val : '8'
