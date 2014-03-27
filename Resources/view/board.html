@@ -60,7 +60,7 @@
         class="select-tile button"
         ng-click="autoSelect(1)"
         >
-        select one for me
+        clear a safe tile
     </div>
     <div 
         class="instructions button"
@@ -140,7 +140,9 @@
     </div>
 
     <div class="sliders">
-        <div class="slider">
+        <div 
+            class="slider"
+            >
             <div>
                 {{newGameInfo.x.val}} tiles wide
             </div>
@@ -149,6 +151,7 @@
                 id="slider-tile-x"
                 class="slider"
                 ng-model="newGameInfo.x.val" 
+                ng-change="newGameInfoRefresh()"
                 options="newGameInfo.x.options"
                 type="text"
             />
@@ -163,6 +166,7 @@
                 id="slider-tile-y"
                 class="slider"
                 ng-model="newGameInfo.y.val" 
+                ng-change="newGameInfoRefresh()"
                 options="newGameInfo.y.options"
                 type="text"
             />

@@ -18,6 +18,17 @@ minesweeperCtrl.controller('Board', function($scope, board, storage) {
     newGame: false
   };
   $scope.newGameInfo = {};
+  $scope.newGameInfoRefresh = function() {
+    console.log('asd');
+    return $scope.newGameInfo.mines = {
+      val: Math.floor($scope.newGameInfo.x.val * $scope.newGameInfo.y.val / 3).toString(),
+      options: {
+        from: Math.floor($scope.newGameInfo.x.val * $scope.newGameInfo.y.val / 4),
+        to: Math.floor($scope.newGameInfo.x.val * $scope.newGameInfo.y.val / 2),
+        step: $scope.newGameInfo.x.options.step
+      }
+    };
+  };
   $scope.newGameInfo.x = {
     val: '8',
     options: {
@@ -34,14 +45,7 @@ minesweeperCtrl.controller('Board', function($scope, board, storage) {
       step: $scope.newGameInfo.x.options.step
     }
   };
-  $scope.newGameInfo.mines = {
-    val: '20',
-    options: {
-      from: Math.floor(Math.pow($scope.newGameInfo.x.val, 2) / 4),
-      to: Math.floor(Math.pow($scope.newGameInfo.x.val, 2) / 2),
-      step: $scope.newGameInfo.x.options.step
-    }
-  };
+  $scope.newGameInfoRefresh();
   $scope.checkTile = function(event, x, y) {
     $scope.tiles = currentBoard.checkTile(x, y, event);
     return $scope.info.refresh($scope.tiles);
