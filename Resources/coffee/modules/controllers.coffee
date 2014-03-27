@@ -6,7 +6,7 @@ minesweeperCtrl = angular.module(
 
 minesweeperCtrl
 .controller 'Board', 
-    ($scope, board, storage) ->
+    ($scope, board, storage, boardInfo) ->
         currentBoard = undefined
 
         if storage.get('tiles') == null
@@ -17,7 +17,7 @@ minesweeperCtrl
         storage.bind $scope, 'tiles'
 
         $scope.tiles = currentBoard.tiles
-        $scope.info = currentBoard.info.refresh $scope.tiles
+        $scope.info = boardInfo.refresh $scope.tiles
         
         $scope.overlay = {
             instructions: false
@@ -26,7 +26,7 @@ minesweeperCtrl
 
         $scope.newGameInfo = {
             mines   : {
-                val     : undefined,
+                val     : undefined
                 options : undefined
             }
         }
@@ -68,18 +68,18 @@ minesweeperCtrl
 
 
         $scope.checkTile = (event, x, y) ->
-            $scope.tiles = currentBoard.checkTile x, y, event
-            $scope.info.refresh $scope.tiles
+            $scope.tiles = currentBoard.checkTile x, y, event, boardInfo
+            boardInfo.refresh $scope.tiles
             
 
         $scope.autoSelect = (num) ->
             $scope.tiles = currentBoard.autoSelect num 
-            $scope.info.refresh currentBoard.tiles
+            boardInfo.refresh currentBoard.tiles
 
         $scope.newGame = (sizeX, sizeY, numOfMines) -> 
             currentBoard = board.newGame sizeX, sizeY, numOfMines
             $scope.tiles = currentBoard.tiles
-            $scope.info = currentBoard.info.refresh currentBoard.tiles
+            $scope.info = boardInfo.refresh currentBoard.tiles
 
             $scope.overlayReset()
 

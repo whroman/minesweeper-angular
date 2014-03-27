@@ -2,7 +2,7 @@ var minesweeperCtrl;
 
 minesweeperCtrl = angular.module('minesweeperCtrl', ['angularLocalStorage', 'ngSlider']);
 
-minesweeperCtrl.controller('Board', function($scope, board, storage) {
+minesweeperCtrl.controller('Board', function($scope, board, storage, boardInfo) {
   var currentBoard;
   currentBoard = void 0;
   if (storage.get('tiles') === null) {
@@ -11,9 +11,8 @@ minesweeperCtrl.controller('Board', function($scope, board, storage) {
     currentBoard = board.loadGame(storage.get('tiles'));
   }
   storage.bind($scope, 'tiles');
-  console.log($scope.tiles, storage.get('tiles'));
   $scope.tiles = currentBoard.tiles;
-  $scope.info = currentBoard.info.refresh($scope.tiles);
+  $scope.info = boardInfo.refresh($scope.tiles);
   $scope.overlay = {
     instructions: false,
     newGame: false
@@ -57,17 +56,17 @@ minesweeperCtrl.controller('Board', function($scope, board, storage) {
   };
   $scope.sliderRefresh();
   $scope.checkTile = function(event, x, y) {
-    $scope.tiles = currentBoard.checkTile(x, y, event);
-    return $scope.info.refresh($scope.tiles);
+    $scope.tiles = currentBoard.checkTile(x, y, event, boardInfo);
+    return boardInfo.refresh($scope.tiles);
   };
   $scope.autoSelect = function(num) {
     $scope.tiles = currentBoard.autoSelect(num);
-    return $scope.info.refresh(currentBoard.tiles);
+    return boardInfo.refresh(currentBoard.tiles);
   };
   $scope.newGame = function(sizeX, sizeY, numOfMines) {
     currentBoard = board.newGame(sizeX, sizeY, numOfMines);
     $scope.tiles = currentBoard.tiles;
-    $scope.info = currentBoard.info.refresh(currentBoard.tiles);
+    $scope.info = boardInfo.refresh(currentBoard.tiles);
     return $scope.overlayReset();
   };
   $scope.toggleOverlay = function(name) {

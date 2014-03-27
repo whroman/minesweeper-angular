@@ -13,43 +13,63 @@ minesweeperApp.config(function($routeProvider, $locationProvider) {
   return $locationProvider.html5Mode(true);
 });
 
-minesweeperApp.factory('board', function() {
+minesweeperApp.factory('boardInfo', function() {
+  var boardInfo;
+  boardInfo = function() {
+    var refresh;
+    refresh = function(tiles) {
+      var key, tile;
+      this.loss = false;
+      this.win = false;
+      this.numOfTiles = 0;
+      this.numOfClears = 0;
+      this.numOfFlags = 0;
+      this.numOfMines = 0;
+      for (key in tiles) {
+        tile = tiles[key];
+        this.numOfTiles++;
+        if (tile.isClear === true) {
+          this.numOfClears++;
+        }
+        if (tile.isFlagged === true) {
+          this.numOfFlags++;
+        }
+        if (tile.isMine === true) {
+          this.numOfMines++;
+        }
+        if (tile.isMine === true && tile.isClear === true) {
+          this.loss = true;
+        }
+      }
+      if (this.loss === false && this.numOfTiles - this.numOfMines - this.numOfClears === 0) {
+        this.win = true;
+      }
+      return this;
+    };
+    return {
+      refresh: refresh
+    };
+  };
+  return boardInfo();
+});
+
+minesweeperApp.service('toggleFlag', function() {
+  var toggleFlag;
+  return toggleFlag = function(tile) {
+    if (tile.isFlagged === true) {
+      tile.isFlagged = false;
+    } else {
+      tile.isFlagged = true;
+    }
+    return tile;
+  };
+});
+
+minesweeperApp.factory('board', function(boardInfo, toggleFlag) {
   var board;
   board = function() {
-    var adjacentTiles, autoSelect, checkTile, clearNeighbors, clearTile, get, info, loadGame, newGame, noMineFirstClick, randomSafeTile, tallyAdjacentMines, tiles, toggleFlag;
+    var adjacentTiles, autoSelect, checkTile, clearNeighbors, clearTile, get, loadGame, newGame, noMineFirstClick, randomSafeTile, tallyAdjacentMines, tiles;
     tiles = {};
-    info = {
-      numOfClears: 0,
-      refresh: function(tiles) {
-        var key, tile;
-        this.loss = false;
-        this.win = false;
-        this.numOfTiles = 0;
-        this.numOfClears = 0;
-        this.numOfFlags = 0;
-        this.numOfMines = 0;
-        for (key in tiles) {
-          tile = tiles[key];
-          this.numOfTiles++;
-          if (tile.isClear === true) {
-            this.numOfClears++;
-          }
-          if (tile.isFlagged === true) {
-            this.numOfFlags++;
-          }
-          if (tile.isMine === true) {
-            this.numOfMines++;
-          }
-          if (tile.isMine === true && tile.isClear === true) {
-            this.loss = true;
-          }
-        }
-        if (this.loss === false && info.numOfTiles - info.numOfMines - info.numOfClears === 0) {
-          this.win = true;
-        }
-        return this;
-      }
-    };
     adjacentTiles = [[-1, -1], [0, -1], [1, -1], [-1, 0], [1, 0], [-1, 1], [0, 1], [1, 1]];
     get = function(x, y) {
       var key;
@@ -104,7 +124,7 @@ minesweeperApp.factory('board', function() {
       return this.clearNeighbors(tile);
     };
     noMineFirstClick = function(tile) {
-      if (info.numOfClears === 0 && tile.isMine === true) {
+      if (boardInfo.numOfClears === 0 && tile.isMine === true) {
         tile.isMine = false;
         return this.randomSafeTile().isMine = true;
       }
@@ -128,14 +148,6 @@ minesweeperApp.factory('board', function() {
         }
         return _results;
       }
-    };
-    toggleFlag = function(tile) {
-      if (tile.isFlagged === true) {
-        tile.isFlagged = false;
-      } else {
-        tile.isFlagged = true;
-      }
-      return tile;
     };
     checkTile = function(x, y, event) {
       var tile;
@@ -170,7 +182,6 @@ minesweeperApp.factory('board', function() {
     return {
       newGame: newGame,
       loadGame: loadGame,
-      info: info,
       tiles: tiles,
       checkTile: checkTile,
       clearTile: clearTile,

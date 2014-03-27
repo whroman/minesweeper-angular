@@ -15,49 +15,62 @@ minesweeperApp.config(
         $locationProvider.html5Mode true
     )
 
-minesweeperApp.factory 'board', () ->
-    board = () ->
+minesweeperApp.factory 'boardInfo', () ->
+    boardInfo = () ->
+        refresh =(tiles) ->
+            this.loss    = false
+            this.win     = false
+            this.numOfTiles  = 0
+            this.numOfClears = 0
+            this.numOfFlags  = 0
+            this.numOfMines  = 0
 
-        tiles = {}
+            for key, tile of tiles
 
-        info = {
-            numOfClears : 0
-            refresh : (tiles) ->
-                this.loss    = false
-                this.win     = false
-                this.numOfTiles  = 0
-                this.numOfClears = 0
-                this.numOfFlags  = 0
-                this.numOfMines  = 0
+                # All Tiles
+                this.numOfTiles++
 
-                for key, tile of tiles
+                # Cleared Tiles
+                if tile.isClear == true
+                    this.numOfClears++
 
-                    # All Tiles
-                    this.numOfTiles++
+                # Flagged Tiles
+                if tile.isFlagged == true
+                    this.numOfFlags++
 
-                    # Cleared Tiles
-                    if tile.isClear == true
-                        this.numOfClears++
+                # Mined Tiles
+                if tile.isMine == true
+                    this.numOfMines++
 
-                    # Flagged Tiles
-                    if tile.isFlagged == true
-                        this.numOfFlags++
+                # Check Game Loss
+                if tile.isMine == true && tile.isClear == true
+                    this.loss = true
 
-                    # Mined Tiles
-                    if tile.isMine == true
-                        this.numOfMines++
-
-                    # Check Game Loss
-                    if tile.isMine == true && tile.isClear == true
-                        this.loss = true
-
-                # Check Game Win
-                if this.loss == false && info.numOfTiles - info.numOfMines - info.numOfClears == 0
-                    this.win = true
+            # Check Game Win
+            if this.loss == false && this.numOfTiles - this.numOfMines - this.numOfClears == 0
+                this.win = true
 
 
-                return this
+            return this
+
+        return {
+            refresh     : refresh
         }
+    return boardInfo()
+
+minesweeperApp.service 'toggleFlag', () ->
+    toggleFlag = (tile) ->
+        if (tile.isFlagged == true)
+            tile.isFlagged = false
+        else
+            tile.isFlagged = true
+
+        return tile
+
+
+minesweeperApp.factory 'board', (boardInfo, toggleFlag) ->
+    board = () ->
+        tiles = {}
 
         adjacentTiles = [
             [-1, -1], [ 0, -1], [ 1, -1],
@@ -111,7 +124,7 @@ minesweeperApp.factory 'board', () ->
             this.clearNeighbors tile
 
         noMineFirstClick = (tile) ->
-            if info.numOfClears == 0 && tile.isMine == true
+            if boardInfo.numOfClears == 0 && tile.isMine == true
                 tile.isMine = false
                 this.randomSafeTile().isMine = true
 
@@ -124,14 +137,6 @@ minesweeperApp.factory 'board', () ->
                     if neighbor?
                         if neighbor.adjacentMines == 0 && neighbor.isClear == false && neighbor.isMine == false
                             this.clearTile neighbor
-
-        toggleFlag = (tile) ->
-            if (tile.isFlagged == true)
-                tile.isFlagged = false
-            else
-                tile.isFlagged = true
-
-            return tile
 
         checkTile = (x, y, event) ->
 
@@ -163,7 +168,6 @@ minesweeperApp.factory 'board', () ->
         return {
             newGame     : newGame
             loadGame    : loadGame
-            info        : info
             tiles       : tiles
             checkTile   : checkTile
             clearTile   : clearTile
