@@ -50,8 +50,11 @@ path.js.compile = [
     path.js.lib + 'ng-slider.min.js',
 
     
+    path.js.modules + 'services/toggleFlag.js',
+    path.js.modules + 'factories/gameInfo.js',
+    path.js.modules + 'factories/gameLogic.js',
+    path.js.modules + 'controllers/board.js',
     path.js.modules + 'app.js',
-    path.js.modules + 'controllers.js',
 ]
 
 path.coffee = {
