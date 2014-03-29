@@ -53,7 +53,7 @@ path.js.compile = [
     
     path.js.modules + 'factories/collection.js',
     path.js.modules + 'services/model.js',
-    path.js.modules + 'services/tileMethods.js',
+    path.js.modules + 'services/modelMethods.js',
     path.js.modules + 'controllers/board.js',
     path.js.modules + 'app.js',
 ]
@@ -191,7 +191,7 @@ gulp.task(
 
 gulp.task(
     'default', 
-    ['sass','clean-js', 'coffee', 'compile-js', 'html', 'watch', 'connect']
+    ['coffee', 'compile-js', 'sass', 'html', 'watch', 'connect']
 ); 
 
 gulp.task(
