@@ -2,17 +2,17 @@ var msBoard;
 
 msBoard = angular.module('msControllerBoard', ['angularLocalStorage', 'ngSlider']);
 
-msBoard.controller('board', function($scope, gameLogic, storage, gameInfo) {
+msBoard.controller('board', function($scope, storage, collection) {
   var currentBoard;
   currentBoard = void 0;
   if (storage.get('tiles') === null) {
-    currentBoard = gameLogic.newGame(5, 7, 5);
+    currentBoard = collection.newGame(5, 7, 5);
   } else {
-    currentBoard = gameLogic.loadGame(storage.get('tiles'));
+    currentBoard = collection.loadGame(storage.get('tiles'));
   }
   storage.bind($scope, 'tiles');
   $scope.tiles = currentBoard.tiles;
-  $scope.info = gameInfo.refresh(currentBoard.tiles);
+  $scope.info = collection.info.refresh(currentBoard.tiles);
   $scope.overlay = {
     instructions: false,
     newGame: false
@@ -56,17 +56,18 @@ msBoard.controller('board', function($scope, gameLogic, storage, gameInfo) {
   };
   $scope.sliderRefresh();
   $scope.checkTile = function(event, x, y) {
-    $scope.tiles = currentBoard.checkTile(x, y, event, gameInfo);
-    return gameInfo.refresh($scope.tiles);
+    $scope.tiles = collection.checkTile(x, y, event);
+    collection.info.refresh($scope.tiles);
+    return storage.get('tiles');
   };
   $scope.autoSelect = function(num) {
-    $scope.tiles = currentBoard.autoSelect(num);
-    return gameInfo.refresh(currentBoard.tiles);
+    $scope.tiles = collection.autoSelect(num);
+    return collection.info.refresh(currentBoard.tiles);
   };
   $scope.newGame = function(sizeX, sizeY, numOfMines) {
-    currentBoard = gameLogic.newGame(sizeX, sizeY, numOfMines);
+    currentBoard = collection.newGame(sizeX, sizeY, numOfMines);
     $scope.tiles = currentBoard.tiles;
-    $scope.info = gameInfo.refresh(currentBoard.tiles);
+    $scope.info = collection.info.refresh(currentBoard.tiles);
     return $scope.overlayReset();
   };
   $scope.toggleOverlay = function(name) {

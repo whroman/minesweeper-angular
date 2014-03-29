@@ -1,23 +1,26 @@
 msBoard = angular
-    .module 'msControllerBoard', 
+    .module 'msControllerBoard',
     # Dependencies
-    ['angularLocalStorage', 'ngSlider']
+    [
+        'angularLocalStorage', 
+        'ngSlider',
+    ]
 
 msBoard
 .controller 'board', 
-    ($scope, gameLogic, storage, gameInfo) ->
+    ($scope, storage, collection) ->
 
         currentBoard = undefined
 
         if storage.get('tiles') == null
-            currentBoard = gameLogic.newGame 5, 7, 5
+            currentBoard = collection.newGame 5, 7, 5
         else
-            currentBoard = gameLogic.loadGame storage.get('tiles')
+            currentBoard = collection.loadGame storage.get('tiles')
 
         storage.bind $scope, 'tiles'
 
         $scope.tiles = currentBoard.tiles
-        $scope.info = gameInfo.refresh currentBoard.tiles
+        $scope.info = collection.info.refresh currentBoard.tiles
         
         $scope.overlay = {
             instructions: false
@@ -68,18 +71,18 @@ msBoard
 
 
         $scope.checkTile = (event, x, y) ->
-            $scope.tiles = currentBoard.checkTile x, y, event, gameInfo
-            gameInfo.refresh $scope.tiles
-            
+            $scope.tiles = collection.checkTile x, y, event
+            collection.info.refresh $scope.tiles
+            storage.get('tiles')
 
         $scope.autoSelect = (num) ->
-            $scope.tiles = currentBoard.autoSelect num 
-            gameInfo.refresh currentBoard.tiles
+            $scope.tiles = collection.autoSelect num 
+            collection.info.refresh currentBoard.tiles
 
         $scope.newGame = (sizeX, sizeY, numOfMines) -> 
-            currentBoard = gameLogic.newGame sizeX, sizeY, numOfMines
+            currentBoard = collection.newGame sizeX, sizeY, numOfMines
             $scope.tiles = currentBoard.tiles
-            $scope.info = gameInfo.refresh currentBoard.tiles
+            $scope.info = collection.info.refresh currentBoard.tiles
 
             $scope.overlayReset()
 

@@ -1,8 +1,8 @@
 msApp = angular
     .module 'msApp', [
         'ngRoute',
-        'msGameLogic',
-        'msControllerBoard'
+        'msControllerBoard',
+        'msCollection'
     ]
 
 msApp.config(

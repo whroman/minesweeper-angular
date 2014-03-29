@@ -10,40 +10,40 @@
         class="tile"
         ng-repeat="tile in tiles" 
         ng-class="{
-            nth     : tile.y === 0,
-            flagged : tile.isFlagged === true,
-            mine    : tile.isMine === true,
-            clear   : tile.isClear === true,
-            zero    : tile.isClear === true && tile.adjacentMines == 0
+            nth     : tile.model.y === 0,
+            flagged : tile.model.isFlagged === true,
+            mine    : tile.model.isMine === true,
+            clear   : tile.model.isClear === true,
+            zero    : tile.model.isClear === true && tile.model.adjacentMines == 0
         }"
-        ng-click="checkTile($event, tile.x, tile.y)"
+        ng-click="checkTile($event, tile.model.x, tile.model.y)"
     >
 
-        <span ng-if="tile.isClear != true">
+        <span ng-if="tile.model.isClear != true">
         </span>
 
         <span 
             ng-if="
-                tile.isClear != true && 
-                tile.isFlagged == true"
+                tile.model.isClear != true && 
+                tile.model.isFlagged == true"
             >
             ?
         </span>
 
         <span 
             ng-if="
-                tile.isClear == true && 
-                tile.isMine == true"
+                tile.model.isClear == true && 
+                tile.model.isMine == true"
             >
             X
         </span>
 
         <span 
             ng-if="
-                tile.isClear == true && 
-                tile.isMine == false"
+                tile.model.isClear == true && 
+                tile.model.isMine == false"
             >
-            {{tile.adjacentMines}}
+            {{tile.model.adjacentMines}}
         </span>
 
      </li>
