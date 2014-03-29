@@ -7,6 +7,7 @@ var connect = require('gulp-connect')
 var concat  = require('gulp-concat')
 var uglify  = require('gulp-uglify')
 var processhtml  = require('gulp-processhtml')
+var clean  = require('gulp-clean')
 
 var config = {
     scss    : {
@@ -50,9 +51,9 @@ path.js.compile = [
     path.js.lib + 'ng-slider.min.js',
 
     
-    path.js.modules + 'services/toggleFlag.js',
-    path.js.modules + 'factories/gameInfo.js',
-    path.js.modules + 'factories/gameLogic.js',
+    path.js.modules + 'factories/collection.js',
+    path.js.modules + 'services/model.js',
+    path.js.modules + 'services/tileMethods.js',
     path.js.modules + 'controllers/board.js',
     path.js.modules + 'app.js',
 ]
@@ -132,6 +133,24 @@ gulp.task(
 )
 
 gulp.task(
+    'clean-js', 
+    function() {
+        gulp
+        .src(
+            path.js.modules, 
+            {
+                read: false
+            }
+        )
+        .pipe(
+            clean({
+                force: true
+            })
+        )
+    }
+)
+
+gulp.task(
     'connect', 
     connect.server({
         root    : ['../'],
@@ -172,7 +191,7 @@ gulp.task(
 
 gulp.task(
     'default', 
-    ['sass', 'coffee', 'compile-js', 'html', 'watch', 'connect']
+    ['sass','clean-js', 'coffee', 'compile-js', 'html', 'watch', 'connect']
 ); 
 
 gulp.task(
