@@ -51,6 +51,7 @@ path.js.compile = [
     path.js.lib + 'ng-slider.min.js',
 
     
+    path.js.modules + 'factories/sliderInfo.js',
     path.js.modules + 'factories/collection.js',
     path.js.modules + 'services/model.js',
     path.js.modules + 'services/modelMethods.js',
