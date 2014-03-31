@@ -1,8 +1,8 @@
 var msBoard;
 
-msBoard = angular.module('msControllerBoard', ['angularLocalStorage', 'ngSlider']);
+msBoard = angular.module('msControllerBoard', ['angularLocalStorage', 'ngSlider', 'msSliderInfo']);
 
-msBoard.controller('board', function($scope, storage, collection) {
+msBoard.controller('board', function($scope, storage, collection, sliderInfo) {
   var currentBoard;
   currentBoard = void 0;
   if (storage.get('tiles') === null) {
@@ -17,12 +17,7 @@ msBoard.controller('board', function($scope, storage, collection) {
     instructions: false,
     newGame: false
   };
-  $scope.newGameInfo = {
-    mines: {
-      val: void 0,
-      options: void 0
-    }
-  };
+  $scope.newGameInfo = sliderInfo.init(5, 15, 8);
   $scope.sliderRefresh = function() {
     var currentVal, newFrom, newTo, newVal;
     currentVal = $scope.newGameInfo.mines.val;
@@ -34,24 +29,8 @@ msBoard.controller('board', function($scope, storage, collection) {
       to: newTo,
       step: $scope.newGameInfo.x.options.step
     };
-    if (currentVal === void 0 || (currentVal < newFrom && currentVal > newTo)) {
+    if (currentVal === void 0 || currentVal < newFrom || currentVal > newTo) {
       return $scope.newGameInfo.mines.val = newVal;
-    }
-  };
-  $scope.newGameInfo.x = {
-    val: '8',
-    options: {
-      from: 5,
-      to: 15,
-      step: 1
-    }
-  };
-  $scope.newGameInfo.y = {
-    val: $scope.newGameInfo.x.val,
-    options: {
-      from: $scope.newGameInfo.x.options.from,
-      to: $scope.newGameInfo.x.options.to,
-      step: $scope.newGameInfo.x.options.step
     }
   };
   $scope.sliderRefresh();

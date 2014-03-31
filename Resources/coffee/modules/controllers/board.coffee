@@ -4,11 +4,12 @@ msBoard = angular
     [
         'angularLocalStorage', 
         'ngSlider',
+        'msSliderInfo'
     ]
 
 msBoard
 .controller 'board', 
-    ($scope, storage, collection) ->
+    ($scope, storage, collection, sliderInfo) ->
 
         currentBoard = undefined
 
@@ -27,12 +28,7 @@ msBoard
             newGame     : false
         }
 
-        $scope.newGameInfo = {
-            mines   : {
-                val     : undefined
-                options : undefined
-            }
-        }
+        $scope.newGameInfo = sliderInfo.init 5, 15, 8
 
         $scope.sliderRefresh = () ->
             currentVal = $scope.newGameInfo.mines.val
@@ -46,26 +42,8 @@ msBoard
                 step    : $scope.newGameInfo.x.options.step
             }
 
-            if (currentVal == undefined || (currentVal < newFrom && currentVal > newTo))
+            if (currentVal == undefined || currentVal < newFrom || currentVal > newTo)
                 $scope.newGameInfo.mines.val = newVal
-
-        $scope.newGameInfo.x    = {
-            val : '8'
-            options : {
-                from    : 5
-                to      : 15
-                step    : 1
-            }
-        }
-
-        $scope.newGameInfo.y    = {
-            val : $scope.newGameInfo.x.val
-            options : {
-                from    : $scope.newGameInfo.x.options.from
-                to      : $scope.newGameInfo.x.options.to
-                step    : $scope.newGameInfo.x.options.step
-            }
-        }
 
         $scope.sliderRefresh()
 
