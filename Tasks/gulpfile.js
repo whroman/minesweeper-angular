@@ -7,7 +7,8 @@ var connect = require('gulp-connect')
 var concat  = require('gulp-concat')
 var uglify  = require('gulp-uglify')
 var processhtml  = require('gulp-processhtml')
-var clean  = require('gulp-clean')
+var htmlreplace  = require('gulp-html-replace')
+var clean   = require('gulp-clean')
 
 var config = {
     scss    : {
@@ -25,8 +26,8 @@ var path = {
 path.build = path.root + 'build/';
 
 path.scss = {
-    src     : [path.root + 'scss/init.scss'],
-    watch   : path.root + 'scss/**/*.scss',
+    src     : [path.root + 'stylesheets/scss/init.scss'],
+    watch   : path.root + 'stylesheets/scss/**/*.scss',
     dest    : {
         dirname     : path.build,
         basename    : 'build',
@@ -35,10 +36,10 @@ path.scss = {
 }
 
 path.js = {
-    watch   : path.root + 'js/**/*.js',
-    modules : path.root + 'js/modules/',
-    lib     : path.root + 'js/lib/',
-    build    : path.build + 'build.js',
+    watch   : path.root + 'scripts/js/**/*.js',
+    modules : path.root + 'scripts/js/modules/',
+    lib     : path.root + 'scripts/js/lib/',
+    build   : path.build + 'build.js',
 }
 
 path.js.compile = [
@@ -60,13 +61,13 @@ path.js.compile = [
 ]
 
 path.coffee = {
-    src   : [path.root + 'coffee/modules/**/*.coffee'],
+    src   : [path.root + 'scripts/coffee/modules/**/*.coffee'],
     dest    : path.js.modules,
 }
 
 path.html = {
-    src     : ['../dev.html'],
-    build   : '../index.html'
+    dev     : '../dev.html',
+    index   : '../index.html'
 }
 
 gulp.task(
@@ -169,26 +170,31 @@ gulp.task(
             path.coffee.src, ['coffee', 'compile-js']
         )
         gulp.watch(
-            path.html.src, ['html']
+            path.html.dev, ['html']
         )
     }
 );
 
 gulp.task(
-    'html', 
+    'html',
     function() {
         gulp
         .src(
-            path.html.src
+            path.html.index
         )
         .pipe(
-            processhtml(path.html.build)
+            htmlreplace({
+                js: path.js.compile
+            })
+        )
+        .pipe(
+            rename(path.html.dev)
         )
         .pipe(
             gulp.dest('./')
         )
     }
-); 
+)
 
 gulp.task(
     'default', 

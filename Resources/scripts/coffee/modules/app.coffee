@@ -9,11 +9,11 @@ msApp.config(
     ($routeProvider, $locationProvider) ->
         $routeProvider
             .when '/:any*', {
-                templateUrl : 'Resources/view/board.html'
+                templateUrl : 'Resources/templates/board.html'
                 controller  : 'board'
             }
             .when '/', {
-                templateUrl : 'Resources/view/board.html'
+                templateUrl : 'Resources/templates/board.html'
                 controller  : 'board'
             }
 
