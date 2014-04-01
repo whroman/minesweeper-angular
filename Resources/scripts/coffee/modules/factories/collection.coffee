@@ -15,17 +15,21 @@ msCollection.factory 'collection', (model, modelMethods) ->
                 for x in [0..sizeX - 1]
                     this.tiles[x + '-' + y] = modelMethods(
                         model( x, y ), {
-                            get     : (x, y) =>
-                                this.get(x, y)
+                            get     : (attrs) =>
+                                this.get(attrs)
+                            getAll     : (attrs) =>
+                                this.getAll(attrs)
                             randomSafeTile  : this.randomSafeTile
                             info    : this.info
+                            tallyMines  : this.tallyMines
                         }
                     )
 
             for mineNum in [1..numOfMines]
                 tile = this.randomSafeTile()
                 tile.model.isMine = true
-                tile.tallyAdjacentMines()
+            
+            this.tallyMines()
 
             return this
 
@@ -38,10 +42,13 @@ msCollection.factory 'collection', (model, modelMethods) ->
 
                 this.tiles[key] = modelMethods(
                     this.tiles[key].model, {
-                        get     : (x, y) =>
-                            this.get(x, y)
+                        get     : (attrs) =>
+                            this.get(attrs)
+                        getAll     : (attrs) =>
+                            this.getAll(attrs)
                         randomSafeTile  : this.randomSafeTile
                         info    : this.info
+                        tallyMines  : this.tallyMines
                     }
                 )
 
@@ -87,20 +94,53 @@ msCollection.factory 'collection', (model, modelMethods) ->
                 return this
             }
 
-        get = (x, y) ->
-            key = x + '-' + y
-            return this.tiles[key]
+        get = (attrs) ->
+            return this.getAll(attrs)[0]
+
+        getAll = (attrs) ->
+            matches = []
+            if attrs is undefined
+                for key, tile of this.tiles
+                    matches.push(tile)
+            else 
+                for key, tile of this.tiles
+                    numOfAttrs = 0
+                    numOfMatchedAttrs = 0
+                    for key, val of attrs
+                        numOfAttrs++
+                        if tile.model[key] == val
+                            numOfMatchedAttrs++
+
+                    if numOfMatchedAttrs == numOfAttrs
+                        matches.push(tile)
+
+            return matches
+
+        tallyMines = () ->
+            for tile in this.getAll()
+                neighborMines = 0
+                for adjacentTile in tile.adjacentTiles
+                    neighborMine = this.get({
+                        isMine  : true
+                        x       : tile.model.x + adjacentTile[0] 
+                        y       : tile.model.y + adjacentTile[1]
+                    }) 
+                    if neighborMine isnt undefined
+                        neighborMines++
+                tile.model.adjacentMines = neighborMines
 
         randomSafeTile = () ->
-            availTiles = []
+            find = {
+                isClear : false
+                isMine  : false
+            }
+            safeTiles = this.getAll(find)
 
-            for key, tile of this.tiles
-                if tile.model.isClear == false && tile.model.isMine == false
-                    availTiles.push tile
 
-            randomTile = availTiles[ Math.floor( Math.random() * availTiles.length) ]
+            randomTile = safeTiles[ Math.floor( Math.random() * safeTiles.length) ]
 
             return randomTile
+
 
         autoSelect = (num) ->
             while num--
@@ -111,7 +151,10 @@ msCollection.factory 'collection', (model, modelMethods) ->
 
 
         checkTile = (x, y, event) ->
-            tile = this.get x, y
+            tile = this.get({
+                x : x, 
+                y : y
+            })
 
             if event.shiftKey == true || event.altKey == true
                 tile.toggleFlag()
@@ -126,7 +169,9 @@ msCollection.factory 'collection', (model, modelMethods) ->
             loadGame    : loadGame
             info        : info
             randomSafeTile  : randomSafeTile
+            tallyMines  : tallyMines
             get         : get
+            getAll      : getAll
             autoSelect  : autoSelect
             checkTile   : checkTile
         }

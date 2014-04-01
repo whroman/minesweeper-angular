@@ -13,7 +13,7 @@ msModelMethods.service 'modelMethods', () ->
         ]
 
         this.toggleFlag = () ->
-            if (this.model.isFlagged == true)
+            if (this.model.isFlagged is true)
                 this.model.isFlagged = false
             else
                 this.model.isFlagged = true
@@ -29,28 +29,27 @@ msModelMethods.service 'modelMethods', () ->
             return this
 
         this.noMineFirstClick = () ->
-            if collection.info.numOfClears == 0 && this.model.isMine == true
+            if collection.info.numOfClears is 0 and this.model.isMine is true
                 this.model.isMine = false
-                this.collection.randomSafeTile().isMine = true
+                this.collection.randomSafeTile().model.isMine = true
                 for adjacentTile in this.adjacentTiles
-                    neighbor = this.collection.get this.model.x + adjacentTile[0], this.model.y + adjacentTile[1]
-                    this.tallyAdjacentMines()                    
+                    neighbor = this.collection.get({
+                        x : this.model.x + adjacentTile[0], 
+                        y : this.model.y + adjacentTile[1]
+                    })
+                
+                this.collection.tallyMines()                    
 
         this.clearNeighbors = () ->
             if this.model.adjacentMines == 0
                 for adjacentTile in this.adjacentTiles
                     neighbor = this.collection.get(
-                        this.model.x + adjacentTile[0], this.model.y + adjacentTile[1]
+                        x : this.model.x + adjacentTile[0], 
+                        y : this.model.y + adjacentTile[1]
                     )
                     if neighbor?
-                        if neighbor.model.adjacentMines == 0 && neighbor.model.isClear == false && neighbor.model.isMine == false
+                        if neighbor.model.isClear is false and neighbor.model.isMine is false
                             neighbor.clear()
-
-
-        this.tallyAdjacentMines = () ->
-            for adjacentTile in this.adjacentTiles
-                neighbor = this.collection.get this.model.x + adjacentTile[0], this.model.y + adjacentTile[1]
-                neighbor.model.adjacentMines++ if neighbor?
 
         return {
             model   : model
@@ -58,7 +57,6 @@ msModelMethods.service 'modelMethods', () ->
             clear       : this.clear
             toggleFlag      : this.toggleFlag
             clearNeighbors  : this.clearNeighbors
-            tallyAdjacentMines  : this.tallyAdjacentMines
             adjacentTiles   : this.adjacentTiles
             noMineFirstClick   : this.noMineFirstClick
         }

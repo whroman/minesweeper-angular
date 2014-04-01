@@ -22,18 +22,19 @@ msModelMethods.service('modelMethods', function() {
       return this;
     };
     this.noMineFirstClick = function() {
-      var adjacentTile, neighbor, _i, _len, _ref, _results;
+      var adjacentTile, neighbor, _i, _len, _ref;
       if (collection.info.numOfClears === 0 && this.model.isMine === true) {
         this.model.isMine = false;
-        this.collection.randomSafeTile().isMine = true;
+        this.collection.randomSafeTile().model.isMine = true;
         _ref = this.adjacentTiles;
-        _results = [];
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           adjacentTile = _ref[_i];
-          neighbor = this.collection.get(this.model.x + adjacentTile[0], this.model.y + adjacentTile[1]);
-          _results.push(this.tallyAdjacentMines());
+          neighbor = this.collection.get({
+            x: this.model.x + adjacentTile[0],
+            y: this.model.y + adjacentTile[1]
+          });
         }
-        return _results;
+        return this.collection.tallyMines();
       }
     };
     this.clearNeighbors = function() {
@@ -43,9 +44,12 @@ msModelMethods.service('modelMethods', function() {
         _results = [];
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           adjacentTile = _ref[_i];
-          neighbor = this.collection.get(this.model.x + adjacentTile[0], this.model.y + adjacentTile[1]);
+          neighbor = this.collection.get({
+            x: this.model.x + adjacentTile[0],
+            y: this.model.y + adjacentTile[1]
+          });
           if (neighbor != null) {
-            if (neighbor.model.adjacentMines === 0 && neighbor.model.isClear === false && neighbor.model.isMine === false) {
+            if (neighbor.model.isClear === false && neighbor.model.isMine === false) {
               _results.push(neighbor.clear());
             } else {
               _results.push(void 0);
@@ -57,28 +61,12 @@ msModelMethods.service('modelMethods', function() {
         return _results;
       }
     };
-    this.tallyAdjacentMines = function() {
-      var adjacentTile, neighbor, _i, _len, _ref, _results;
-      _ref = this.adjacentTiles;
-      _results = [];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        adjacentTile = _ref[_i];
-        neighbor = this.collection.get(this.model.x + adjacentTile[0], this.model.y + adjacentTile[1]);
-        if (neighbor != null) {
-          _results.push(neighbor.model.adjacentMines++);
-        } else {
-          _results.push(void 0);
-        }
-      }
-      return _results;
-    };
     return {
       model: model,
       collection: collection,
       clear: this.clear,
       toggleFlag: this.toggleFlag,
       clearNeighbors: this.clearNeighbors,
-      tallyAdjacentMines: this.tallyAdjacentMines,
       adjacentTiles: this.adjacentTiles,
       noMineFirstClick: this.noMineFirstClick
     };
