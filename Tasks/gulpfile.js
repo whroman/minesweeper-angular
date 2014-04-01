@@ -1,6 +1,7 @@
 var gulp    = require('gulp')
 var util    = require('gulp-util')
 var sass    = require('gulp-ruby-sass')
+var cssmin    = require('gulp-minify-css')
 var rename  = require('gulp-rename')
 var coffee  = require('gulp-coffee')
 var connect = require('gulp-connect')
@@ -10,7 +11,11 @@ var processhtml  = require('gulp-processhtml')
 var htmlreplace  = require('gulp-html-replace')
 var clean   = require('gulp-clean')
 
-var config = {
+var options = {
+    css     : {
+        keepSpecialComments : 0,
+        removeEmpty : true,
+    },
     scss    : {
         style   : 'compressed',
     },
@@ -25,21 +30,29 @@ var path = {
 
 path.build = path.root + 'build/';
 
+path.css = {
+    lib         : path.root + 'stylesheets/lib/',
+    compiled    : path.root + 'stylesheets/css/',
+    build       : path.build + 'build.css',
+}
+
+path.css.compile = [
+    path.css.lib + 'ng-slider.min.css',
+    path.css.compiled + 'base.css',
+    path.css.compiled + 'board.css',
+    path.css.compiled + 'dashboard.css',
+    path.css.compiled + 'overlay.css',
+]
+
 path.scss = {
-    src     : [path.root + 'stylesheets/scss/init.scss'],
-    watch   : path.root + 'stylesheets/scss/**/*.scss',
-    dest    : {
-        dirname     : path.build,
-        basename    : 'build',
-        extname     : '.css',
-    },
+    src     : [path.root + 'stylesheets/scss/**/*.scss'],
+    dest    : path.css.compiled
 }
 
 path.js = {
-    watch   : path.root + 'scripts/js/**/*.js',
-    modules : path.root + 'scripts/js/modules/',
-    lib     : path.root + 'scripts/js/lib/',
-    build   : path.build + 'build.js',
+    lib         : path.root + 'scripts/lib/',
+    compiled    : path.root + 'scripts/js/',
+    build       : path.build + 'build.js',
 }
 
 path.js.compile = [
@@ -50,19 +63,18 @@ path.js.compile = [
     path.js.lib + 'angular-cookies.min.js',
     path.js.lib + 'angularLocalStorage.js',
     path.js.lib + 'ng-slider.min.js',
-
     
-    path.js.modules + 'factories/sliderInfo.js',
-    path.js.modules + 'factories/collection.js',
-    path.js.modules + 'services/model.js',
-    path.js.modules + 'services/modelMethods.js',
-    path.js.modules + 'controllers/board.js',
-    path.js.modules + 'app.js',
+    path.js.compiled + 'factories/sliderInfo.js',
+    path.js.compiled + 'factories/collection.js',
+    path.js.compiled + 'services/model.js',
+    path.js.compiled + 'services/modelMethods.js',
+    path.js.compiled + 'controllers/board.js',
+    path.js.compiled + 'app.js',
 ]
 
 path.coffee = {
-    src   : [path.root + 'scripts/coffee/modules/**/*.coffee'],
-    dest    : path.js.modules,
+    src     : [path.root + 'scripts/coffee/**/*.coffee'],
+    dest    : path.js.compiled,
 }
 
 path.html = {
@@ -78,13 +90,10 @@ gulp.task(
             path.scss.src
         )
         .pipe(
-            sass( config.scss )
+            sass( options.scss )
         )
         .pipe(
-            rename( path.scss.dest )
-        )
-        .pipe(
-            gulp.dest('./')
+            gulp.dest(path.scss.dest)
         )
         .pipe(
             connect.reload()
@@ -102,7 +111,7 @@ gulp.task(
         )
         .pipe(
             coffee(
-                config.coffee
+                options.coffee
             ).on('error', util.log)
         )
         .pipe(
@@ -135,11 +144,30 @@ gulp.task(
 )
 
 gulp.task(
+    'compile-css',
+    function() {
+        gulp
+        .src(
+            path.css.compile
+        )
+        .pipe(
+            concat(path.css.build)
+        )
+        .pipe(
+            cssmin(options.css)
+        )
+        .pipe(
+            gulp.dest('./')
+        )
+    }
+)
+
+gulp.task(
     'clean-js', 
     function() {
         gulp
         .src(
-            path.js.modules, 
+            path.js.compiled, 
             {
                 read: false
             }
@@ -148,6 +176,28 @@ gulp.task(
             clean({
                 force: true
             })
+        )
+    }
+)
+
+gulp.task(
+    'html',
+    function() {
+        gulp
+        .src(
+            path.html.index
+        )
+        .pipe(
+            htmlreplace({
+                js  : path.js.compile,
+                css : path.css.compile
+            })
+        )
+        .pipe(
+            rename(path.html.dev)
+        )
+        .pipe(
+            gulp.dest('./')
         )
     }
 )
@@ -164,41 +214,20 @@ gulp.task(
     'watch', 
     function() {
         gulp.watch(
-            path.scss.watch, ['sass']
+            path.scss.src, ['sass', 'compile-css']
         )
         gulp.watch(
             path.coffee.src, ['coffee', 'compile-js']
         )
         gulp.watch(
-            path.html.dev, ['html']
+            path.html.index, ['html']
         )
     }
 );
 
 gulp.task(
-    'html',
-    function() {
-        gulp
-        .src(
-            path.html.index
-        )
-        .pipe(
-            htmlreplace({
-                js: path.js.compile
-            })
-        )
-        .pipe(
-            rename(path.html.dev)
-        )
-        .pipe(
-            gulp.dest('./')
-        )
-    }
-)
-
-gulp.task(
     'default', 
-    ['coffee', 'compile-js', 'sass', 'html', 'watch', 'connect']
+    ['coffee', 'compile-js', 'sass', 'compile-css', 'html', 'watch', 'connect']
 ); 
 
 gulp.task(

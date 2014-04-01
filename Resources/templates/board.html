@@ -12,8 +12,8 @@
         ng-class="{
             nth     : tile.model.y === 0,
             flagged : tile.model.isFlagged === true,
-            mine    : tile.model.isMine === true,
             clear   : tile.model.isClear === true,
+            mine    : tile.model.isMine === true && tile.model.isClear === true,
             zero    : tile.model.isClear === true && tile.model.adjacentMines == 0
         }"
         ng-click="checkTile($event, tile.model.x, tile.model.y)"
