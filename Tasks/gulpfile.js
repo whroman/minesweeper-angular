@@ -85,7 +85,7 @@ path.html = {
 gulp.task(
     'sass', 
     function() {
-        gulp
+        return gulp
         .src(
             path.scss.src
         )
@@ -105,10 +105,8 @@ gulp.task(
 gulp.task(
     'coffee',
     function() {
-        gulp
-        .src(
-            path.coffee.src
-        )
+        return gulp
+        .src(path.coffee.src)
         .pipe(
             coffee(
                 options.coffee
@@ -123,9 +121,9 @@ gulp.task(
 );
 
 gulp.task(
-    'compile-js',
+    'build-js',
     function() {
-        gulp
+        return gulp
         .src(
             path.js.compile
         )
@@ -144,9 +142,9 @@ gulp.task(
 )
 
 gulp.task(
-    'compile-css',
+    'build-css',
     function() {
-        gulp
+        return gulp
         .src(
             path.css.compile
         )
@@ -165,10 +163,26 @@ gulp.task(
 gulp.task(
     'clean-js', 
     function() {
-        gulp
+        return gulp
         .src(
-            path.js.compiled, 
-            {
+            path.js.compiled, {
+                read: false
+            }
+        )
+        .pipe(
+            clean({
+                force: true
+            })
+        )
+    }
+)
+
+gulp.task(
+    'clean-css', 
+    function() {
+        return gulp
+        .src(
+            path.css.compiled, {
                 read: false
             }
         )
@@ -183,7 +197,7 @@ gulp.task(
 gulp.task(
     'html',
     function() {
-        gulp
+        return gulp
         .src(
             path.html.index
         )
@@ -210,14 +224,15 @@ gulp.task(
     })
 );
 
+
 gulp.task(
     'watch', 
     function() {
         gulp.watch(
-            path.scss.src, ['sass', 'compile-css']
+            path.scss.src, ['sass', 'build-css']
         )
         gulp.watch(
-            path.coffee.src, ['coffee', 'compile-js']
+            path.coffee.src, ['coffee', 'build-js']
         )
         gulp.watch(
             path.html.index, ['html']
@@ -226,11 +241,21 @@ gulp.task(
 );
 
 gulp.task(
-    'default', 
-    ['coffee', 'compile-js', 'sass', 'compile-css', 'html', 'watch', 'connect']
-); 
+    'compile',
+    ['coffee', 'build-js', 'sass', 'build-css']
+);
+
+gulp.task(
+    'clean',
+    ['clean-js', 'clean-css']
+);
 
 gulp.task(
     'dev', 
-    ['default']
+    ['compile', 'html', 'watch', 'connect']
+);
+
+gulp.task(
+    'default', 
+    ['dev']
 ); 
