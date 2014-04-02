@@ -1,28 +1,31 @@
-msCollection = angular
-    .module 'msCollection', [
-    # Dependencies
-        'msModel',
-        'msModelMethods'
-    ]
+angular
+.module 'msCollection', [
+# Dependencies
+    'msModel',
+    'msModelMethods'
+]
 
-msCollection.factory 'collection', (model, modelMethods) ->
+.factory 'collection', (model, modelMethods) ->
     collection = () ->
         tiles = {}
+
+        exposedMethods = () ->
+            return {
+                get     : (attrs) =>
+                    this.get(attrs)
+                getAll  : (attrs) =>
+                    this.getAll(attrs)
+                info    : this.info
+                randomSafeTile  : this.randomSafeTile
+                tallyMines  : this.tallyMines
+            }
 
         newGame = (sizeX, sizeY, numOfMines) ->
             this.tiles = {}
             for y in [0..sizeY - 1]
                 for x in [0..sizeX - 1]
                     this.tiles[x + '-' + y] = modelMethods(
-                        model( x, y ), {
-                            get     : (attrs) =>
-                                this.get(attrs)
-                            getAll     : (attrs) =>
-                                this.getAll(attrs)
-                            randomSafeTile  : this.randomSafeTile
-                            info    : this.info
-                            tallyMines  : this.tallyMines
-                        }
+                        model( x, y ), this.exposedMethods()
                     )
 
             for mineNum in [1..numOfMines]
@@ -39,20 +42,9 @@ msCollection.factory 'collection', (model, modelMethods) ->
             for key, tile of this.tiles
                 test = this.tiles[key]
 
-
                 this.tiles[key] = modelMethods(
-                    this.tiles[key].model, {
-                        get     : (attrs) =>
-                            this.get(attrs)
-                        getAll     : (attrs) =>
-                            this.getAll(attrs)
-                        randomSafeTile  : this.randomSafeTile
-                        info    : this.info
-                        tallyMines  : this.tallyMines
-                    }
+                    this.tiles[key].model, this.exposedMethods()
                 )
-
-            #     this.tiles[key].override(savedTiles[key])
 
             return this
 
@@ -134,8 +126,7 @@ msCollection.factory 'collection', (model, modelMethods) ->
                 isClear : false
                 isMine  : false
             }
-            safeTiles = this.getAll(find)
-
+            safeTiles = this.getAll find
 
             randomTile = safeTiles[ Math.floor( Math.random() * safeTiles.length) ]
 
@@ -174,6 +165,7 @@ msCollection.factory 'collection', (model, modelMethods) ->
             getAll      : getAll
             autoSelect  : autoSelect
             checkTile   : checkTile
+            exposedMethods  : exposedMethods
         }
 
     return collection()

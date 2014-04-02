@@ -29,6 +29,7 @@ msModelMethods.service 'modelMethods', () ->
             return this
 
         this.noMineFirstClick = () ->
+            console.log this, this.collection.get({x: 3})
             if collection.info.numOfClears is 0 and this.model.isMine is true
                 this.model.isMine = false
                 this.collection.randomSafeTile().model.isMine = true

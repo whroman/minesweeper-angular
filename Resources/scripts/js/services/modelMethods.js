@@ -23,6 +23,9 @@ msModelMethods.service('modelMethods', function() {
     };
     this.noMineFirstClick = function() {
       var adjacentTile, neighbor, _i, _len, _ref;
+      console.log(this, this.collection.get({
+        x: 3
+      }));
       if (collection.info.numOfClears === 0 && this.model.isMine === true) {
         this.model.isMine = false;
         this.collection.randomSafeTile().model.isMine = true;
