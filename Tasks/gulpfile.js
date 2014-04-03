@@ -24,6 +24,16 @@ var options = {
     },
 }
 
+function setPaths(path, format, files) {
+    filePaths = [];
+
+    for (var i = 0; i < files.length; i++) {
+        filePaths.push(path + files[i] + format)
+    }
+
+    return filePaths;
+}
+
 var path = {
     root    : '../Resources/'
 }
@@ -55,22 +65,26 @@ path.js = {
     build       : path.build + 'build.js',
 }
 
-path.js.compile = [
-    path.js.lib + 'angular.min.js',
-    path.js.lib + 'jquery.min.js',
-    path.js.lib + 'angular-route.min.js',
-    path.js.lib + 'angular-sanitize.js',
-    path.js.lib + 'angular-cookies.min.js',
-    path.js.lib + 'angularLocalStorage.js',
-    path.js.lib + 'ng-slider.min.js',
-    
-    path.js.compiled + 'factories/sliderInfo.js',
-    path.js.compiled + 'factories/collection.js',
-    path.js.compiled + 'services/model.js',
-    path.js.compiled + 'services/modelMethods.js',
-    path.js.compiled + 'controllers/board.js',
-    path.js.compiled + 'app.js',
-]
+path.js.compile = setPaths(
+    path.js.lib, '.js', [
+        'angular.min',
+        'jquery.min',
+        'angular-route.min',
+        'angular-sanitize',
+        'angular-cookies.min',
+        'angularLocalStorage',
+        'ng-slider.min'
+    ]
+).concat(setPaths(
+    path.js.compiled, '.js', [
+        'factories/sliderInfo',
+        'factories/collection',
+        'services/model',
+        'services/modelMethods',
+        'controllers/board',
+        'app'
+    ]
+))
 
 path.coffee = {
     src     : [path.root + 'scripts/coffee/**/*.coffee'],
