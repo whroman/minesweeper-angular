@@ -9,16 +9,18 @@ msSliderInfo.factory('sliderInfo', function() {
     sliderInfo = {};
     init = function(min, max, initial) {
       var schema;
-      schema = {
-        val: initial.toString(),
-        options: {
-          from: min,
-          to: max,
-          step: 1
-        }
+      schema = function() {
+        return {
+          val: initial.toString(),
+          options: {
+            from: min,
+            to: max,
+            step: 1
+          }
+        };
       };
-      sliderInfo.x = schema;
-      sliderInfo.y = schema;
+      sliderInfo.x = schema();
+      sliderInfo.y = schema();
       sliderInfo.mines = {
         val: void 0,
         options: void 0

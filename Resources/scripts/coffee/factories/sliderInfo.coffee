@@ -11,18 +11,19 @@ msSliderInfo.factory 'sliderInfo', () ->
         sliderInfo = {}
 
         init = (min, max, initial) ->
-            schema = {
-                val : initial.toString()
-                options : {
-                    from    : min
-                    to      : max
-                    step    : 1
+            schema = () ->
+                return  {
+                    val : initial.toString()
+                    options : {
+                        from    : min
+                        to      : max
+                        step    : 1
+                    }
                 }
-            }
 
-            sliderInfo.x    = schema
+            sliderInfo.x    = schema()
 
-            sliderInfo.y    = schema
+            sliderInfo.y    = schema()
 
             sliderInfo.mines = {
                 val     : undefined
