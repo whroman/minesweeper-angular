@@ -11,19 +11,33 @@ msBoard
 .controller 'board', 
     ($scope, storage, collection, sliderInfo) ->
 
-        modals = (path, fileNames) ->
-            modalInfo = {}
-            for fileName in fileNames
-                modalInfo[fileName] = {
-                    path    : path + fileName + '.html'
-                    show    : false
-                }
-            return modalInfo
+        $scope.modals = {
+            path    : {}
+            show    : {}
+            set     : (path, fileNames) ->
+                for fileName in fileNames
+                    this.path[fileName] = path + fileName + '.html'
+                    this.show[fileName] = false
+                return this
+            toggle  : (name) ->
+                if ($scope.info.win == false && $scope.info.loss == false)
+                    if (this.show[name] == true)
+                        this.show[name] = false
+                    else
+                        this.show[name] = true
+                return this
 
-        $scope.modals = modals('Resources/templates/modals/', [
+            reset   : () ->
+                for key, showModal of this.show
+                    this.show[key] = false
+                return this
+        }
+
+        $scope.modals.set('Resources/templates/modals/', [
             'instructions',
             'newGame'
         ])
+
 
         currentBoard = undefined
 
@@ -36,11 +50,6 @@ msBoard
 
         $scope.tiles = currentBoard.tiles
         $scope.info = collection.info.refresh currentBoard.tiles
-        
-        $scope.overlay = {
-            instructions: false
-            newGame     : false
-        }
 
         $scope.newGameInfo = sliderInfo.init 5, 15, 8
 
@@ -76,15 +85,4 @@ msBoard
             $scope.tiles = currentBoard.tiles
             $scope.info = collection.info.refresh currentBoard.tiles
 
-            $scope.overlayReset()
-
-        $scope.toggleOverlay = (name) ->
-            if ($scope.info.win == false && $scope.info.loss == false)
-                if ($scope.modals[name].show == true)
-                    $scope.modals[name].show = false
-                else
-                    $scope.modals[name].show = true
-
-        $scope.overlayReset = () ->
-            for key, panel of $scope.modals
-                $scope.modals[key].show = false
+            $scope.modals.reset()

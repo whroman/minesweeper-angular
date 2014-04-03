@@ -2,7 +2,7 @@
     class="border-bottom">
     <span
         class="title"
-        ng-if="modals.newGame.show == true && info.win == false && info.loss == false"
+        ng-if="modals.show.newGame == true && info.win == false && info.loss == false"
     >
         new game?
     </span>
@@ -83,9 +83,9 @@
     </div>
 
     <div 
-        ng-if="modals.newGame.show == true"
+        ng-if="modals.show.newGame == true"
         class="button"
-        ng-click="overlayReset()"
+        ng-click="modals.reset()"
         >
         resume!
     </div>

@@ -3,20 +3,40 @@ var msBoard;
 msBoard = angular.module('msControllerBoard', ['angularLocalStorage', 'ngSlider', 'msSliderInfo']);
 
 msBoard.controller('board', function($scope, storage, collection, sliderInfo) {
-  var currentBoard, modals;
-  modals = function(path, fileNames) {
-    var fileName, modalInfo, _i, _len;
-    modalInfo = {};
-    for (_i = 0, _len = fileNames.length; _i < _len; _i++) {
-      fileName = fileNames[_i];
-      modalInfo[fileName] = {
-        path: path + fileName + '.html',
-        show: false
-      };
+  var currentBoard;
+  $scope.modals = {
+    path: {},
+    show: {},
+    set: function(path, fileNames) {
+      var fileName, _i, _len;
+      for (_i = 0, _len = fileNames.length; _i < _len; _i++) {
+        fileName = fileNames[_i];
+        this.path[fileName] = path + fileName + '.html';
+        this.show[fileName] = false;
+      }
+      return this;
+    },
+    toggle: function(name) {
+      if ($scope.info.win === false && $scope.info.loss === false) {
+        if (this.show[name] === true) {
+          this.show[name] = false;
+        } else {
+          this.show[name] = true;
+        }
+      }
+      return this;
+    },
+    reset: function() {
+      var key, showModal, _ref;
+      _ref = this.show;
+      for (key in _ref) {
+        showModal = _ref[key];
+        this.show[key] = false;
+      }
+      return this;
     }
-    return modalInfo;
   };
-  $scope.modals = modals('Resources/templates/modals/', ['instructions', 'newGame']);
+  $scope.modals.set('Resources/templates/modals/', ['instructions', 'newGame']);
   currentBoard = void 0;
   if (storage.get('tiles') === null) {
     currentBoard = collection.newGame(5, 7, 5);
@@ -26,10 +46,6 @@ msBoard.controller('board', function($scope, storage, collection, sliderInfo) {
   storage.bind($scope, 'tiles');
   $scope.tiles = currentBoard.tiles;
   $scope.info = collection.info.refresh(currentBoard.tiles);
-  $scope.overlay = {
-    instructions: false,
-    newGame: false
-  };
   $scope.newGameInfo = sliderInfo.init(5, 15, 8);
   $scope.sliderRefresh = function() {
     var currentVal, newFrom, newTo, newVal;
@@ -56,29 +72,10 @@ msBoard.controller('board', function($scope, storage, collection, sliderInfo) {
     $scope.tiles = collection.autoSelect(num);
     return collection.info.refresh(currentBoard.tiles);
   };
-  $scope.newGame = function(sizeX, sizeY, numOfMines) {
+  return $scope.newGame = function(sizeX, sizeY, numOfMines) {
     currentBoard = collection.newGame(sizeX, sizeY, numOfMines);
     $scope.tiles = currentBoard.tiles;
     $scope.info = collection.info.refresh(currentBoard.tiles);
-    return $scope.overlayReset();
-  };
-  $scope.toggleOverlay = function(name) {
-    if ($scope.info.win === false && $scope.info.loss === false) {
-      if ($scope.modals[name].show === true) {
-        return $scope.modals[name].show = false;
-      } else {
-        return $scope.modals[name].show = true;
-      }
-    }
-  };
-  return $scope.overlayReset = function() {
-    var key, panel, _ref, _results;
-    _ref = $scope.modals;
-    _results = [];
-    for (key in _ref) {
-      panel = _ref[key];
-      _results.push($scope.modals[key].show = false);
-    }
-    return _results;
+    return $scope.modals.reset();
   };
 });

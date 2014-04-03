@@ -52,7 +52,7 @@
 <div id="dashboard">
     <div 
         class="new-game button"
-        ng-click="toggleOverlay('newGame')"
+        ng-click="modals.toggle('newGame')"
         >
         new game
     </div>
@@ -64,7 +64,7 @@
     </div>
     <div 
         class="instructions button"
-        ng-click="toggleOverlay('instructions')"
+        ng-click="modals.toggle('instructions')"
         >
         instructions
     </div>
@@ -72,20 +72,20 @@
 
 <div 
     id="overlay"
-    ng-if="modals.instructions.show == true || modals.newGame.show == true || info.win == true || info.loss == true"
-    ng-click="overlayReset()"
+    ng-if="modals.show.instructions == true || modals.show.newGame == true || info.win == true || info.loss == true"
+    ng-click="modals.reset()"
     >
 
 </div>
 
 <ng-include 
-    src="modals.instructions.path"
-    ng-if="modals.instructions.show == true"
+    src="modals.path.instructions"
+    ng-if="modals.show.instructions == true"
     class="message"
 ></ng-include>
 
 <ng-include 
-    src="modals.newGame.path"
-    ng-if="info.win == true || info.loss == true || modals.newGame.show == true"
+    src="modals.path.newGame"
+    ng-if="info.win == true || info.loss == true || modals.show.newGame == true"
     class="message"
 ></ng-include>
