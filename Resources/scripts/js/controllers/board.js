@@ -1,42 +1,10 @@
 var msBoard;
 
-msBoard = angular.module('msControllerBoard', ['angularLocalStorage', 'ngSlider', 'msSliderInfo']);
+msBoard = angular.module('msControllerBoard', ['angularLocalStorage', 'ngSlider', 'msSliderInfo', 'modelModals']);
 
-msBoard.controller('board', function($scope, storage, collection, sliderInfo) {
+msBoard.controller('board', function($scope, storage, collection, sliderInfo, modelModals) {
   var currentBoard;
-  $scope.modals = {
-    path: {},
-    show: {},
-    set: function(path, fileNames) {
-      var fileName, _i, _len;
-      for (_i = 0, _len = fileNames.length; _i < _len; _i++) {
-        fileName = fileNames[_i];
-        this.path[fileName] = path + fileName + '.html';
-        this.show[fileName] = false;
-      }
-      return this;
-    },
-    toggle: function(name) {
-      if ($scope.info.win === false && $scope.info.loss === false) {
-        if (this.show[name] === true) {
-          this.show[name] = false;
-        } else {
-          this.show[name] = true;
-        }
-      }
-      return this;
-    },
-    reset: function() {
-      var key, showModal, _ref;
-      _ref = this.show;
-      for (key in _ref) {
-        showModal = _ref[key];
-        this.show[key] = false;
-      }
-      return this;
-    }
-  };
-  $scope.modals.set('Resources/templates/modals/', ['instructions', 'newGame']);
+  $scope.modals = modelModals.set('Resources/templates/modals/', ['instructions', 'newGame']);
   currentBoard = void 0;
   if (storage.get('tiles') === null) {
     currentBoard = collection.newGame(5, 7, 5);

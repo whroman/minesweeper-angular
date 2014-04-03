@@ -79,6 +79,7 @@ path.js.compile = setPaths(
     path.js.compiled, '.js', [
         'factories/sliderInfo',
         'factories/collection',
+        'factories/modelModals',
         'services/model',
         'services/modelMethods',
         'controllers/board',
