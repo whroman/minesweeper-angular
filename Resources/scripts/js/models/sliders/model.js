@@ -1,4 +1,4 @@
-angular.module('modelSliders', []).factory('modelSliders', function() {
+angular.module('ModelSliders', []).factory('ModelSliders', function() {
   var slider;
   slider = function() {
     var info, init, refresh;

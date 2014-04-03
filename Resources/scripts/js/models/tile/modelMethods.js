@@ -1,8 +1,4 @@
-var msModelMethods;
-
-msModelMethods = angular.module('msModelMethods', []);
-
-msModelMethods.service('modelMethods', function() {
+angular.module('ModelMethodsTile', []).service('ModelMethodsTile', function() {
   var modelMethods;
   return modelMethods = function() {
     this.adjacentTiles = [[-1, -1], [0, -1], [1, -1], [-1, 0], [1, 0], [-1, 1], [0, 1], [1, 1]];

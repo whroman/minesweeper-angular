@@ -1,10 +1,10 @@
 angular
-.module 'modelSliders', [
+.module 'ModelSliders', [
 # Dependencies
 
 ]
 
-.factory 'modelSliders', () ->
+.factory 'ModelSliders', () ->
 
     slider = () ->
 

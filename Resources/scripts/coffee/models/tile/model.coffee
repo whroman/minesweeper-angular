@@ -1,10 +1,10 @@
 angular
-.module 'msModel', [
+.module 'ModelTile', [
 # Dependencies
-    'msModelMethods'
+    'ModelMethodsTile'
 ]
 
-.service 'model', (modelMethods) ->
+.service 'ModelTile', (ModelMethodsTile) ->
     model = (newAttrs) ->
         this.model = {
                 x   : undefined
@@ -36,4 +36,4 @@ angular
             getSchema   : this.getSchema
         }
 
-        return this.set(newAttrs).extend(modelMethods())
+        return this.set(newAttrs).extend(ModelMethodsTile())

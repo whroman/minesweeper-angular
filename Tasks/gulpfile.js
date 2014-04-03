@@ -77,11 +77,11 @@ path.js.compile = setPaths(
     ]
 ).concat(setPaths(
     path.js.compiled, '.js', [
-        'factories/collection',
-        'factories/modelSliders',
-        'factories/modelModals',
-        'services/model',
-        'services/modelMethods',
+        'collections/tiles/collection',
+        'models/sliders/model',
+        'models/modals/model',
+        'models/tile/model',
+        'models/tile/modelMethods',
         'controllers/board',
         'app'
     ]

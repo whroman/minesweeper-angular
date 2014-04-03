@@ -1,10 +1,10 @@
 angular
-.module 'msCollection', [
+.module 'CollectTiles', [
 # Dependencies
-    'msModel'
+    'ModelTile'
 ]
 
-.factory 'collection', (model) ->
+.factory 'CollectTiles', (ModelTile) ->
     collection = () ->
         tiles = {}
 
@@ -137,7 +137,7 @@ angular
                         y   : y
                     }
 
-                    this.tiles[x + '-' + y] = model(attrs)
+                    this.tiles[x + '-' + y] = ModelTile(attrs)
                         .extend(this.exposedMethods())
 
             for mineNum in [1..numOfMines]
@@ -154,7 +154,7 @@ angular
             for key, tile of this.tiles
                 test = this.tiles[key]
 
-                this.tiles[key] = model(this.tiles[key].model)
+                this.tiles[key] = ModelTile(this.tiles[key].model)
                     .extend(this.exposedMethods())
 
             return this

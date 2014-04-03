@@ -1,9 +1,9 @@
 angular
-.module 'modelModals', [
+.module 'ModelModals', [
 # Dependencies
 ]
 
-.factory 'modelModals', () ->
+.factory 'ModelModals', () ->
     return {
         path    : {}
         show    : {}

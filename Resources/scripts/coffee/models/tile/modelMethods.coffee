@@ -1,10 +1,10 @@
-msModelMethods = angular
-    .module 'msModelMethods', [
-    # Dependencies
-    
-    ] 
+angular
+.module 'ModelMethodsTile', [
+# Dependencies
 
-msModelMethods.service 'modelMethods', () ->
+] 
+
+.service 'ModelMethodsTile', () ->
     modelMethods = () ->
 
         this.adjacentTiles = [

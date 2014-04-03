@@ -1,4 +1,4 @@
-angular.module('modelModals', []).factory('modelModals', function() {
+angular.module('ModelModals', []).factory('ModelModals', function() {
   return {
     path: {},
     show: {},

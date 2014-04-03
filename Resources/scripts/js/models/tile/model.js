@@ -1,4 +1,4 @@
-angular.module('msModel', ['msModelMethods']).service('model', function(modelMethods) {
+angular.module('ModelTile', ['ModelMethodsTile']).service('ModelTile', function(ModelMethodsTile) {
   var model;
   return model = function(newAttrs) {
     this.model = {
@@ -34,6 +34,6 @@ angular.module('msModel', ['msModelMethods']).service('model', function(modelMet
       extend: this.extend,
       getSchema: this.getSchema
     };
-    return this.set(newAttrs).extend(modelMethods());
+    return this.set(newAttrs).extend(ModelMethodsTile());
   };
 });

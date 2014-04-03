@@ -1,21 +1,18 @@
-msApp = angular
-    .module 'msApp', [
-        'ngRoute',
-        'msControllerBoard',
-        'msCollection'
-    ]
+angular
+.module 'msApp', [
+    'ngRoute',
+    'CtrlBoard'
+]
 
-msApp.config(
-    ($routeProvider, $locationProvider) ->
-        $routeProvider
-            .when '/:any*', {
-                templateUrl : 'Resources/templates/board.html'
-                controller  : 'board'
-            }
-            .when '/', {
-                templateUrl : 'Resources/templates/board.html'
-                controller  : 'board'
-            }
+.config ($routeProvider, $locationProvider) ->
+    $routeProvider
+        .when '/:any*', {
+            templateUrl : 'Resources/templates/board.html'
+            controller  : 'CtrlBoard'
+        }
+        .when '/', {
+            templateUrl : 'Resources/templates/board.html'
+            controller  : 'CtrlBoard'
+        }
 
-        $locationProvider.html5Mode true
-    )
+    $locationProvider.html5Mode true

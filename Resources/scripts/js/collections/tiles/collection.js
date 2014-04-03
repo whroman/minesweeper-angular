@@ -1,4 +1,4 @@
-angular.module('msCollection', ['msModel']).factory('collection', function(model) {
+angular.module('CollectTiles', ['ModelTile']).factory('CollectTiles', function(ModelTile) {
   var collection;
   collection = function() {
     var autoSelect, checkTile, exposedMethods, get, getAll, info, loadGame, newGame, randomSafeTile, tallyMines, tiles;
@@ -148,7 +148,7 @@ angular.module('msCollection', ['msModel']).factory('collection', function(model
             x: x,
             y: y
           };
-          this.tiles[x + '-' + y] = model(attrs).extend(this.exposedMethods());
+          this.tiles[x + '-' + y] = ModelTile(attrs).extend(this.exposedMethods());
         }
       }
       for (mineNum = _k = 1; 1 <= numOfMines ? _k <= numOfMines : _k >= numOfMines; mineNum = 1 <= numOfMines ? ++_k : --_k) {
@@ -165,7 +165,7 @@ angular.module('msCollection', ['msModel']).factory('collection', function(model
       for (key in _ref) {
         tile = _ref[key];
         test = this.tiles[key];
-        this.tiles[key] = model(this.tiles[key].model).extend(this.exposedMethods());
+        this.tiles[key] = ModelTile(this.tiles[key].model).extend(this.exposedMethods());
       }
       return this;
     };
