@@ -4,13 +4,13 @@ msBoard = angular
     [
         'angularLocalStorage', 
         'ngSlider',
-        'msSliderInfo',
+        'modelSliders',
         'modelModals'
     ]
 
 msBoard
 .controller 'board', 
-    ($scope, storage, collection, slider, modelModals) ->
+    ($scope, storage, collection, modelSliders, modelModals) ->
 
         $scope.modals = modelModals.set('Resources/templates/modals/', [
             'instructions',
@@ -29,7 +29,7 @@ msBoard
         $scope.tiles = currentBoard.tiles
         $scope.info = collection.info.refresh currentBoard.tiles
 
-        $scope.slider = slider
+        $scope.sliders = modelSliders
             .init(5, 15, 8)
             .refresh()
 

@@ -1,10 +1,10 @@
-msSliderInfo = angular
-    .module 'msSliderInfo', [
-    # Dependencies
+angular
+.module 'modelSliders', [
+# Dependencies
 
-    ]
+]
 
-msSliderInfo.factory 'slider', () ->
+.factory 'modelSliders', () ->
 
     slider = () ->
 
