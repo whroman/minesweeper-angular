@@ -1,0 +1,92 @@
+<div 
+    class="border-bottom">
+    <span
+        class="title"
+        ng-if="overlay.newGame == true && info.win == false && info.loss == false"
+    >
+        new game?
+    </span>
+
+    <span
+        class="title"
+        ng-if="info.win == true && info.loss == false"
+    >
+        you won!
+    </span>
+
+    <span
+        class="title"
+        ng-if="info.win == false && info.loss == true"
+    >
+        you lost...
+    </span>
+</div>
+
+<div>
+    {{newGameInfo.x.val * newGameInfo.y.val}} tiles total
+</div>
+
+<div class="sliders">
+    <div 
+        class="slider"
+        >
+        <div>
+            {{newGameInfo.x.val}} tiles wide
+        </div>
+        <input
+            slider
+            id="slider-tile-x"
+            class="slider"
+            ng-model="newGameInfo.x.val" 
+            ng-change="sliderRefresh()"
+            options="newGameInfo.x.options"
+            type="text"
+        />
+    </div>
+
+    <div class="slider">
+        <div>
+            {{newGameInfo.y.val}} tiles tall
+        </div>
+        <input
+            slider
+            id="slider-tile-y"
+            class="slider"
+            ng-model="newGameInfo.y.val" 
+            ng-change="sliderRefresh()"
+            options="newGameInfo.y.options"
+            type="text"
+        />
+    </div>
+
+    <div class="slider">
+        <div>
+            {{newGameInfo.mines.val}} mines
+        </div>
+        <input
+            slider
+            id="slider-mines"
+            class="slider"
+            ng-model="newGameInfo.mines.val" 
+            options="newGameInfo.mines.options"
+            type="text"
+        />
+    </div>
+</div>
+
+<div>
+    <div 
+        class="button"
+        ng-click="newGame(newGameInfo.x.val, newGameInfo.y.val, newGameInfo.mines.val)"
+        >
+        start!
+    </div>
+
+    <div 
+        ng-if="overlay.newGame == true"
+        class="button"
+        ng-click="overlayReset()"
+        >
+        resume!
+    </div>
+</div>

@@ -32,11 +32,6 @@
         clear: both;
     }
 
-    &.mine {
-        background-color: #D32;
-        border-color: #D32;
-    }
-
     &.flagged {
         background-color: #F82;
         border-color: #F82;
@@ -50,5 +45,10 @@
     &.clear.zero {
         background-color:  #999;
         border-color:  #999;
+    }
+
+    &.mine {
+        background-color: #D32;
+        border-color: #D32;
     }
 }

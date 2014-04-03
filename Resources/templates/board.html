@@ -13,7 +13,7 @@
             nth     : tile.model.y === 0,
             flagged : tile.model.isFlagged === true,
             clear   : tile.model.isClear === true,
-            mine    : tile.model.isMine === true && tile.model.clear === true,
+            mine    : tile.model.isMine === true && tile.model.isClear === true,
             zero    : tile.model.isClear === true && tile.model.adjacentMines == 0
         }"
         ng-click="checkTile($event, tile.model.x, tile.model.y)"
@@ -78,129 +78,14 @@
 
 </div>
 
-<div
-    id="instructions" 
+<ng-include 
+    src="modals.instructions"
     ng-if="overlay.instructions == true"
     class="message"
->
-    <div class="border-bottom">how to play</div>
-    <div class="border-bottom">
-        the game is played by revealing tiles of the grid. if a selected tile contains a mine, the player loses the game. otherwise, a digit is revealed in the tile, indicating the number of mines located in the eight adjacent tiles.
-    </div>
-    <div>
-        <span class="code">click</span> to reveal the squares of the grid.
-    </div>
-    <div class="border-bottom">
-        (your first click will never land on a mine)
-    </div>
-    <div>
-        <span class="code">shift + click</span> or 
-        <span class="code">alt + click</span>
-        will 'flag' a tile, helping you to remember where you think a mine is hidden
-    </div>
-    <div>
-        <div 
-            class="button"
-            ng-click="toggleOverlay('instructions')"
-            >
-            got it! 
-        </div>
-    </div>
-</div>
+></ng-include>
 
-<div
+<ng-include 
+    src="modals.newGame"
     ng-if="info.win == true || info.loss == true || overlay.newGame == true"
-    id="win" 
     class="message"
->
-    <div class="border-bottom">
-        <span
-            class="title"
-            ng-if="overlay.newGame == true && info.win == false && info.loss == false"
-        >
-            new game?
-        </span>
-
-        <span
-            class="title"
-            ng-if="info.win == true && info.loss == false"
-        >
-            you won!
-        </span>
-
-        <span
-            class="title"
-            ng-if="info.win == false && info.loss == true"
-        >
-            you lost...
-        </span>
-    </div>
-    <div>
-        {{newGameInfo.x.val * newGameInfo.y.val}} tiles total
-    </div>
-
-    <div class="sliders">
-        <div 
-            class="slider"
-            >
-            <div>
-                {{newGameInfo.x.val}} tiles wide
-            </div>
-            <input
-                slider
-                id="slider-tile-x"
-                class="slider"
-                ng-model="newGameInfo.x.val" 
-                ng-change="sliderRefresh()"
-                options="newGameInfo.x.options"
-                type="text"
-            />
-        </div>
-
-        <div class="slider">
-            <div>
-                {{newGameInfo.y.val}} tiles tall
-            </div>
-            <input
-                slider
-                id="slider-tile-y"
-                class="slider"
-                ng-model="newGameInfo.y.val" 
-                ng-change="sliderRefresh()"
-                options="newGameInfo.y.options"
-                type="text"
-            />
-        </div>
-
-        <div class="slider">
-            <div>
-                {{newGameInfo.mines.val}} mines
-            </div>
-            <input
-                slider
-                id="slider-mines"
-                class="slider"
-                ng-model="newGameInfo.mines.val" 
-                options="newGameInfo.mines.options"
-                type="text"
-            />
-        </div>
-    </div>
-
-    <div>
-        <div 
-            class="button"
-            ng-click="newGame(newGameInfo.x.val, newGameInfo.y.val, newGameInfo.mines.val)"
-            >
-            start!
-        </div>
-
-        <div 
-            ng-if="overlay.newGame == true"
-            class="button"
-            ng-click="overlayReset()"
-            >
-            resume!
-        </div>
-    </div>
-</div>
+></ng-include>

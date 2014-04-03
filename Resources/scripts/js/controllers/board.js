@@ -3,7 +3,15 @@ var msBoard;
 msBoard = angular.module('msControllerBoard', ['angularLocalStorage', 'ngSlider', 'msSliderInfo']);
 
 msBoard.controller('board', function($scope, storage, collection, sliderInfo) {
-  var currentBoard;
+  var currentBoard, modal, modals;
+  modal = function(fileName) {
+    return 'Resources/templates/modals/' + fileName + '.html';
+  };
+  modals = {
+    instructions: modal('instructions'),
+    newGame: modal('newGame')
+  };
+  $scope.modals = modals;
   currentBoard = void 0;
   if (storage.get('tiles') === null) {
     currentBoard = collection.newGame(5, 7, 5);

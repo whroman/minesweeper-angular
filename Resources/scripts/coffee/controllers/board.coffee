@@ -11,6 +11,16 @@ msBoard
 .controller 'board', 
     ($scope, storage, collection, sliderInfo) ->
 
+        modal = (fileName) ->
+            return 'Resources/templates/modals/' + fileName + '.html'
+
+        modals = {
+            instructions: modal('instructions')
+            newGame     : modal('newGame')
+        }
+
+        $scope.modals = modals
+
         currentBoard = undefined
 
         if storage.get('tiles') == null
