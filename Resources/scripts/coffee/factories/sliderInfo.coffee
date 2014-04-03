@@ -4,11 +4,11 @@ msSliderInfo = angular
 
     ]
 
-msSliderInfo.factory 'sliderInfo', () ->
+msSliderInfo.factory 'slider', () ->
 
     slider = () ->
 
-        sliderInfo = {}
+        info = {}
 
         init = (min, max, initial) ->
             schema = () ->
@@ -21,35 +21,36 @@ msSliderInfo.factory 'sliderInfo', () ->
                     }
                 }
 
-            sliderInfo.x    = schema()
+            info.x    = schema()
 
-            sliderInfo.y    = schema()
+            info.y    = schema()
 
-            sliderInfo.mines = {
+            info.mines = {
                 val     : undefined
                 options : undefined
             }
 
-            return sliderInfo
+            return this
 
         refresh = () ->
-            currentVal = sliderInfo.mines.val
-            newVal = Math.floor( sliderInfo.x.val * sliderInfo.y.val / 3 ).toString()
-            newFrom = Math.floor( sliderInfo.x.val * sliderInfo.y.val / 4 )
-            newTo = Math.floor( sliderInfo.x.val * sliderInfo.y.val / 2 )
+            currentVal = info.mines.val
+            newVal = Math.floor( info.x.val * info.y.val / 3 ).toString()
+            newFrom = Math.floor( info.x.val * info.y.val / 4 )
+            newTo = Math.floor( info.x.val * info.y.val / 2 )
 
-            sliderInfo.mines.options = {
+            info.mines.options = {
                 from    : newFrom
                 to      : newTo
-                step    : sliderInfo.x.options.step
+                step    : info.x.options.step
             }
 
             if (currentVal == undefined || (currentVal < newFrom && currentVal > newTo))
-                sliderInfo.mines.val = newVal
+                info.mines.val = newVal
 
-            return sliderInfo
+            return this
 
         return {
+            info    : info
             init    : init
             refresh : refresh
         }

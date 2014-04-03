@@ -10,7 +10,7 @@ msBoard = angular
 
 msBoard
 .controller 'board', 
-    ($scope, storage, collection, sliderInfo, modelModals) ->
+    ($scope, storage, collection, slider, modelModals) ->
 
         $scope.modals = modelModals.set('Resources/templates/modals/', [
             'instructions',
@@ -29,24 +29,9 @@ msBoard
         $scope.tiles = currentBoard.tiles
         $scope.info = collection.info.refresh currentBoard.tiles
 
-        $scope.newGameInfo = sliderInfo.init 5, 15, 8
-
-        $scope.sliderRefresh = () ->
-            currentVal = $scope.newGameInfo.mines.val
-            newVal = Math.floor( $scope.newGameInfo.x.val * $scope.newGameInfo.y.val / 3 ).toString()
-            newFrom = Math.floor( $scope.newGameInfo.x.val * $scope.newGameInfo.y.val / 4 )
-            newTo = Math.floor( $scope.newGameInfo.x.val * $scope.newGameInfo.y.val / 2 )
-
-            $scope.newGameInfo.mines.options = {
-                from    : newFrom
-                to      : newTo
-                step    : $scope.newGameInfo.x.options.step
-            }
-
-            if (currentVal == undefined || currentVal < newFrom || currentVal > newTo)
-                $scope.newGameInfo.mines.val = newVal
-
-        $scope.sliderRefresh()
+        $scope.slider = slider
+            .init(5, 15, 8)
+            .refresh()
 
 
         $scope.checkTile = (event, x, y) ->

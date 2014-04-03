@@ -2,11 +2,11 @@ var msSliderInfo;
 
 msSliderInfo = angular.module('msSliderInfo', []);
 
-msSliderInfo.factory('sliderInfo', function() {
+msSliderInfo.factory('slider', function() {
   var slider;
   slider = function() {
-    var init, refresh, sliderInfo;
-    sliderInfo = {};
+    var info, init, refresh;
+    info = {};
     init = function(min, max, initial) {
       var schema;
       schema = function() {
@@ -19,31 +19,32 @@ msSliderInfo.factory('sliderInfo', function() {
           }
         };
       };
-      sliderInfo.x = schema();
-      sliderInfo.y = schema();
-      sliderInfo.mines = {
+      info.x = schema();
+      info.y = schema();
+      info.mines = {
         val: void 0,
         options: void 0
       };
-      return sliderInfo;
+      return this;
     };
     refresh = function() {
       var currentVal, newFrom, newTo, newVal;
-      currentVal = sliderInfo.mines.val;
-      newVal = Math.floor(sliderInfo.x.val * sliderInfo.y.val / 3).toString();
-      newFrom = Math.floor(sliderInfo.x.val * sliderInfo.y.val / 4);
-      newTo = Math.floor(sliderInfo.x.val * sliderInfo.y.val / 2);
-      sliderInfo.mines.options = {
+      currentVal = info.mines.val;
+      newVal = Math.floor(info.x.val * info.y.val / 3).toString();
+      newFrom = Math.floor(info.x.val * info.y.val / 4);
+      newTo = Math.floor(info.x.val * info.y.val / 2);
+      info.mines.options = {
         from: newFrom,
         to: newTo,
-        step: sliderInfo.x.options.step
+        step: info.x.options.step
       };
       if (currentVal === void 0 || (currentVal < newFrom && currentVal > newTo)) {
-        sliderInfo.mines.val = newVal;
+        info.mines.val = newVal;
       }
-      return sliderInfo;
+      return this;
     };
     return {
+      info: info,
       init: init,
       refresh: refresh
     };

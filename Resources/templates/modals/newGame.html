@@ -37,9 +37,9 @@
             slider
             id="slider-tile-x"
             class="slider"
-            ng-model="newGameInfo.x.val" 
-            ng-change="sliderRefresh()"
-            options="newGameInfo.x.options"
+            ng-model="slider.info.x.val" 
+            ng-change="slider.refresh()"
+            options="slider.info.x.options"
             type="text"
         />
     </div>
@@ -52,9 +52,9 @@
             slider
             id="slider-tile-y"
             class="slider"
-            ng-model="newGameInfo.y.val" 
-            ng-change="sliderRefresh()"
-            options="newGameInfo.y.options"
+            ng-model="slider.info.y.val" 
+            ng-change="slider.refresh()"
+            options="slider.info.y.options"
             type="text"
         />
     </div>
@@ -67,8 +67,8 @@
             slider
             id="slider-mines"
             class="slider"
-            ng-model="newGameInfo.mines.val" 
-            options="newGameInfo.mines.options"
+            ng-model="slider.info.mines.val" 
+            options="slider.info.mines.options"
             type="text"
         />
     </div>
@@ -77,7 +77,7 @@
 <div>
     <div 
         class="button"
-        ng-click="newGame(newGameInfo.x.val, newGameInfo.y.val, newGameInfo.mines.val)"
+        ng-click="newGame(slider.info.x.val, slider.info.y.val, slider.info.mines.val)"
         >
         start!
     </div>
