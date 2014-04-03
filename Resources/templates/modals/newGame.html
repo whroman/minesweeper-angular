@@ -2,7 +2,7 @@
     class="border-bottom">
     <span
         class="title"
-        ng-if="overlay.newGame == true && info.win == false && info.loss == false"
+        ng-if="modals.newGame.show == true && info.win == false && info.loss == false"
     >
         new game?
     </span>
@@ -83,7 +83,7 @@
     </div>
 
     <div 
-        ng-if="overlay.newGame == true"
+        ng-if="modals.newGame.show == true"
         class="button"
         ng-click="overlayReset()"
         >

@@ -72,20 +72,20 @@
 
 <div 
     id="overlay"
-    ng-if="overlay.instructions == true || overlay.newGame == true || info.win == true || info.loss == true"
+    ng-if="modals.instructions.show == true || modals.newGame.show == true || info.win == true || info.loss == true"
     ng-click="overlayReset()"
     >
 
 </div>
 
 <ng-include 
-    src="modals.instructions"
-    ng-if="overlay.instructions == true"
+    src="modals.instructions.path"
+    ng-if="modals.instructions.show == true"
     class="message"
 ></ng-include>
 
 <ng-include 
-    src="modals.newGame"
-    ng-if="info.win == true || info.loss == true || overlay.newGame == true"
+    src="modals.newGame.path"
+    ng-if="info.win == true || info.loss == true || modals.newGame.show == true"
     class="message"
 ></ng-include>

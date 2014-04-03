@@ -11,15 +11,19 @@ msBoard
 .controller 'board', 
     ($scope, storage, collection, sliderInfo) ->
 
-        modal = (fileName) ->
-            return 'Resources/templates/modals/' + fileName + '.html'
+        modals = (path, fileNames) ->
+            modalInfo = {}
+            for fileName in fileNames
+                modalInfo[fileName] = {
+                    path    : path + fileName + '.html'
+                    show    : false
+                }
+            return modalInfo
 
-        modals = {
-            instructions: modal('instructions')
-            newGame     : modal('newGame')
-        }
-
-        $scope.modals = modals
+        $scope.modals = modals('Resources/templates/modals/', [
+            'instructions',
+            'newGame'
+        ])
 
         currentBoard = undefined
 
@@ -76,11 +80,11 @@ msBoard
 
         $scope.toggleOverlay = (name) ->
             if ($scope.info.win == false && $scope.info.loss == false)
-                if ($scope.overlay[name] == true)
-                    $scope.overlay[name] = false
+                if ($scope.modals[name].show == true)
+                    $scope.modals[name].show = false
                 else
-                    $scope.overlay[name] = true
+                    $scope.modals[name].show = true
 
         $scope.overlayReset = () ->
-            for key, panel of $scope.overlay
-                $scope.overlay[key] = false
+            for key, panel of $scope.modals
+                $scope.modals[key].show = false
