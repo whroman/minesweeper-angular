@@ -1,7 +1,7 @@
-angular.module('CollectTiles', ['ModelTile']).factory('CollectTiles', function(ModelTile) {
-  var autoSelect, checkTile, exposedMethods, get, getAll, info, loadGame, newGame, randomSafeTile, tallyMines, tiles;
+angular.module('CollectTiles', ['ModelTile', 'angularLocalStorage']).factory('CollectTiles', function(storage, ModelTile) {
+  var autoSelect, checkTile, exposeToModel, get, getAll, info, init, loadGame, newGame, randomSafeTile, tallyMines, tiles;
   tiles = {};
-  exposedMethods = function() {
+  exposeToModel = function() {
     return {
       collection: {
         get: (function(_this) {
@@ -146,7 +146,7 @@ angular.module('CollectTiles', ['ModelTile']).factory('CollectTiles', function(M
           x: x,
           y: y
         };
-        this.tiles[x + '-' + y] = ModelTile(attrs).extend(this.exposedMethods());
+        this.tiles[x + '-' + y] = ModelTile(attrs).extend(this.exposeToModel());
       }
     }
     for (mineNum = _k = 1; 1 <= numOfMines ? _k <= numOfMines : _k >= numOfMines; mineNum = 1 <= numOfMines ? ++_k : --_k) {
@@ -163,11 +163,23 @@ angular.module('CollectTiles', ['ModelTile']).factory('CollectTiles', function(M
     for (key in _ref) {
       tile = _ref[key];
       test = this.tiles[key];
-      this.tiles[key] = ModelTile(this.tiles[key].model).extend(this.exposedMethods());
+      this.tiles[key] = ModelTile(this.tiles[key].model).extend(this.exposeToModel());
     }
     return this;
   };
+  init = function(scope, info) {
+    var board;
+    board = void 0;
+    if (storage.get('tiles') === null) {
+      board = this.newGame(info.x.val, info.y.val, info.mines.val);
+    } else {
+      board = this.loadGame(storage.get('tiles'));
+    }
+    storage.bind(scope, 'tiles');
+    return board;
+  };
   return {
+    init: init,
     tiles: tiles,
     newGame: newGame,
     loadGame: loadGame,
@@ -178,6 +190,6 @@ angular.module('CollectTiles', ['ModelTile']).factory('CollectTiles', function(M
     getAll: getAll,
     autoSelect: autoSelect,
     checkTile: checkTile,
-    exposedMethods: exposedMethods
+    exposeToModel: exposeToModel
   };
 });

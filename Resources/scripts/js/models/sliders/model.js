@@ -21,13 +21,13 @@ angular.module('ModelSliders', []).factory('ModelSliders', function() {
         val: void 0,
         options: void 0
       };
-      return this;
+      return this.refresh();
     };
     refresh = function() {
       var currentVal, newFrom, newTo, newVal;
       currentVal = info.mines.val;
-      newVal = Math.floor(info.x.val * info.y.val / 3).toString();
-      newFrom = Math.floor(info.x.val * info.y.val / 4);
+      newVal = Math.floor(info.x.val * info.y.val / 4).toString();
+      newFrom = Math.floor(info.x.val * info.y.val / 5);
       newTo = Math.floor(info.x.val * info.y.val / 2);
       info.mines.options = {
         from: newFrom,

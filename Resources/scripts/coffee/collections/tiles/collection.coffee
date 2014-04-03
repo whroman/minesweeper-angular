@@ -1,13 +1,14 @@
 angular
 .module 'CollectTiles', [
 # Dependencies
-    'ModelTile'
+    'ModelTile',
+    'angularLocalStorage'
 ]
 
-.factory 'CollectTiles', (ModelTile) ->
+.factory 'CollectTiles', (storage, ModelTile) ->
     tiles = {}
 
-    exposedMethods = () ->
+    exposeToModel = () ->
         return {
             collection  : {
                 get     : (attrs) =>
@@ -114,7 +115,6 @@ angular
 
 
     checkTile = (x, y, event) ->
-
         tile = this.get({
             x : x, 
             y : y
@@ -137,7 +137,7 @@ angular
                 }
 
                 this.tiles[x + '-' + y] = ModelTile(attrs)
-                    .extend(this.exposedMethods())
+                    .extend(this.exposeToModel())
 
         for mineNum in [1..numOfMines]
             tile = this.randomSafeTile()
@@ -154,11 +154,24 @@ angular
             test = this.tiles[key]
 
             this.tiles[key] = ModelTile(this.tiles[key].model)
-                .extend(this.exposedMethods())
+                .extend(this.exposeToModel())
 
         return this
 
+    init = (scope, info) ->
+        board  = undefined
+        if storage.get('tiles') == null
+            board = this.newGame info.x.val, info.y.val, info.mines.val
+        else
+            board = this.loadGame storage.get('tiles')
+
+        storage.bind scope, 'tiles'
+
+        return board
+
+
     return {
+        init        : init
         tiles       : tiles
         newGame     : newGame
         loadGame    : loadGame
@@ -169,5 +182,5 @@ angular
         getAll      : getAll
         autoSelect  : autoSelect
         checkTile   : checkTile
-        exposedMethods  : exposedMethods
+        exposeToModel  : exposeToModel
     }

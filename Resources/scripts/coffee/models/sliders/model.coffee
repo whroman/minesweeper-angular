@@ -30,12 +30,12 @@ angular
                 options : undefined
             }
 
-            return this
+            return this.refresh()
 
         refresh = () ->
             currentVal = info.mines.val
-            newVal = Math.floor( info.x.val * info.y.val / 3 ).toString()
-            newFrom = Math.floor( info.x.val * info.y.val / 4 )
+            newVal = Math.floor( info.x.val * info.y.val / 4 ).toString()
+            newFrom = Math.floor( info.x.val * info.y.val / 5 )
             newTo = Math.floor( info.x.val * info.y.val / 2 )
 
             info.mines.options = {
