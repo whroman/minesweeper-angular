@@ -4,7 +4,7 @@ msModelMethods = angular.module('msModelMethods', []);
 
 msModelMethods.service('modelMethods', function() {
   var modelMethods;
-  return modelMethods = function(model, collection) {
+  return modelMethods = function() {
     this.adjacentTiles = [[-1, -1], [0, -1], [1, -1], [-1, 0], [1, 0], [-1, 1], [0, 1], [1, 1]];
     this.toggleFlag = function() {
       if (this.model.isFlagged === true) {
@@ -23,7 +23,7 @@ msModelMethods.service('modelMethods', function() {
     };
     this.noMineFirstClick = function() {
       var adjacentTile, neighbor, _i, _len, _ref;
-      if (collection.info.numOfClears === 0 && this.model.isMine === true) {
+      if (this.collection.info.numOfClears === 0 && this.model.isMine === true) {
         this.model.isMine = false;
         this.collection.randomSafeTile().model.isMine = true;
         _ref = this.adjacentTiles;
@@ -62,8 +62,6 @@ msModelMethods.service('modelMethods', function() {
       }
     };
     return {
-      model: model,
-      collection: collection,
       clear: this.clear,
       toggleFlag: this.toggleFlag,
       clearNeighbors: this.clearNeighbors,

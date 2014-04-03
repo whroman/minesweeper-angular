@@ -1,50 +1,26 @@
-angular.module('msCollection', ['msModel', 'msModelMethods']).factory('collection', function(model, modelMethods) {
+angular.module('msCollection', ['msModel']).factory('collection', function(model) {
   var collection;
   collection = function() {
     var autoSelect, checkTile, exposedMethods, get, getAll, info, loadGame, newGame, randomSafeTile, tallyMines, tiles;
     tiles = {};
     exposedMethods = function() {
       return {
-        get: (function(_this) {
-          return function(attrs) {
-            return _this.get(attrs);
-          };
-        })(this),
-        getAll: (function(_this) {
-          return function(attrs) {
-            return _this.getAll(attrs);
-          };
-        })(this),
-        info: this.info,
-        randomSafeTile: this.randomSafeTile,
-        tallyMines: this.tallyMines
-      };
-    };
-    newGame = function(sizeX, sizeY, numOfMines) {
-      var mineNum, tile, x, y, _i, _j, _k, _ref, _ref1;
-      this.tiles = {};
-      for (y = _i = 0, _ref = sizeY - 1; 0 <= _ref ? _i <= _ref : _i >= _ref; y = 0 <= _ref ? ++_i : --_i) {
-        for (x = _j = 0, _ref1 = sizeX - 1; 0 <= _ref1 ? _j <= _ref1 : _j >= _ref1; x = 0 <= _ref1 ? ++_j : --_j) {
-          this.tiles[x + '-' + y] = modelMethods(model(x, y), this.exposedMethods());
+        collection: {
+          get: (function(_this) {
+            return function(attrs) {
+              return _this.get(attrs);
+            };
+          })(this),
+          getAll: (function(_this) {
+            return function(attrs) {
+              return _this.getAll(attrs);
+            };
+          })(this),
+          info: this.info,
+          randomSafeTile: this.randomSafeTile,
+          tallyMines: this.tallyMines
         }
-      }
-      for (mineNum = _k = 1; 1 <= numOfMines ? _k <= numOfMines : _k >= numOfMines; mineNum = 1 <= numOfMines ? ++_k : --_k) {
-        tile = this.randomSafeTile();
-        tile.model.isMine = true;
-      }
-      this.tallyMines();
-      return this;
-    };
-    loadGame = function(savedTiles) {
-      var key, test, tile, _ref;
-      this.tiles = savedTiles;
-      _ref = this.tiles;
-      for (key in _ref) {
-        tile = _ref[key];
-        test = this.tiles[key];
-        this.tiles[key] = modelMethods(this.tiles[key].model, this.exposedMethods());
-      }
-      return this;
+      };
     };
     info = {
       refresh: function(tiles) {
@@ -162,6 +138,36 @@ angular.module('msCollection', ['msModel', 'msModelMethods']).factory('collectio
         tile.clear();
       }
       return this.tiles;
+    };
+    newGame = function(sizeX, sizeY, numOfMines) {
+      var attrs, mineNum, tile, x, y, _i, _j, _k, _ref, _ref1;
+      this.tiles = {};
+      for (y = _i = 0, _ref = sizeY - 1; 0 <= _ref ? _i <= _ref : _i >= _ref; y = 0 <= _ref ? ++_i : --_i) {
+        for (x = _j = 0, _ref1 = sizeX - 1; 0 <= _ref1 ? _j <= _ref1 : _j >= _ref1; x = 0 <= _ref1 ? ++_j : --_j) {
+          attrs = {
+            x: x,
+            y: y
+          };
+          this.tiles[x + '-' + y] = model(attrs).extend(this.exposedMethods());
+        }
+      }
+      for (mineNum = _k = 1; 1 <= numOfMines ? _k <= numOfMines : _k >= numOfMines; mineNum = 1 <= numOfMines ? ++_k : --_k) {
+        tile = this.randomSafeTile();
+        tile.model.isMine = true;
+      }
+      this.tallyMines();
+      return this;
+    };
+    loadGame = function(savedTiles) {
+      var key, test, tile, _ref;
+      this.tiles = savedTiles;
+      _ref = this.tiles;
+      for (key in _ref) {
+        tile = _ref[key];
+        test = this.tiles[key];
+        this.tiles[key] = model(this.tiles[key].model).extend(this.exposedMethods());
+      }
+      return this;
     };
     return {
       tiles: tiles,

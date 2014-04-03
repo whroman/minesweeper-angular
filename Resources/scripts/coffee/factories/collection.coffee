@@ -1,52 +1,25 @@
 angular
 .module 'msCollection', [
 # Dependencies
-    'msModel',
-    'msModelMethods'
+    'msModel'
 ]
 
-.factory 'collection', (model, modelMethods) ->
+.factory 'collection', (model) ->
     collection = () ->
         tiles = {}
 
         exposedMethods = () ->
             return {
-                get     : (attrs) =>
-                    this.get(attrs)
-                getAll  : (attrs) =>
-                    this.getAll(attrs)
-                info    : this.info
-                randomSafeTile  : this.randomSafeTile
-                tallyMines  : this.tallyMines
+                collection  : {
+                    get     : (attrs) =>
+                        this.get(attrs)
+                    getAll  : (attrs) =>
+                        this.getAll(attrs)
+                    info    : this.info
+                    randomSafeTile  : this.randomSafeTile
+                    tallyMines  : this.tallyMines
+                }
             }
-
-        newGame = (sizeX, sizeY, numOfMines) ->
-            this.tiles = {}
-            for y in [0..sizeY - 1]
-                for x in [0..sizeX - 1]
-                    this.tiles[x + '-' + y] = modelMethods(
-                        model( x, y ), this.exposedMethods()
-                    )
-
-            for mineNum in [1..numOfMines]
-                tile = this.randomSafeTile()
-                tile.model.isMine = true
-            
-            this.tallyMines()
-
-            return this
-
-        loadGame = (savedTiles) ->
-            this.tiles = savedTiles
-
-            for key, tile of this.tiles
-                test = this.tiles[key]
-
-                this.tiles[key] = modelMethods(
-                    this.tiles[key].model, this.exposedMethods()
-                )
-
-            return this
 
         info = {
             refresh     : (tiles) ->
@@ -142,6 +115,7 @@ angular
 
 
         checkTile = (x, y, event) ->
+
             tile = this.get({
                 x : x, 
                 y : y
@@ -153,6 +127,37 @@ angular
                 tile.clear()
 
             return this.tiles
+
+        newGame = (sizeX, sizeY, numOfMines) ->
+            this.tiles = {}
+            for y in [0..sizeY - 1]
+                for x in [0..sizeX - 1]
+                    attrs = {
+                        x   : x
+                        y   : y
+                    }
+
+                    this.tiles[x + '-' + y] = model(attrs)
+                        .extend(this.exposedMethods())
+
+            for mineNum in [1..numOfMines]
+                tile = this.randomSafeTile()
+                tile.model.isMine = true
+            
+            this.tallyMines()
+
+            return this
+
+        loadGame = (savedTiles) ->
+            this.tiles = savedTiles
+
+            for key, tile of this.tiles
+                test = this.tiles[key]
+
+                this.tiles[key] = model(this.tiles[key].model)
+                    .extend(this.exposedMethods())
+
+            return this
 
         return {
             tiles       : tiles

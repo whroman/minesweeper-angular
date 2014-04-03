@@ -1,10 +1,11 @@
 msModelMethods = angular
     .module 'msModelMethods', [
     # Dependencies
+    
     ] 
 
 msModelMethods.service 'modelMethods', () ->
-    modelMethods = (model, collection) ->
+    modelMethods = () ->
 
         this.adjacentTiles = [
             [-1, -1], [ 0, -1], [ 1, -1],
@@ -29,7 +30,7 @@ msModelMethods.service 'modelMethods', () ->
             return this
 
         this.noMineFirstClick = () ->
-            if collection.info.numOfClears is 0 and this.model.isMine is true
+            if this.collection.info.numOfClears is 0 and this.model.isMine is true
                 this.model.isMine = false
                 this.collection.randomSafeTile().model.isMine = true
                 for adjacentTile in this.adjacentTiles
@@ -52,8 +53,6 @@ msModelMethods.service 'modelMethods', () ->
                             neighbor.clear()
 
         return {
-            model   : model
-            collection  : collection
             clear       : this.clear
             toggleFlag      : this.toggleFlag
             clearNeighbors  : this.clearNeighbors
