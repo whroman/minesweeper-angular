@@ -7,6 +7,7 @@ angular
 
 .factory 'CollectTiles', (storage, ModelTile) ->
     tiles = {}
+    info = {}
 
     exposeToModel = () ->
         return {
@@ -21,43 +22,41 @@ angular
             }
         }
 
-    info = {
-        refresh     : (tiles) ->
-            this.loss    = false
-            this.win     = false
-            this.numOfTiles  = 0
-            this.numOfClears = 0
-            this.numOfFlags  = 0
-            this.numOfMines  = 0
+    infoRefresh     = () ->
+            this.info.loss    = false
+            this.info.win     = false
+            this.info.numOfTiles  = 0
+            this.info.numOfClears = 0
+            this.info.numOfFlags  = 0
+            this.info.numOfMines  = 0
 
-            for key, tile of tiles
+            for key, tile of this.tiles
 
                 # All Tiles
-                this.numOfTiles++
+                this.info.numOfTiles++
 
                 # Cleared Tiles
                 if tile.model.isClear == true
-                    this.numOfClears++
+                    this.info.numOfClears++
 
                 # Flagged Tiles
                 if tile.model.isFlagged == true
-                    this.numOfFlags++
+                    this.info.numOfFlags++
 
                 # Mined Tiles
                 if tile.model.isMine == true
-                    this.numOfMines++
+                    this.info.numOfMines++
 
                 # Check Game Loss
                 if tile.model.isMine == true && tile.model.isClear == true
-                    this.loss = true
+                    this.info.loss = true
 
             # Check Game Win
-            if this.loss == false && this.numOfTiles - this.numOfMines - this.numOfClears == 0
-                this.win = true
+            if this.info.loss == false && this.info.numOfTiles - this.info.numOfMines - this.info.numOfClears == 0
+                this.info.win = true
 
 
-            return this
-        }
+            return this.info
 
     get = (attrs) ->
         return this.getAll(attrs)[0]
@@ -110,6 +109,8 @@ angular
         while num--
             tile = this.randomSafeTile()
             tile.clear()
+
+        this.infoRefresh()
         
         return this.tiles
 
@@ -124,6 +125,8 @@ angular
             tile.toggleFlag()
         else
             tile.clear()
+
+        this.infoRefresh()
 
         return this.tiles
 
@@ -145,6 +148,8 @@ angular
         
         this.tallyMines()
 
+        this.infoRefresh()
+
         return this
 
     loadGame = (savedTiles) ->
@@ -155,6 +160,8 @@ angular
 
             this.tiles[key] = ModelTile(this.tiles[key].model)
                 .extend(this.exposeToModel())
+
+        this.infoRefresh()
 
         return this
 
@@ -176,6 +183,7 @@ angular
         newGame     : newGame
         loadGame    : loadGame
         info        : info
+        infoRefresh : infoRefresh
         randomSafeTile  : randomSafeTile
         tallyMines  : tallyMines
         get         : get

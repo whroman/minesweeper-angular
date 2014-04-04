@@ -1,6 +1,7 @@
 angular.module('CollectTiles', ['ModelTile', 'angularLocalStorage']).factory('CollectTiles', function(storage, ModelTile) {
-  var autoSelect, checkTile, exposeToModel, get, getAll, info, init, loadGame, newGame, randomSafeTile, tallyMines, tiles;
+  var autoSelect, checkTile, exposeToModel, get, getAll, info, infoRefresh, init, loadGame, newGame, randomSafeTile, tallyMines, tiles;
   tiles = {};
+  info = {};
   exposeToModel = function() {
     return {
       collection: {
@@ -20,36 +21,35 @@ angular.module('CollectTiles', ['ModelTile', 'angularLocalStorage']).factory('Co
       }
     };
   };
-  info = {
-    refresh: function(tiles) {
-      var key, tile;
-      this.loss = false;
-      this.win = false;
-      this.numOfTiles = 0;
-      this.numOfClears = 0;
-      this.numOfFlags = 0;
-      this.numOfMines = 0;
-      for (key in tiles) {
-        tile = tiles[key];
-        this.numOfTiles++;
-        if (tile.model.isClear === true) {
-          this.numOfClears++;
-        }
-        if (tile.model.isFlagged === true) {
-          this.numOfFlags++;
-        }
-        if (tile.model.isMine === true) {
-          this.numOfMines++;
-        }
-        if (tile.model.isMine === true && tile.model.isClear === true) {
-          this.loss = true;
-        }
+  infoRefresh = function() {
+    var key, tile, _ref;
+    this.info.loss = false;
+    this.info.win = false;
+    this.info.numOfTiles = 0;
+    this.info.numOfClears = 0;
+    this.info.numOfFlags = 0;
+    this.info.numOfMines = 0;
+    _ref = this.tiles;
+    for (key in _ref) {
+      tile = _ref[key];
+      this.info.numOfTiles++;
+      if (tile.model.isClear === true) {
+        this.info.numOfClears++;
       }
-      if (this.loss === false && this.numOfTiles - this.numOfMines - this.numOfClears === 0) {
-        this.win = true;
+      if (tile.model.isFlagged === true) {
+        this.info.numOfFlags++;
       }
-      return this;
+      if (tile.model.isMine === true) {
+        this.info.numOfMines++;
+      }
+      if (tile.model.isMine === true && tile.model.isClear === true) {
+        this.info.loss = true;
+      }
     }
+    if (this.info.loss === false && this.info.numOfTiles - this.info.numOfMines - this.info.numOfClears === 0) {
+      this.info.win = true;
+    }
+    return this.info;
   };
   get = function(attrs) {
     return this.getAll(attrs)[0];
@@ -122,6 +122,7 @@ angular.module('CollectTiles', ['ModelTile', 'angularLocalStorage']).factory('Co
       tile = this.randomSafeTile();
       tile.clear();
     }
+    this.infoRefresh();
     return this.tiles;
   };
   checkTile = function(x, y, event) {
@@ -135,6 +136,7 @@ angular.module('CollectTiles', ['ModelTile', 'angularLocalStorage']).factory('Co
     } else {
       tile.clear();
     }
+    this.infoRefresh();
     return this.tiles;
   };
   newGame = function(sizeX, sizeY, numOfMines) {
@@ -154,6 +156,7 @@ angular.module('CollectTiles', ['ModelTile', 'angularLocalStorage']).factory('Co
       tile.model.isMine = true;
     }
     this.tallyMines();
+    this.infoRefresh();
     return this;
   };
   loadGame = function(savedTiles) {
@@ -165,6 +168,7 @@ angular.module('CollectTiles', ['ModelTile', 'angularLocalStorage']).factory('Co
       test = this.tiles[key];
       this.tiles[key] = ModelTile(this.tiles[key].model).extend(this.exposeToModel());
     }
+    this.infoRefresh();
     return this;
   };
   init = function(scope, info) {
@@ -184,6 +188,7 @@ angular.module('CollectTiles', ['ModelTile', 'angularLocalStorage']).factory('Co
     newGame: newGame,
     loadGame: loadGame,
     info: info,
+    infoRefresh: infoRefresh,
     randomSafeTile: randomSafeTile,
     tallyMines: tallyMines,
     get: get,
