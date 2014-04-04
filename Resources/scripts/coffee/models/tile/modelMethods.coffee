@@ -42,7 +42,7 @@ angular
                 this.collection.tallyMines()                    
 
         this.clearNeighbors = () ->
-            if this.model.adjacentMines == 0 and this.model.isMine isnt false
+            if this.model.adjacentMines == 0 and this.model.isMine == false
                 for adjacentTile in this.adjacentTiles
                     neighbor = this.collection.get(
                         x : this.model.x + adjacentTile[0], 

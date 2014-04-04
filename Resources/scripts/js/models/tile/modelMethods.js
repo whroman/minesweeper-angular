@@ -35,7 +35,7 @@ angular.module('ModelMethodsTile', []).service('ModelMethodsTile', function() {
     };
     this.clearNeighbors = function() {
       var adjacentTile, neighbor, _i, _len, _ref, _results;
-      if (this.model.adjacentMines === 0 && this.model.isMine !== false) {
+      if (this.model.adjacentMines === 0 && this.model.isMine === false) {
         _ref = this.adjacentTiles;
         _results = [];
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
