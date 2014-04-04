@@ -48,12 +48,12 @@ angular
                         x : this.model.x + adjacentTile[0], 
                         y : this.model.y + adjacentTile[1]
                     )
-                    if neighbor?
-                        if neighbor.model.isClear is false and neighbor.model.isMine is false
+                    if neighbor != undefined
+                        if neighbor.model.isClear == false and neighbor.model.isMine == false
                             neighbor.clear()
 
         this.check = (event) ->
-\           if event.shiftKey == true || event.altKey == true
+            if event.shiftKey == true || event.altKey == true
                 this.toggleFlag()
             else
                 this.clear()

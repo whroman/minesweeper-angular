@@ -24,9 +24,12 @@ angular
     $scope.info = currentBoard.info
 
     $scope.autoSelect = (num) ->
-        $scope.tiles = CollectTiles.autoSelect num 
+        $scope.tiles = currentBoard.autoSelect num 
 
     $scope.newGame = (sizeX, sizeY, numOfMines) -> 
         currentBoard = CollectTiles.newGame sizeX, sizeY, numOfMines
+
         $scope.tiles = currentBoard.tiles
+        $scope.info = currentBoard.info
+
         $scope.modals.reset()

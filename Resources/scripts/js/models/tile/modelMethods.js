@@ -44,7 +44,7 @@ angular.module('ModelMethodsTile', []).service('ModelMethodsTile', function() {
             x: this.model.x + adjacentTile[0],
             y: this.model.y + adjacentTile[1]
           });
-          if (neighbor != null) {
+          if (neighbor !== void 0) {
             if (neighbor.model.isClear === false && neighbor.model.isMine === false) {
               _results.push(neighbor.clear());
             } else {
@@ -57,8 +57,7 @@ angular.module('ModelMethodsTile', []).service('ModelMethodsTile', function() {
         return _results;
       }
     };
-    this.check = function(event, x, y) {
-      console.log(x, y);
+    this.check = function(event) {
       if (event.shiftKey === true || event.altKey === true) {
         this.toggleFlag();
       } else {

@@ -1,5 +1,5 @@
 angular.module('CollectTiles', ['ModelTile', 'angularLocalStorage']).factory('CollectTiles', function(storage, ModelTile) {
-  var autoSelect, checkTile, exposeToModel, get, getAll, info, infoRefresh, init, loadGame, newGame, randomSafeTile, tallyMines, tiles;
+  var autoSelect, exposeToModel, get, getAll, info, infoRefresh, init, loadGame, newGame, randomSafeTile, tallyMines, tiles;
   tiles = {};
   info = {};
   exposeToModel = function() {
@@ -130,13 +130,6 @@ angular.module('CollectTiles', ['ModelTile', 'angularLocalStorage']).factory('Co
     this.infoRefresh();
     return this.tiles;
   };
-  checkTile = function(x, y, event) {
-    var tile;
-    return tile = this.get({
-      x: x,
-      y: y
-    });
-  };
   newGame = function(sizeX, sizeY, numOfMines) {
     var attrs, mineNum, tile, x, y, _i, _j, _k, _ref, _ref1;
     this.tiles = {};
@@ -192,7 +185,6 @@ angular.module('CollectTiles', ['ModelTile', 'angularLocalStorage']).factory('Co
     get: get,
     getAll: getAll,
     autoSelect: autoSelect,
-    checkTile: checkTile,
     exposeToModel: exposeToModel
   };
 });
