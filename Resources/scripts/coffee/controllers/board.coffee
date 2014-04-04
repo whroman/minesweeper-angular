@@ -18,18 +18,18 @@ angular
 
     $scope.sliders = ModelSliders.init 5, 15, 8
 
-    currentBoard = CollectTiles.init $scope, $scope.sliders.info
+    CollectTiles.init $scope, $scope.sliders.info
 
-    $scope.tiles = currentBoard.tiles
-    $scope.info = currentBoard.info
+    $scope.tiles = CollectTiles.tiles
+    $scope.info = CollectTiles.info
 
     $scope.checkTile = (event, x, y) ->
-        $scope.tiles = CollectTiles.checkTile x, y, event
+        CollectTiles.checkTile x, y, event
 
     $scope.autoSelect = (num) ->
-        $scope.tiles = CollectTiles.autoSelect num 
+        CollectTiles.autoSelect num 
 
     $scope.newGame = (sizeX, sizeY, numOfMines) -> 
-        currentBoard = CollectTiles.newGame sizeX, sizeY, numOfMines
-        $scope.tiles = currentBoard.tiles
+        CollectTiles.newGame sizeX, sizeY, numOfMines
+
         $scope.modals.reset()
