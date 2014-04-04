@@ -15,6 +15,11 @@ angular.module('CollectTiles', ['ModelTile', 'angularLocalStorage']).factory('Co
             return _this.getAll(attrs);
           };
         })(this),
+        infoRefresh: (function(_this) {
+          return function() {
+            return _this.infoRefresh();
+          };
+        })(this),
         info: this.info,
         randomSafeTile: this.randomSafeTile,
         tallyMines: this.tallyMines
@@ -127,17 +132,10 @@ angular.module('CollectTiles', ['ModelTile', 'angularLocalStorage']).factory('Co
   };
   checkTile = function(x, y, event) {
     var tile;
-    tile = this.get({
+    return tile = this.get({
       x: x,
       y: y
     });
-    if (event.shiftKey === true || event.altKey === true) {
-      tile.toggleFlag();
-    } else {
-      tile.clear();
-    }
-    this.infoRefresh();
-    return this.tiles;
   };
   newGame = function(sizeX, sizeY, numOfMines) {
     var attrs, mineNum, tile, x, y, _i, _j, _k, _ref, _ref1;

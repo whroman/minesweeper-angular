@@ -52,8 +52,17 @@ angular
                         if neighbor.model.isClear is false and neighbor.model.isMine is false
                             neighbor.clear()
 
+        this.check = (event) ->
+\           if event.shiftKey == true || event.altKey == true
+                this.toggleFlag()
+            else
+                this.clear()
+
+            this.collection.infoRefresh()
+
         return {
             clear       : this.clear
+            check       : this.check
             toggleFlag      : this.toggleFlag
             clearNeighbors  : this.clearNeighbors
             adjacentTiles   : this.adjacentTiles

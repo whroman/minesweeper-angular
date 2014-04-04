@@ -16,6 +16,8 @@ angular
                     this.get(attrs)
                 getAll  : (attrs) =>
                     this.getAll(attrs)
+                infoRefresh : () =>
+                    this.infoRefresh() 
                 info    : this.info
                 randomSafeTile  : this.randomSafeTile
                 tallyMines  : this.tallyMines
@@ -114,22 +116,6 @@ angular
         
         return this.tiles
 
-
-    checkTile = (x, y, event) ->
-        tile = this.get({
-            x : x, 
-            y : y
-        })
-
-        if event.shiftKey == true || event.altKey == true
-            tile.toggleFlag()
-        else
-            tile.clear()
-
-        this.infoRefresh()
-
-        return this.tiles
-
     newGame = (sizeX, sizeY, numOfMines) ->
         this.tiles = {}
         for y in [0..sizeY - 1]
@@ -189,6 +175,5 @@ angular
         get         : get
         getAll      : getAll
         autoSelect  : autoSelect
-        checkTile   : checkTile
         exposeToModel  : exposeToModel
     }

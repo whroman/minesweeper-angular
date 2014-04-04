@@ -57,8 +57,18 @@ angular.module('ModelMethodsTile', []).service('ModelMethodsTile', function() {
         return _results;
       }
     };
+    this.check = function(event, x, y) {
+      console.log(x, y);
+      if (event.shiftKey === true || event.altKey === true) {
+        this.toggleFlag();
+      } else {
+        this.clear();
+      }
+      return this.collection.infoRefresh();
+    };
     return {
       clear: this.clear,
+      check: this.check,
       toggleFlag: this.toggleFlag,
       clearNeighbors: this.clearNeighbors,
       adjacentTiles: this.adjacentTiles,

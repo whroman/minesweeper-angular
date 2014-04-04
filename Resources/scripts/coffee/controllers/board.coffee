@@ -23,9 +23,6 @@ angular
     $scope.tiles = currentBoard.tiles
     $scope.info = currentBoard.info
 
-    $scope.checkTile = (event, x, y) ->
-        $scope.tiles = CollectTiles.checkTile x, y, event
-
     $scope.autoSelect = (num) ->
         $scope.tiles = CollectTiles.autoSelect num 
 
