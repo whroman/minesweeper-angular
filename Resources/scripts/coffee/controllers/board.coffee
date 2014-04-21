@@ -16,7 +16,7 @@ angular
         'newGame'
     ])
 
-    $scope.sliders = ModelSliders.init 5, 10, 8
+    $scope.sliders = ModelSliders.init 5, 20, 10
 
     currentBoard = CollectTiles.init $scope, $scope.sliders.info
 

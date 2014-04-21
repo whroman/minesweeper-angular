@@ -47,21 +47,8 @@
         border-color:  #999;
     }
 
-    &.mine.clear {
+    &.clear.mine {
         background-color: #D32;
         border-color: #D32;
     }
-}
-
-#board .tile.zero {
-    background-color: blue;
-}
-
-#board .tile.mine {
-    background-color: #D32;
-    border-color: #D32;
-}
-
-#board .tile.test {
-    background-color: #f0f;
 }

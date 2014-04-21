@@ -4,6 +4,7 @@ angular.module('ModelTile', ['ModelMethodsTile']).service('ModelTile', function(
     this.model = {
       x: void 0,
       y: void 0,
+      uid: void 0,
       isMine: false,
       isClear: false,
       isFlagged: false,
@@ -18,6 +19,7 @@ angular.module('ModelTile', ['ModelMethodsTile']).service('ModelTile', function(
         attr = attrs[key];
         getSchema().model[key] = attr;
       }
+      getSchema().model.uid = getSchema().model.x.toString() + getSchema().model.y.toString();
       return getSchema();
     };
     this.extend = function(methods) {

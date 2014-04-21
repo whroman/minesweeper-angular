@@ -6,7 +6,7 @@ angular
 ]
 
 .factory 'CollectTiles', (storage, ModelTile) ->
-    tiles = {}
+    tiles = []
     info = {}
 
     exposeToModel = () ->
@@ -32,7 +32,7 @@ angular
             this.info.numOfFlags  = 0
             this.info.numOfMines  = 0
 
-            for key, tile of this.tiles
+            for tile in this.tiles
 
                 # All Tiles
                 this.info.numOfTiles++
@@ -66,10 +66,10 @@ angular
     getAll = (attrs) ->
         matches = []
         if attrs is undefined
-            for key, tile of this.tiles
+            for tile in this.tiles
                 matches.push(tile)
         else 
-            for key, tile of this.tiles
+            for tile in this.tiles
                 numOfAttrs = 0
                 numOfMatchedAttrs = 0
                 for key, val of attrs
@@ -86,14 +86,18 @@ angular
         for tile in this.getAll()
             neighborMines = 0
             for adjacentTile in tile.adjacentTiles
+                neighborX = tile.model.x + adjacentTile[0] 
+                neighborY = tile.model.y + adjacentTile[1]
                 neighborMine = this.get({
                     isMine  : true
-                    x       : tile.model.x + adjacentTile[0] 
-                    y       : tile.model.y + adjacentTile[1]
-                }) 
+                    x       : neighborX
+                    y       : neighborY
+                })
                 if neighborMine isnt undefined
                     neighborMines++
             tile.model.adjacentMines = neighborMines
+
+        return this
 
     randomSafeTile = () ->
         find = {
@@ -117,7 +121,7 @@ angular
         return this.tiles
 
     newGame = (sizeX, sizeY, numOfMines) ->
-        this.tiles = {}
+        this.tiles = []
         for y in [0..sizeY - 1]
             for x in [0..sizeX - 1]
                 attrs = {
@@ -125,8 +129,9 @@ angular
                     y   : y
                 }
 
-                this.tiles[x + '-' + y] = ModelTile(attrs)
-                    .extend(this.exposeToModel())
+                this.tiles.push(
+                    ModelTile(attrs).extend(this.exposeToModel())
+                )
 
         for mineNum in [1..numOfMines]
             tile = this.randomSafeTile()
@@ -139,13 +144,11 @@ angular
         return this
 
     loadGame = (savedTiles) ->
-        this.tiles = savedTiles
+        loadedTiles = []
+        for tile in savedTiles
+            loadedTiles.push(ModelTile(tile.model).extend(this.exposeToModel()))
 
-        for key, tile of this.tiles
-            test = this.tiles[key]
-
-            this.tiles[key] = ModelTile(this.tiles[key].model)
-                .extend(this.exposeToModel())
+        this.tiles = loadedTiles
 
         this.infoRefresh()
 

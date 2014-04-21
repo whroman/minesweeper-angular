@@ -9,6 +9,7 @@ angular
         this.model = {
                 x   : undefined
                 y   : undefined
+                uid : undefined
                 isMine      : false
                 isClear     : false
                 isFlagged   : false
@@ -21,6 +22,7 @@ angular
         this.set = (attrs) ->
             for key, attr of attrs
                 getSchema().model[key] = attr
+            getSchema().model.uid = getSchema().model.x.toString() + getSchema().model.y.toString()
             return getSchema()
 
         this.extend = (methods) ->

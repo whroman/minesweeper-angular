@@ -1,6 +1,6 @@
 angular.module('CollectTiles', ['ModelTile', 'angularLocalStorage']).factory('CollectTiles', function(storage, ModelTile) {
   var autoSelect, exposeToModel, get, getAll, info, infoRefresh, init, loadGame, newGame, randomSafeTile, tallyMines, tiles;
-  tiles = {};
+  tiles = [];
   info = {};
   exposeToModel = function() {
     return {
@@ -27,7 +27,7 @@ angular.module('CollectTiles', ['ModelTile', 'angularLocalStorage']).factory('Co
     };
   };
   infoRefresh = function() {
-    var key, tile, _ref;
+    var tile, _i, _len, _ref;
     this.info.loss = false;
     this.info.win = false;
     this.info.numOfTiles = 0;
@@ -35,8 +35,8 @@ angular.module('CollectTiles', ['ModelTile', 'angularLocalStorage']).factory('Co
     this.info.numOfFlags = 0;
     this.info.numOfMines = 0;
     _ref = this.tiles;
-    for (key in _ref) {
-      tile = _ref[key];
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      tile = _ref[_i];
       this.info.numOfTiles++;
       if (tile.model.isClear === true) {
         this.info.numOfClears++;
@@ -60,18 +60,18 @@ angular.module('CollectTiles', ['ModelTile', 'angularLocalStorage']).factory('Co
     return this.getAll(attrs)[0];
   };
   getAll = function(attrs) {
-    var key, matches, numOfAttrs, numOfMatchedAttrs, tile, val, _ref, _ref1;
+    var key, matches, numOfAttrs, numOfMatchedAttrs, tile, val, _i, _j, _len, _len1, _ref, _ref1;
     matches = [];
     if (attrs === void 0) {
       _ref = this.tiles;
-      for (key in _ref) {
-        tile = _ref[key];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        tile = _ref[_i];
         matches.push(tile);
       }
     } else {
       _ref1 = this.tiles;
-      for (key in _ref1) {
-        tile = _ref1[key];
+      for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+        tile = _ref1[_j];
         numOfAttrs = 0;
         numOfMatchedAttrs = 0;
         for (key in attrs) {
@@ -89,27 +89,28 @@ angular.module('CollectTiles', ['ModelTile', 'angularLocalStorage']).factory('Co
     return matches;
   };
   tallyMines = function() {
-    var adjacentTile, neighborMine, neighborMines, tile, _i, _j, _len, _len1, _ref, _ref1, _results;
+    var adjacentTile, neighborMine, neighborMines, neighborX, neighborY, tile, _i, _j, _len, _len1, _ref, _ref1;
     _ref = this.getAll();
-    _results = [];
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       tile = _ref[_i];
       neighborMines = 0;
       _ref1 = tile.adjacentTiles;
       for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
         adjacentTile = _ref1[_j];
+        neighborX = tile.model.x + adjacentTile[0];
+        neighborY = tile.model.y + adjacentTile[1];
         neighborMine = this.get({
           isMine: true,
-          x: tile.model.x + adjacentTile[0],
-          y: tile.model.y + adjacentTile[1]
+          x: neighborX,
+          y: neighborY
         });
         if (neighborMine !== void 0) {
           neighborMines++;
         }
       }
-      _results.push(tile.model.adjacentMines = neighborMines);
+      tile.model.adjacentMines = neighborMines;
     }
-    return _results;
+    return this;
   };
   randomSafeTile = function() {
     var find, randomTile, safeTiles;
@@ -132,14 +133,14 @@ angular.module('CollectTiles', ['ModelTile', 'angularLocalStorage']).factory('Co
   };
   newGame = function(sizeX, sizeY, numOfMines) {
     var attrs, mineNum, tile, x, y, _i, _j, _k, _ref, _ref1;
-    this.tiles = {};
+    this.tiles = [];
     for (y = _i = 0, _ref = sizeY - 1; 0 <= _ref ? _i <= _ref : _i >= _ref; y = 0 <= _ref ? ++_i : --_i) {
       for (x = _j = 0, _ref1 = sizeX - 1; 0 <= _ref1 ? _j <= _ref1 : _j >= _ref1; x = 0 <= _ref1 ? ++_j : --_j) {
         attrs = {
           x: x,
           y: y
         };
-        this.tiles[x + '-' + y] = ModelTile(attrs).extend(this.exposeToModel());
+        this.tiles.push(ModelTile(attrs).extend(this.exposeToModel()));
       }
     }
     for (mineNum = _k = 1; 1 <= numOfMines ? _k <= numOfMines : _k >= numOfMines; mineNum = 1 <= numOfMines ? ++_k : --_k) {
@@ -151,14 +152,13 @@ angular.module('CollectTiles', ['ModelTile', 'angularLocalStorage']).factory('Co
     return this;
   };
   loadGame = function(savedTiles) {
-    var key, test, tile, _ref;
-    this.tiles = savedTiles;
-    _ref = this.tiles;
-    for (key in _ref) {
-      tile = _ref[key];
-      test = this.tiles[key];
-      this.tiles[key] = ModelTile(this.tiles[key].model).extend(this.exposeToModel());
+    var loadedTiles, tile, _i, _len;
+    loadedTiles = [];
+    for (_i = 0, _len = savedTiles.length; _i < _len; _i++) {
+      tile = savedTiles[_i];
+      loadedTiles.push(ModelTile(tile.model).extend(this.exposeToModel()));
     }
+    this.tiles = loadedTiles;
     this.infoRefresh();
     return this;
   };
