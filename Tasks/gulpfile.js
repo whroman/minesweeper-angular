@@ -10,6 +10,7 @@ var uglify  = require('gulp-uglify')
 var processhtml  = require('gulp-processhtml')
 var htmlreplace  = require('gulp-html-replace')
 var clean   = require('gulp-clean')
+var bower = require('gulp-bower')
 
 var options = {
     css     : {
@@ -38,6 +39,7 @@ var path = {
     root    : '../Resources/'
 }
 
+path.bower = path.root + 'bower_components/';
 path.build = path.root + 'build/';
 
 path.css = {
@@ -47,7 +49,7 @@ path.css = {
 }
 
 path.css.compile = [
-    path.css.lib + 'ng-slider.min.css',
+    path.bower + 'ng-slider/dist/css/ng-slider.min.css',
     path.css.compiled + 'base.css',
     path.css.compiled + 'board.css',
     path.css.compiled + 'dashboard.css',
@@ -60,20 +62,20 @@ path.scss = {
 }
 
 path.js = {
-    lib         : path.root + 'scripts/lib/',
     compiled    : path.root + 'scripts/js/',
     build       : path.build + 'build.js',
 }
 
+
 path.js.compile = setPaths(
-    path.js.lib, '.js', [
-        'angular.min',
-        'jquery.min',
-        'angular-route.min',
-        'angular-sanitize',
-        'angular-cookies.min',
-        'angularLocalStorage',
-        'ng-slider.min'
+    path.bower, '.js', [
+        'angular/angular.min',
+        'angular-route/angular-route.min',
+        'angular-sanitize/angular-sanitize.min',
+        'angular-cookies/angular-cookies.min',
+        'angularLocalStorage/src/angularLocalStorage',
+        'jquery/dist/jquery.min',
+        'ng-slider/dist/ng-slider.min'
     ]
 ).concat(setPaths(
     path.js.compiled, '.js', [
@@ -252,6 +254,13 @@ gulp.task(
         gulp.watch(
             path.html.index, ['html']
         )
+    }
+);
+
+gulp.task(
+    'bower',
+    function() {
+        bower()
     }
 );
 
