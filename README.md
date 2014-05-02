@@ -1,4 +1,4 @@
 minesweeper-angular
 ===================
 
-A single-page Minesweeper application built using Angular, Sass and Gulp
+A single-page Minesweeper app built using Angular, Coffeescript, Sass and Gulp
