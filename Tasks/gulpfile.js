@@ -89,6 +89,17 @@ path.js.compile = setPaths(
     ]
 ))
 
+path.css.inject = path.css.compile
+path.js.inject = path.js.compile
+
+for (var i = 0; i < path.css.inject; i++) {
+    path.css.inject[i].replace("../", "./")
+}
+
+for (var i = 0; i < path.js.inject; i++) {
+    path.js.inject[i].replace("../", "./")
+}
+
 path.coffee = {
     src     : [path.root + 'scripts/coffee/**/*.coffee'],
     dest    : path.js.compiled,
@@ -220,8 +231,8 @@ gulp.task(
         )
         .pipe(
             htmlreplace({
-                js  : path.js.compile,
-                css : path.css.compile
+                js  : path.js.inject,
+                css : path.css.inject
             })
         )
         .pipe(
