@@ -1,12 +1,4 @@
-function setPaths(path, format, files) {
-    filePaths = [];
-
-    for (var i = 0; i < files.length; i++) {
-        filePaths.push(path + files[i] + format)
-    }
-
-    return filePaths;
-}
+var batchPaths = require('./batchPaths.js');
 
 var path = {
     cwd     : '../',
@@ -22,13 +14,20 @@ path.css = {
     build       : path.build + 'build.css',
 }
 
-path.css.compile = [
-    path.bower + 'ng-slider/dist/css/ng-slider.min.css',
-    path.css.compiled + 'base.css',
-    path.css.compiled + 'board.css',
-    path.css.compiled + 'dashboard.css',
-    path.css.compiled + 'overlay.css',
-]
+path.css.compile = batchPaths
+    .suffix('.css')
+    .prefix(path.bower)
+    .add([
+        'ng-slider/dist/css/ng-slider.min.css',
+    ])
+    .prefix(path.css.compiled)
+    .add([
+        'base.css',
+        'board.css',
+        'dashboard.css',
+        'overlay.css',
+    ])
+    .all()
 
 path.scss = {
     src     : [path.root + 'stylesheets/scss/**/*.scss'],
@@ -41,8 +40,10 @@ path.js = {
 }
 
 
-path.js.compile = setPaths(
-    path.bower, '.js', [
+path.js.compile = batchPaths
+    .suffix('.js')
+    .prefix(path.bower)
+    .add([
         'angular/angular.min',
         'angular-route/angular-route.min',
         'angular-sanitize/angular-sanitize.min',
@@ -50,9 +51,9 @@ path.js.compile = setPaths(
         'angularLocalStorage/src/angularLocalStorage',
         'jquery/dist/jquery.min',
         'ng-slider/dist/ng-slider.min'
-    ]
-).concat(setPaths(
-    path.js.compiled, '.js', [
+    ])
+    .prefix(path.js.compiled)
+    .add([
         'collections/tiles/collection',
         'models/sliders/model',
         'models/modals/model',
@@ -60,8 +61,8 @@ path.js.compile = setPaths(
         'models/tile/modelMethods',
         'controllers/board',
         'app'
-    ]
-))
+    ])
+    .all()
 
 path.coffee = {
     src     : [path.root + 'scripts/coffee/**/*.coffee'],

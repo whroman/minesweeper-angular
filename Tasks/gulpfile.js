@@ -19,7 +19,6 @@ var options = config.options;
 gulp.task(
     'sass', 
     function() {
-        console.log(options.gulpSrc)
         return gulp
         .src(
             path.scss.src, options.gulpSrc
@@ -159,7 +158,6 @@ gulp.task(
 gulp.task(
     'watch', 
     function() {
-        console.log(options.gulpSrc)
         gulp.watch(
             path.scss.src, options.gulpNoRead, ['sass', 'build-css']
         )
