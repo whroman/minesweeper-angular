@@ -3,7 +3,6 @@ angular
     'ngRoute',
     'CtrlBoard'
 ]
-
 .config ($routeProvider, $locationProvider) ->
     $routeProvider
         .when '/:any*', {

@@ -7,23 +7,9 @@ var coffee  = require('gulp-coffee')
 var connect = require('gulp-connect')
 var concat  = require('gulp-concat')
 var uglify  = require('gulp-uglify')
-var processhtml  = require('gulp-processhtml')
 var htmlreplace  = require('gulp-html-replace')
 var clean   = require('gulp-clean')
 var bower = require('gulp-bower')
-
-var options = {
-    css     : {
-        keepSpecialComments : 0,
-        removeEmpty : true,
-    },
-    scss    : {
-        style   : 'compressed',
-    },
-    coffee  : {
-        bare    : true,
-    },
-}
 
 function setPaths(path, format, files) {
     filePaths = [];
@@ -36,6 +22,7 @@ function setPaths(path, format, files) {
 }
 
 var path = {
+    cwd     : '../',
     root    : 'Resources/'
 }
 
@@ -89,17 +76,6 @@ path.js.compile = setPaths(
     ]
 ))
 
-path.css.inject = path.css.compile
-path.js.inject = path.js.compile
-
-for (var i = 0; i < path.css.inject; i++) {
-    path.css.inject[i].replace("../", "./")
-}
-
-for (var i = 0; i < path.js.inject; i++) {
-    path.js.inject[i].replace("../", "./")
-}
-
 path.coffee = {
     src     : [path.root + 'scripts/coffee/**/*.coffee'],
     dest    : path.js.compiled,
@@ -110,21 +86,43 @@ path.html = {
     index   : 'index.html'
 }
 
+var options = {};
+
+options.css = {
+    keepSpecialComments : 0,
+    removeEmpty : true,
+};
+
+options.scss    = {
+    style   : 'compressed',
+};
+
+options.coffee  = {
+    bare    : true,
+};
+
+options.gulpSrc = {
+    cwd     : path.cwd,
+};
+
+options.gulpNoRead = {
+    cwd     : path.cwd,
+    read    : false
+};
+
 gulp.task(
     'sass', 
     function() {
+        console.log(options.gulpSrc)
         return gulp
         .src(
-            path.scss.src,
-            {
-                cwd : '../'
-            }
+            path.scss.src, options.gulpSrc
         )
         .pipe(
             sass( options.scss )
         )
         .pipe(
-            gulp.dest('../' + path.scss.dest)
+            gulp.dest( path.cwd + path.scss.dest )
         )
         .pipe(
             connect.reload()
@@ -138,10 +136,7 @@ gulp.task(
     function() {
         return gulp
         .src(
-            path.coffee.src, 
-            {
-                cwd : '../'
-            }
+            path.coffee.src, options.gulpSrc
         )
         .pipe(
             coffee(
@@ -149,9 +144,7 @@ gulp.task(
             ).on('error', util.log)
         )
         .pipe(
-            gulp.dest(
-                '../' + path.coffee.dest
-            )
+            gulp.dest( path.cwd + path.coffee.dest )
         )
     }
 );
@@ -161,10 +154,7 @@ gulp.task(
     function() {
         return gulp
         .src(
-            path.js.compile,
-            {
-                cwd : '../'
-            }
+            path.js.compile, options.gulpSrc
         )
         .pipe(
             concat(path.js.build)
@@ -175,7 +165,7 @@ gulp.task(
             })
         )
         .pipe(
-            gulp.dest('../')
+            gulp.dest( path.cwd )
         )
     }
 )
@@ -185,10 +175,7 @@ gulp.task(
     function() {
         return gulp
         .src(
-            path.css.compile,
-            {
-                cwd : '../'
-            }
+            path.css.compile, options.gulpSrc
         )
         .pipe(
             concat(path.css.build)
@@ -197,7 +184,7 @@ gulp.task(
             cssmin(options.css)
         )
         .pipe(
-            gulp.dest('../')
+            gulp.dest( path.cwd )
         )
     }
 )
@@ -207,10 +194,7 @@ gulp.task(
     function() {
         return gulp
         .src(
-            path.js.compiled, {
-                read: false,
-                cwd : '../'
-            }
+            path.js.compiled, options.gulpNoRead
         )
         .pipe(
             clean({
@@ -225,10 +209,7 @@ gulp.task(
     function() {
         return gulp
         .src(
-            path.css.compiled, {
-                read: false,
-                cwd : '../'
-            }
+            path.css.compiled, options.gulpNoRead
         )
         .pipe(
             clean({
@@ -243,7 +224,7 @@ gulp.task(
     function() {
         return gulp
         .src(
-            path.html.index, {cwd:'../'}
+            path.html.index, options.gulpSrc
         )
         .pipe(
             htmlreplace({
@@ -255,7 +236,7 @@ gulp.task(
             rename(path.html.dev)
         )
         .pipe(
-            gulp.dest('../')
+            gulp.dest(path.cwd)
         )
     }
 )
@@ -263,7 +244,7 @@ gulp.task(
 gulp.task(
     'connect', 
     connect.server({
-        root    : ['../'],
+        root    : [path.cwd],
         port    : '8888'
     })
 );
@@ -272,11 +253,12 @@ gulp.task(
 gulp.task(
     'watch', 
     function() {
+        console.log(options.gulpSrc)
         gulp.watch(
-            path.scss.src, ['sass', 'build-css']
+            path.scss.src, options.gulpNoRead, ['sass', 'build-css']
         )
         gulp.watch(
-            path.coffee.src, ['coffee', 'build-js']
+            path.coffee.src, options.gulpNoRead, ['coffee', 'build-js']
         )
         gulp.watch(
             path.html.index, ['html']
