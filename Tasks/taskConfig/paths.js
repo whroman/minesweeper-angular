@@ -18,14 +18,14 @@ path.css.compile = batchPaths
     .suffix('.css')
     .prefix(path.bower)
     .add([
-        'ng-slider/dist/css/ng-slider.min.css',
+        'ng-slider/dist/css/ng-slider.min',
     ])
     .prefix(path.css.compiled)
     .add([
-        'base.css',
-        'board.css',
-        'dashboard.css',
-        'overlay.css',
+        'base',
+        'board',
+        'dashboard',
+        'overlay',
     ])
     .all()
 

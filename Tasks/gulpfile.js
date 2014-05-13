@@ -57,6 +57,7 @@ gulp.task(
 gulp.task(
     'build-js',
     function() {
+        console.log(path.js.compile)
         return gulp
         .src(
             path.js.compile, options.gulpSrc

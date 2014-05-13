@@ -39,7 +39,9 @@ var batchPaths = function() {
     // Args: none
     // Returns Array comprised of all strings that have been stored in current batchPaths Object via method add()
     function all () {
-        return _all
+        var all = _all;
+        _all = [];
+        return all
     };
 
     return {
