@@ -34,9 +34,10 @@ angular.module('ModelSliders', []).factory('ModelSliders', function() {
         to: newTo,
         step: info.x.options.step
       };
-      if (currentVal === void 0 || (currentVal < newFrom && currentVal > newTo)) {
+      if (currentVal === void 0 || (parseFloat(currentVal) < newFrom || parseFloat(currentVal) > newTo)) {
         info.mines.val = newVal;
       }
+      console.log(this, newVal, newFrom, currentVal, newTo, parseFloat(currentVal));
       return this;
     };
     return {

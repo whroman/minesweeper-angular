@@ -44,7 +44,7 @@ angular
                 step    : info.x.options.step
             }
 
-            if (currentVal == undefined || (currentVal < newFrom && currentVal > newTo))
+            if (currentVal == undefined || (parseFloat(currentVal) < newFrom || parseFloat(currentVal) > newTo))
                 info.mines.val = newVal
 
             return this
