@@ -37,7 +37,6 @@ angular.module('ModelSliders', []).factory('ModelSliders', function() {
       if (currentVal === void 0 || (parseFloat(currentVal) < newFrom || parseFloat(currentVal) > newTo)) {
         info.mines.val = newVal;
       }
-      console.log(this, newVal, newFrom, currentVal, newTo, parseFloat(currentVal));
       return this;
     };
     return {
