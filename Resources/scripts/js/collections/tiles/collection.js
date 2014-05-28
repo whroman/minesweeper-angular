@@ -152,11 +152,12 @@ angular.module('CollectTiles', ['ModelTile', 'angularLocalStorage']).factory('Co
     return this;
   };
   loadGame = function(savedTiles) {
-    var loadedTiles, tile, _i, _len;
+    var loadedTiles, savedTile, tile, _i, _len;
     loadedTiles = [];
     for (_i = 0, _len = savedTiles.length; _i < _len; _i++) {
       tile = savedTiles[_i];
-      loadedTiles.push(ModelTile(tile.model).extend(this.exposeToModel()));
+      savedTile = ModelTile(tile.model).extend(this.exposeToModel());
+      loadedTiles.push(savedTile);
     }
     this.tiles = loadedTiles;
     this.infoRefresh();

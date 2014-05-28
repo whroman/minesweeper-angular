@@ -8,30 +8,10 @@ var path = {
 path.bower = path.root + 'bower_components/';
 path.build = path.root + 'build/';
 
-path.css = {
-    lib         : path.root + 'stylesheets/lib/',
-    compiled    : path.root + 'stylesheets/css/',
-    build       : path.build + 'build.css',
-}
-
-path.css.compile = batchPaths
-    .suffix('.css')
-    .prefix(path.bower)
-    .add([
-        'ng-slider/dist/css/ng-slider.min',
-    ])
-    .prefix(path.css.compiled)
-    .add([
-        'base',
-        'board',
-        'dashboard',
-        'overlay',
-    ])
-    .all()
-
 path.scss = {
-    src     : [path.root + 'stylesheets/scss/**/*.scss'],
-    dest    : path.css.compiled
+    watch   : path.root + 'scss/**/*.scss',
+    src     : [path.root + 'scss/index.scss'],
+    buildName   : 'build.scss'
 }
 
 path.js = {
@@ -83,6 +63,7 @@ options.css = {
 
 options.scss    = {
     style   : 'compressed',
+    sourcemap : true
 };
 
 options.coffee  = {
@@ -96,6 +77,10 @@ options.gulpSrc = {
 options.gulpNoRead = {
     cwd     : path.cwd,
     read    : false
+};
+
+options.htmlReplace = {
+    js  : path.js.compile
 };
 
 

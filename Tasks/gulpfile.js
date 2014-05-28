@@ -8,7 +8,6 @@ var connect = require('gulp-connect')
 var concat  = require('gulp-concat')
 var uglify  = require('gulp-uglify')
 var htmlreplace  = require('gulp-html-replace')
-var clean   = require('gulp-clean')
 var bower = require('gulp-bower')
 
 var config = require('./taskConfig/paths.js')
@@ -20,18 +19,11 @@ gulp.task(
     'sass', 
     function() {
         return gulp
-        .src(
-            path.scss.src, options.gulpSrc
-        )
-        .pipe(
-            sass( options.scss )
-        )
-        .pipe(
-            gulp.dest( path.cwd + path.scss.dest )
-        )
-        .pipe(
-            connect.reload()
-        )
+        .src(path.scss.src, options.gulpSrc)
+        .pipe(rename('build.scss'))
+        .pipe(sass(options.scss).on('error', util.log))
+        .pipe(gulp.dest(path.cwd + path.build))
+        .pipe(connect.reload())
     }
 );
 
@@ -76,55 +68,6 @@ gulp.task(
 )
 
 gulp.task(
-    'build-css',
-    function() {
-        return gulp
-        .src(
-            path.css.compile, options.gulpSrc
-        )
-        .pipe(
-            concat(path.css.build)
-        )
-        .pipe(
-            cssmin(options.css)
-        )
-        .pipe(
-            gulp.dest( path.cwd )
-        )
-    }
-)
-
-gulp.task(
-    'clean-js', 
-    function() {
-        return gulp
-        .src(
-            path.js.compiled, options.gulpNoRead
-        )
-        .pipe(
-            clean({
-                force: true
-            })
-        )
-    }
-)
-
-gulp.task(
-    'clean-css', 
-    function() {
-        return gulp
-        .src(
-            path.css.compiled, options.gulpNoRead
-        )
-        .pipe(
-            clean({
-                force: true
-            })
-        )
-    }
-)
-
-gulp.task(
     'html',
     function() {
         return gulp
@@ -132,10 +75,7 @@ gulp.task(
             path.html.index, options.gulpSrc
         )
         .pipe(
-            htmlreplace({
-                js  : path.js.compile,
-                css : path.css.compile
-            })
+            htmlreplace(options.htmlReplace)
         )
         .pipe(
             rename(path.html.dev)
@@ -159,7 +99,7 @@ gulp.task(
     'watch', 
     function() {
         gulp.watch(
-            path.scss.src, options.gulpNoRead, ['sass', 'build-css']
+            path.scss.src, options.gulpNoRead, ['sass']
         )
         gulp.watch(
             path.coffee.src, options.gulpNoRead, ['coffee', 'build-js']
@@ -179,12 +119,7 @@ gulp.task(
 
 gulp.task(
     'compile',
-    ['coffee', 'build-js', 'sass', 'build-css']
-);
-
-gulp.task(
-    'clean',
-    ['clean-js', 'clean-css']
+    ['coffee', 'build-js', 'sass']
 );
 
 gulp.task(

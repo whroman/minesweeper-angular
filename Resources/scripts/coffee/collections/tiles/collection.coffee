@@ -146,7 +146,8 @@ angular
     loadGame = (savedTiles) ->
         loadedTiles = []
         for tile in savedTiles
-            loadedTiles.push(ModelTile(tile.model).extend(this.exposeToModel()))
+            savedTile = ModelTile(tile.model).extend(this.exposeToModel())
+            loadedTiles.push(savedTile)
 
         this.tiles = loadedTiles
 
