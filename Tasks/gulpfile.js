@@ -10,8 +10,7 @@ var uglify  = require('gulp-uglify')
 var htmlreplace  = require('gulp-html-replace')
 var bower = require('gulp-bower')
 
-var config = require('./taskConfig/paths.js')
-
+var config = require('./config');
 var path = config.path;
 var options = config.options;
 
@@ -32,17 +31,9 @@ gulp.task(
     'coffee',
     function() {
         return gulp
-        .src(
-            path.coffee.src, options.gulpSrc
-        )
-        .pipe(
-            coffee(
-                options.coffee
-            ).on('error', util.log)
-        )
-        .pipe(
-            gulp.dest( path.cwd + path.coffee.dest )
-        )
+        .src(path.coffee.src, options.gulpSrc)
+        .pipe(coffee(options.coffee).on('error', util.log))
+        .pipe(gulp.dest( path.cwd + path.coffee.dest ))
     }
 );
 
@@ -105,7 +96,7 @@ gulp.task(
             path.coffee.src, options.gulpNoRead, ['coffee', 'build-js']
         )
         gulp.watch(
-            path.html.index, ['html']
+            path.cwd + path.html.index, ['html']
         )
     }
 );
