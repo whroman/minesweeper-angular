@@ -1,15 +1,10 @@
-var gulp    = require('gulp')
-var util    = require('gulp-util')
-var sass    = require('gulp-ruby-sass')
-var cssmin    = require('gulp-minify-css')
-var rename  = require('gulp-rename')
-var coffee  = require('gulp-coffee')
-var connect = require('gulp-connect')
-var concat  = require('gulp-concat')
-var uglify  = require('gulp-uglify')
-var htmlreplace  = require('gulp-html-replace')
-var bower = require('gulp-bower')
+var gulp    = require('gulp');
 
+// Loads all gulp plugins located in package.json
+// > Call plugins using `gp.<camelizedPluginName>
+var gp = require('gulp-load-plugins')();
+
+// Load configurations for gulp files
 var config = require('./config');
 var path = config.path;
 var options = config.options;
@@ -19,10 +14,10 @@ gulp.task(
     function() {
         return gulp
         .src(path.scss.src, options.gulpSrc)
-        .pipe(rename('build.scss'))
-        .pipe(sass(options.scss).on('error', util.log))
+        .pipe(gp.rename('build.scss'))
+        .pipe(gp.rubySass(options.scss).on('error', gp.util.log))
         .pipe(gulp.dest(path.cwd + path.build))
-        .pipe(connect.reload())
+        .pipe(gp.connect.reload())
     }
 );
 
@@ -32,7 +27,7 @@ gulp.task(
     function() {
         return gulp
         .src(path.coffee.src, options.gulpSrc)
-        .pipe(coffee(options.coffee).on('error', util.log))
+        .pipe(gp.coffee(options.coffee).on('error', gp.util.log))
         .pipe(gulp.dest( path.cwd + path.coffee.dest ))
     }
 );
@@ -41,20 +36,10 @@ gulp.task(
     'build-js',
     function() {
         return gulp
-        .src(
-            path.js.compile, options.gulpSrc
-        )
-        .pipe(
-            concat(path.js.build)
-        )
-        .pipe(
-            uglify({
-                mangle: false
-            })
-        )
-        .pipe(
-            gulp.dest( path.cwd )
-        )
+        .src(path.js.compile, options.gulpSrc)
+        .pipe(gp.concat(path.js.build))
+        .pipe(gp.uglify(options.uglify))
+        .pipe(gulp.dest( path.cwd ))
     }
 )
 
@@ -66,10 +51,10 @@ gulp.task(
             path.html.index, options.gulpSrc
         )
         .pipe(
-            htmlreplace(options.htmlReplace)
+            gp.htmlReplace(options.htmlReplace)
         )
         .pipe(
-            rename(path.html.dev)
+            gp.rename(path.html.dev)
         )
         .pipe(
             gulp.dest(path.cwd)
@@ -79,10 +64,7 @@ gulp.task(
 
 gulp.task(
     'connect', 
-    connect.server({
-        root    : [path.cwd],
-        port    : '8888'
-    })
+    gp.connect.server(options.connect)
 );
 
 
@@ -90,7 +72,7 @@ gulp.task(
     'watch', 
     function() {
         gulp.watch(
-            path.scss.src, options.gulpNoRead, ['sass']
+            path.scss.watch, options.gulpNoRead, ['sass']
         )
         gulp.watch(
             path.coffee.src, options.gulpNoRead, ['coffee', 'build-js']
@@ -98,13 +80,6 @@ gulp.task(
         gulp.watch(
             path.cwd + path.html.index, ['html']
         )
-    }
-);
-
-gulp.task(
-    'bower',
-    function() {
-        bower()
     }
 );
 
