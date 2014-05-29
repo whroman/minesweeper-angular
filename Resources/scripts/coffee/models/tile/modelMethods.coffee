@@ -13,7 +13,6 @@ angular
         ]
 
         toggleFlag = () ->
-            console.log(this)
             if (this.model.isFlagged is true)
                 this.model.isFlagged = false
             else
