@@ -17,8 +17,6 @@ angular
                     this.get(attrs)
                 getAll  : (attrs) =>
                     this.getAll(attrs)
-                infoRefresh : () =>
-                    this.info.update(this.tiles) 
                 info    : this.info
                 randomSafeTile  : this.randomSafeTile
                 tallyMines  : this.tallyMines
@@ -80,8 +78,6 @@ angular
         while num--
             tile = this.randomSafeTile()
             tile.clear()
-
-        this.info.update(this.tiles)
         
         return this.tiles
 
@@ -104,8 +100,6 @@ angular
         
         this.tallyMines()
 
-        this.info.update(this.tiles)
-
         return this
 
     loadGame = (savedTiles) ->
@@ -115,8 +109,6 @@ angular
             loadedTiles.push(savedTile)
 
         this.tiles = loadedTiles
-
-        this.info.update(this.tiles)
 
         return this
 

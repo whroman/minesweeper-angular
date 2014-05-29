@@ -28,6 +28,7 @@ angular
 
             return this
 
+# Decouple logic of whether game is at initial state and making sure a clicked mine is converted to safe mine
         noMineFirstClick = () ->
             if this.collection.info.numOfClears is 0 and this.model.isMine is true
                 this.model.isMine = false
@@ -56,8 +57,6 @@ angular
                 this.toggleFlag()
             else
                 this.clear()
-
-            this.collection.infoRefresh()
 
         return {
             clear           : clear

@@ -25,7 +25,20 @@ angular.module('CtrlBoard', ['ngSlider', 'CollectTiles', 'ModelSliders', 'ModelM
     $scope.info = currentBoard.info;
     return $scope.modals.reset();
   };
-  return $scope.$watch(currentBoard.tiles, function() {
-    return console.log('foo');
+  $scope.tileClick = function() {
+    return console.log('');
+  };
+  return $scope.$watchCollection(function() {
+    var tile, toWatch, _i, _len, _ref;
+    toWatch = [];
+    _ref = $scope.tiles;
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      tile = _ref[_i];
+      toWatch.push(tile.model.isClear);
+      toWatch.push(tile.model.isFlagged);
+    }
+    return toWatch;
+  }, function() {
+    return $scope.info.update($scope.tiles);
   });
 });

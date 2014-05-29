@@ -15,11 +15,6 @@ angular.module('CollectTiles', ['ModelTile', 'ModelBoardInfo', 'angularLocalStor
             return _this.getAll(attrs);
           };
         })(this),
-        infoRefresh: (function(_this) {
-          return function() {
-            return _this.info.update(_this.tiles);
-          };
-        })(this),
         info: this.info,
         randomSafeTile: this.randomSafeTile,
         tallyMines: this.tallyMines
@@ -98,7 +93,6 @@ angular.module('CollectTiles', ['ModelTile', 'ModelBoardInfo', 'angularLocalStor
       tile = this.randomSafeTile();
       tile.clear();
     }
-    this.info.update(this.tiles);
     return this.tiles;
   };
   newGame = function(sizeX, sizeY, numOfMines) {
@@ -118,7 +112,6 @@ angular.module('CollectTiles', ['ModelTile', 'ModelBoardInfo', 'angularLocalStor
       tile.model.isMine = true;
     }
     this.tallyMines();
-    this.info.update(this.tiles);
     return this;
   };
   loadGame = function(savedTiles) {
@@ -130,7 +123,6 @@ angular.module('CollectTiles', ['ModelTile', 'ModelBoardInfo', 'angularLocalStor
       loadedTiles.push(savedTile);
     }
     this.tiles = loadedTiles;
-    this.info.update(this.tiles);
     return this;
   };
   return {

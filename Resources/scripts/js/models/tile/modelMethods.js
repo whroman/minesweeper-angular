@@ -60,11 +60,10 @@ angular.module('ModelMethodsTile', []).service('ModelMethodsTile', function() {
     };
     check = function(event) {
       if (event.shiftKey === true || event.altKey === true) {
-        this.toggleFlag();
+        return this.toggleFlag();
       } else {
-        this.clear();
+        return this.clear();
       }
-      return this.collection.infoRefresh();
     };
     return {
       clear: clear,

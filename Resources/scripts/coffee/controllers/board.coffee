@@ -47,6 +47,17 @@ angular
 
         $scope.modals.reset()
 
-    $scope.$watch(currentBoard.tiles, ->
-        console.log 'foo'
+    $scope.tileClick = () ->
+        console.log ''
+
+    # Update game info when change occurs to any tile
+    $scope.$watchCollection(
+        -> 
+            toWatch = [];
+            for tile in $scope.tiles
+                toWatch.push tile.model.isClear
+                toWatch.push tile.model.isFlagged
+            return toWatch
+        , ->
+            $scope.info.update($scope.tiles)
     )
