@@ -155,20 +155,7 @@ angular
 
         return this
 
-    init = (scope, info) ->
-        board  = undefined
-        if storage.get('tiles') == null
-            board = this.newGame info.x.val, info.y.val, info.mines.val
-        else
-            board = this.loadGame storage.get('tiles')
-
-        storage.bind scope, 'tiles'
-
-        return board
-
-
     return {
-        init        : init
         tiles       : tiles
         newGame     : newGame
         loadGame    : loadGame

@@ -10,15 +10,28 @@ angular
 
 .controller 'CtrlBoard', 
 ($scope, storage, CollectTiles, ModelSliders, ModelModals) ->
+    init = (boardInstance, info) ->
+        board  = undefined
+        if storage.get('tiles') == null
+            board = boardInstance.newGame info.x.val, info.y.val, info.mines.val
+        else
+            board = boardInstance.loadGame storage.get('tiles')
 
-    $scope.modals = ModelModals.set('Resources/templates/modals/', [
-        'instructions',
-        'newGame'
-    ])
+        storage.bind $scope, 'tiles'
+
+        return board
+
+    $scope.modals = ModelModals.set(
+        'Resources/templates/modals/', 
+        [
+            'instructions',
+            'newGame'
+        ]
+    )
 
     $scope.sliders = ModelSliders.init 5, 20, 10
 
-    currentBoard = CollectTiles.init $scope, $scope.sliders.info
+    currentBoard = init CollectTiles, $scope.sliders.info
 
     $scope.tiles = currentBoard.tiles
     $scope.info = currentBoard.info
