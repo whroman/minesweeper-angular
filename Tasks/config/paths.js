@@ -31,6 +31,7 @@ path.js.compile = [
     path.js.compiled + 'models/modals/model.js',
     path.js.compiled + 'models/tile/model.js',
     path.js.compiled + 'models/tile/modelMethods.js',
+    path.js.compiled + 'models/boardInfo/model.js',
     path.js.compiled + 'controllers/board.js',
     path.js.compiled + 'app.js'
 ];

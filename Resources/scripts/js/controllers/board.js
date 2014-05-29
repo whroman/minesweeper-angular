@@ -19,10 +19,13 @@ angular.module('CtrlBoard', ['ngSlider', 'CollectTiles', 'ModelSliders', 'ModelM
   $scope.autoSelect = function(num) {
     return $scope.tiles = currentBoard.autoSelect(num);
   };
-  return $scope.newGame = function(sizeX, sizeY, numOfMines) {
+  $scope.newGame = function(sizeX, sizeY, numOfMines) {
     currentBoard = CollectTiles.newGame(sizeX, sizeY, numOfMines);
     $scope.tiles = currentBoard.tiles;
     $scope.info = currentBoard.info;
     return $scope.modals.reset();
   };
+  return $scope.$watch(currentBoard.tiles, function() {
+    return console.log('foo');
+  });
 });

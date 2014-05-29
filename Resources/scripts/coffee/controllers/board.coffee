@@ -46,3 +46,7 @@ angular
         $scope.info = currentBoard.info
 
         $scope.modals.reset()
+
+    $scope.$watch(currentBoard.tiles, ->
+        console.log 'foo'
+    )

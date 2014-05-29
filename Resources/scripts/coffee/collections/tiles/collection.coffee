@@ -2,12 +2,13 @@ angular
 .module 'CollectTiles', [
 # Dependencies
     'ModelTile',
+    'ModelBoardInfo',
     'angularLocalStorage'
 ]
 
-.factory 'CollectTiles', (storage, ModelTile) ->
+.factory 'CollectTiles', (storage, ModelTile, ModelBoardInfo) ->
     tiles = []
-    info = {}
+    info = ModelBoardInfo
 
     exposeToModel = () ->
         return {
@@ -17,48 +18,12 @@ angular
                 getAll  : (attrs) =>
                     this.getAll(attrs)
                 infoRefresh : () =>
-                    this.infoRefresh() 
+                    this.info.update(this.tiles) 
                 info    : this.info
                 randomSafeTile  : this.randomSafeTile
                 tallyMines  : this.tallyMines
             }
         }
-
-    infoRefresh     = () ->
-            this.info.loss    = false
-            this.info.win     = false
-            this.info.numOfTiles  = 0
-            this.info.numOfClears = 0
-            this.info.numOfFlags  = 0
-            this.info.numOfMines  = 0
-
-            for tile in this.tiles
-
-                # All Tiles
-                this.info.numOfTiles++
-
-                # Cleared Tiles
-                if tile.model.isClear == true
-                    this.info.numOfClears++
-
-                # Flagged Tiles
-                if tile.model.isFlagged == true
-                    this.info.numOfFlags++
-
-                # Mined Tiles
-                if tile.model.isMine == true
-                    this.info.numOfMines++
-
-                # Check Game Loss
-                if tile.model.isMine == true && tile.model.isClear == true
-                    this.info.loss = true
-
-            # Check Game Win
-            if this.info.loss == false && this.info.numOfTiles - this.info.numOfMines - this.info.numOfClears == 0
-                this.info.win = true
-
-
-            return this.info
 
     get = (attrs) ->
         return this.getAll(attrs)[0]
@@ -116,7 +81,7 @@ angular
             tile = this.randomSafeTile()
             tile.clear()
 
-        this.infoRefresh()
+        this.info.update(this.tiles)
         
         return this.tiles
 
@@ -139,7 +104,7 @@ angular
         
         this.tallyMines()
 
-        this.infoRefresh()
+        this.info.update(this.tiles)
 
         return this
 
@@ -151,7 +116,7 @@ angular
 
         this.tiles = loadedTiles
 
-        this.infoRefresh()
+        this.info.update(this.tiles)
 
         return this
 
@@ -160,7 +125,6 @@ angular
         newGame     : newGame
         loadGame    : loadGame
         info        : info
-        infoRefresh : infoRefresh
         randomSafeTile  : randomSafeTile
         tallyMines  : tallyMines
         get         : get
