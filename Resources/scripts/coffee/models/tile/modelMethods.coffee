@@ -42,18 +42,18 @@ angular
                 this.collection.tallyMines()                    
 
         clearNeighbors = () ->
-            if this.model.adjacentMines == 0 and this.model.isMine == false
+            if this.model.adjacentMines is 0 and this.model.isMine is false
                 for adjacentTile in this.adjacentTiles
                     neighbor = this.collection.get(
                         x : this.model.x + adjacentTile[0], 
                         y : this.model.y + adjacentTile[1]
                     )
                     if neighbor != undefined
-                        if neighbor.model.isClear == false and neighbor.model.isMine == false
+                        if neighbor.model.isClear is false and neighbor.model.isMine is false
                             neighbor.clear()
 
         check = (event) ->
-            if event.shiftKey == true || event.altKey == true
+            if event.shiftKey is true || event.altKey is true
                 this.toggleFlag()
             else
                 this.clear()
@@ -61,10 +61,10 @@ angular
             this.collection.infoRefresh()
 
         return {
-            clear       : clear
-            check       : check
+            clear           : clear
+            check           : check
             toggleFlag      : toggleFlag
             clearNeighbors  : clearNeighbors
             adjacentTiles   : adjacentTiles
-            noMineFirstClick   : noMineFirstClick
+            noMineFirstClick: noMineFirstClick
         }
