@@ -1,8 +1,10 @@
 angular.module('ModelMethodsTile', []).service('ModelMethodsTile', function() {
   var modelMethods;
   return modelMethods = function() {
-    this.adjacentTiles = [[-1, -1], [0, -1], [1, -1], [-1, 0], [1, 0], [-1, 1], [0, 1], [1, 1]];
-    this.toggleFlag = function() {
+    var adjacentTiles, check, clear, clearNeighbors, noMineFirstClick, toggleFlag;
+    adjacentTiles = [[-1, -1], [0, -1], [1, -1], [-1, 0], [1, 0], [-1, 1], [0, 1], [1, 1]];
+    toggleFlag = function() {
+      console.log(this);
       if (this.model.isFlagged === true) {
         this.model.isFlagged = false;
       } else {
@@ -10,14 +12,14 @@ angular.module('ModelMethodsTile', []).service('ModelMethodsTile', function() {
       }
       return this;
     };
-    this.clear = function() {
+    clear = function() {
       this.noMineFirstClick();
       this.model.isClear = true;
       this.model.isFlagged = false;
       this.clearNeighbors();
       return this;
     };
-    this.noMineFirstClick = function() {
+    noMineFirstClick = function() {
       var adjacentTile, neighbor, _i, _len, _ref;
       if (this.collection.info.numOfClears === 0 && this.model.isMine === true) {
         this.model.isMine = false;
@@ -33,7 +35,7 @@ angular.module('ModelMethodsTile', []).service('ModelMethodsTile', function() {
         return this.collection.tallyMines();
       }
     };
-    this.clearNeighbors = function() {
+    clearNeighbors = function() {
       var adjacentTile, neighbor, _i, _len, _ref, _results;
       if (this.model.adjacentMines === 0 && this.model.isMine === false) {
         _ref = this.adjacentTiles;
@@ -57,7 +59,7 @@ angular.module('ModelMethodsTile', []).service('ModelMethodsTile', function() {
         return _results;
       }
     };
-    this.check = function(event) {
+    check = function(event) {
       if (event.shiftKey === true || event.altKey === true) {
         this.toggleFlag();
       } else {
@@ -66,12 +68,12 @@ angular.module('ModelMethodsTile', []).service('ModelMethodsTile', function() {
       return this.collection.infoRefresh();
     };
     return {
-      clear: this.clear,
-      check: this.check,
-      toggleFlag: this.toggleFlag,
-      clearNeighbors: this.clearNeighbors,
-      adjacentTiles: this.adjacentTiles,
-      noMineFirstClick: this.noMineFirstClick
+      clear: clear,
+      check: check,
+      toggleFlag: toggleFlag,
+      clearNeighbors: clearNeighbors,
+      adjacentTiles: adjacentTiles,
+      noMineFirstClick: noMineFirstClick
     };
   };
 });

@@ -1,7 +1,8 @@
 angular.module('ModelTile', ['ModelMethodsTile']).service('ModelTile', function(ModelMethodsTile) {
   var model;
   return model = function(newAttrs) {
-    this.model = {
+    var extend, getSchema, schema, set;
+    model = {
       x: void 0,
       y: void 0,
       uid: void 0,
@@ -10,10 +11,10 @@ angular.module('ModelTile', ['ModelMethodsTile']).service('ModelTile', function(
       isFlagged: false,
       adjacentMines: 0
     };
-    this.getSchema = function() {
+    getSchema = function() {
       return schema;
     };
-    this.set = function(attrs) {
+    set = function(attrs) {
       var attr, key;
       for (key in attrs) {
         attr = attrs[key];
@@ -22,7 +23,7 @@ angular.module('ModelTile', ['ModelMethodsTile']).service('ModelTile', function(
       getSchema().model.uid = getSchema().model.x.toString() + getSchema().model.y.toString();
       return getSchema();
     };
-    this.extend = function(methods) {
+    extend = function(methods) {
       var key, method;
       for (key in methods) {
         method = methods[key];
@@ -30,12 +31,12 @@ angular.module('ModelTile', ['ModelMethodsTile']).service('ModelTile', function(
       }
       return getSchema();
     };
-    this.schema = {
-      model: this.model,
-      set: this.set,
-      extend: this.extend,
-      getSchema: this.getSchema
+    schema = {
+      model: model,
+      set: set,
+      extend: extend,
+      getSchema: getSchema
     };
-    return this.set(newAttrs).extend(ModelMethodsTile());
+    return set(newAttrs).extend(ModelMethodsTile());
   };
 });

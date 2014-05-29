@@ -6,36 +6,36 @@ angular
 
 .service 'ModelTile', (ModelMethodsTile) ->
     model = (newAttrs) ->
-        this.model = {
-                x   : undefined
-                y   : undefined
-                uid : undefined
-                isMine      : false
-                isClear     : false
-                isFlagged   : false
-                adjacentMines   : 0
-            }
+        model = {
+            x   : undefined
+            y   : undefined
+            uid : undefined
+            isMine      : false
+            isClear     : false
+            isFlagged   : false
+            adjacentMines   : 0
+        }
 
-        this.getSchema = () ->
+        getSchema = () ->
             return schema
 
-        this.set = (attrs) ->
+        set = (attrs) ->
             for key, attr of attrs
                 getSchema().model[key] = attr
             getSchema().model.uid = getSchema().model.x.toString() + getSchema().model.y.toString()
             return getSchema()
 
-        this.extend = (methods) ->
+        extend = (methods) ->
             for key, method of methods
                 getSchema()[key] = method
             return getSchema()
 
 
-        this.schema = {
-            model   : this.model
-            set     : this.set
-            extend  : this.extend
-            getSchema   : this.getSchema
+        schema = {
+            model   : model
+            set     : set
+            extend  : extend
+            getSchema   : getSchema
         }
 
-        return this.set(newAttrs).extend(ModelMethodsTile())
+        return set(newAttrs).extend(ModelMethodsTile())

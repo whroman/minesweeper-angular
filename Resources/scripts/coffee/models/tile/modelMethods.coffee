@@ -6,13 +6,14 @@ angular
 
 .service 'ModelMethodsTile', () ->
     modelMethods = () ->
-        this.adjacentTiles = [
+        adjacentTiles = [
             [-1, -1], [ 0, -1], [ 1, -1],
             [-1,  0],           [ 1,  0],
             [-1,  1], [ 0,  1], [ 1,  1],
         ]
 
-        this.toggleFlag = () ->
+        toggleFlag = () ->
+            console.log(this)
             if (this.model.isFlagged is true)
                 this.model.isFlagged = false
             else
@@ -20,7 +21,7 @@ angular
 
             return this
 
-        this.clear = () ->
+        clear = () ->
             this.noMineFirstClick()
             this.model.isClear = true
             this.model.isFlagged = false
@@ -28,7 +29,7 @@ angular
 
             return this
 
-        this.noMineFirstClick = () ->
+        noMineFirstClick = () ->
             if this.collection.info.numOfClears is 0 and this.model.isMine is true
                 this.model.isMine = false
                 this.collection.randomSafeTile().model.isMine = true
@@ -40,7 +41,7 @@ angular
                 
                 this.collection.tallyMines()                    
 
-        this.clearNeighbors = () ->
+        clearNeighbors = () ->
             if this.model.adjacentMines == 0 and this.model.isMine == false
                 for adjacentTile in this.adjacentTiles
                     neighbor = this.collection.get(
@@ -51,7 +52,7 @@ angular
                         if neighbor.model.isClear == false and neighbor.model.isMine == false
                             neighbor.clear()
 
-        this.check = (event) ->
+        check = (event) ->
             if event.shiftKey == true || event.altKey == true
                 this.toggleFlag()
             else
@@ -60,10 +61,10 @@ angular
             this.collection.infoRefresh()
 
         return {
-            clear       : this.clear
-            check       : this.check
-            toggleFlag      : this.toggleFlag
-            clearNeighbors  : this.clearNeighbors
-            adjacentTiles   : this.adjacentTiles
-            noMineFirstClick   : this.noMineFirstClick
+            clear       : clear
+            check       : check
+            toggleFlag      : toggleFlag
+            clearNeighbors  : clearNeighbors
+            adjacentTiles   : adjacentTiles
+            noMineFirstClick   : noMineFirstClick
         }
