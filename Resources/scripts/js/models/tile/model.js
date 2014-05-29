@@ -1,7 +1,7 @@
 angular.module('ModelTile', ['ModelMethodsTile']).service('ModelTile', function(ModelMethodsTile) {
   var model;
   return model = function(newAttrs) {
-    var extend, getSchema, schema, set;
+    var bootstrappedTile, extend, getSchema, schema, set;
     model = {
       x: void 0,
       y: void 0,
@@ -37,6 +37,7 @@ angular.module('ModelTile', ['ModelMethodsTile']).service('ModelTile', function(
       extend: extend,
       getSchema: getSchema
     };
-    return set(newAttrs).extend(ModelMethodsTile());
+    bootstrappedTile = set(newAttrs).extend(ModelMethodsTile());
+    return bootstrappedTile;
   };
 });

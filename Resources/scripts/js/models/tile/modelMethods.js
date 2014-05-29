@@ -4,7 +4,6 @@ angular.module('ModelMethodsTile', []).service('ModelMethodsTile', function() {
     var adjacentTiles, check, clear, clearNeighbors, noMineFirstClick, toggleFlag;
     adjacentTiles = [[-1, -1], [0, -1], [1, -1], [-1, 0], [1, 0], [-1, 1], [0, 1], [1, 1]];
     toggleFlag = function() {
-      console.log(this);
       if (this.model.isFlagged === true) {
         this.model.isFlagged = false;
       } else {

@@ -38,4 +38,6 @@ angular
             getSchema   : getSchema
         }
 
-        return set(newAttrs).extend(ModelMethodsTile())
+        bootstrappedTile = set(newAttrs).extend(ModelMethodsTile())
+
+        return bootstrappedTile
