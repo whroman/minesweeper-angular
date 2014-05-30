@@ -1,5 +1,5 @@
-angular.module('CtrlBoard', ['ngSlider', 'CollectTiles', 'ModelSliders', 'ModelModals']).controller('CtrlBoard', function($scope, storage, CollectTiles, ModelSliders, ModelModals) {
-  var currentBoard, init;
+angular.module('CtrlBoard', ['ngSlider', 'CollectTiles', 'ModelSliders', 'ModelModals', 'ModelBoardInfo']).controller('CtrlBoard', function($scope, storage, CollectTiles, ModelSliders, ModelModals, ModelBoardInfo) {
+  var currentBoard, init, noMineFirstClick;
   init = function(boardInstance, info) {
     var board;
     board = void 0;
@@ -15,18 +15,34 @@ angular.module('CtrlBoard', ['ngSlider', 'CollectTiles', 'ModelSliders', 'ModelM
   $scope.sliders = ModelSliders.init(5, 20, 10);
   currentBoard = init(CollectTiles, $scope.sliders.info);
   $scope.tiles = currentBoard.tiles;
-  $scope.info = currentBoard.info;
+  $scope.info = ModelBoardInfo;
   $scope.autoSelect = function(num) {
     return $scope.tiles = currentBoard.autoSelect(num);
   };
   $scope.newGame = function(sizeX, sizeY, numOfMines) {
     currentBoard = CollectTiles.newGame(sizeX, sizeY, numOfMines);
     $scope.tiles = currentBoard.tiles;
-    $scope.info = currentBoard.info;
-    return $scope.modals.reset();
+    $scope.modals.reset();
+    return currentBoard;
   };
-  $scope.tileClick = function() {
-    return console.log('');
+  $scope.tileClick = function(event) {
+    var tile;
+    tile = this.tile;
+    if (event.shiftKey === true || event.altKey === true) {
+      tile.toggleFlag();
+    } else {
+      noMineFirstClick(tile);
+      tile.clear();
+    }
+    return tile;
+  };
+  noMineFirstClick = function(tile) {
+    if ($scope.info.numOfClears === 0 && tile.model.isMine === true) {
+      tile.model.isMine = false;
+      currentBoard.randomSafeTile().model.isMine = true;
+      currentBoard.tallyMines();
+    }
+    return tile;
   };
   return $scope.$watchCollection(function() {
     var tile, toWatch, _i, _len, _ref;

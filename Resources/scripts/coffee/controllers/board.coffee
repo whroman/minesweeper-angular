@@ -5,11 +5,12 @@ angular
     'ngSlider',
     'CollectTiles',
     'ModelSliders',
-    'ModelModals'
+    'ModelModals',
+    'ModelBoardInfo'
 ]
 
 .controller 'CtrlBoard', 
-($scope, storage, CollectTiles, ModelSliders, ModelModals) ->
+($scope, storage, CollectTiles, ModelSliders, ModelModals, ModelBoardInfo) ->
     init = (boardInstance, info) ->
         board  = undefined
         if storage.get('tiles') == null
@@ -34,7 +35,7 @@ angular
     currentBoard = init CollectTiles, $scope.sliders.info
 
     $scope.tiles = currentBoard.tiles
-    $scope.info = currentBoard.info
+    $scope.info = ModelBoardInfo
 
     $scope.autoSelect = (num) ->
         $scope.tiles = currentBoard.autoSelect num 
@@ -43,12 +44,28 @@ angular
         currentBoard = CollectTiles.newGame sizeX, sizeY, numOfMines
 
         $scope.tiles = currentBoard.tiles
-        $scope.info = currentBoard.info
 
         $scope.modals.reset()
 
-    $scope.tileClick = () ->
-        console.log ''
+        return currentBoard
+
+    $scope.tileClick = (event) ->
+        tile = this.tile
+        if event.shiftKey is true or event.altKey is true
+            tile.toggleFlag()
+        else
+            noMineFirstClick(tile)
+            tile.clear()
+
+        return tile
+
+    noMineFirstClick = (tile) ->
+        if $scope.info.numOfClears is 0 and tile.model.isMine is true
+            tile.model.isMine = false
+            currentBoard.randomSafeTile().model.isMine = true
+            currentBoard.tallyMines()
+
+        return tile
 
     # Update game info when change occurs to any tile
     $scope.$watchCollection(

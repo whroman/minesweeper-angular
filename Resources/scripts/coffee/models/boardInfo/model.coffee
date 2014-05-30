@@ -41,6 +41,7 @@ angular
 
 
             return this
+        
     }
 
     return info

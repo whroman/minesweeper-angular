@@ -21,25 +21,11 @@ angular
             return this
 
         clear = () ->
-            this.noMineFirstClick()
             this.model.isClear = true
             this.model.isFlagged = false
             this.clearNeighbors()
 
-            return this
-
-# Decouple logic of whether game is at initial state and making sure a clicked mine is converted to safe mine
-        noMineFirstClick = () ->
-            if this.collection.info.numOfClears is 0 and this.model.isMine is true
-                this.model.isMine = false
-                this.collection.randomSafeTile().model.isMine = true
-                for adjacentTile in this.adjacentTiles
-                    neighbor = this.collection.get({
-                        x : this.model.x + adjacentTile[0], 
-                        y : this.model.y + adjacentTile[1]
-                    })
-                
-                this.collection.tallyMines()                    
+            return this                  
 
         clearNeighbors = () ->
             if this.model.adjacentMines is 0 and this.model.isMine is false
@@ -52,17 +38,9 @@ angular
                         if neighbor.model.isClear is false and neighbor.model.isMine is false
                             neighbor.clear()
 
-        check = (event) ->
-            if event.shiftKey is true || event.altKey is true
-                this.toggleFlag()
-            else
-                this.clear()
-
         return {
             clear           : clear
-            check           : check
             toggleFlag      : toggleFlag
             clearNeighbors  : clearNeighbors
             adjacentTiles   : adjacentTiles
-            noMineFirstClick: noMineFirstClick
         }

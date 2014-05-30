@@ -1,7 +1,6 @@
-angular.module('CollectTiles', ['ModelTile', 'ModelBoardInfo', 'angularLocalStorage']).factory('CollectTiles', function(storage, ModelTile, ModelBoardInfo) {
-  var autoSelect, exposeToModel, get, getAll, info, loadGame, newGame, randomSafeTile, tallyMines, tiles;
+angular.module('CollectTiles', ['ModelTile', 'angularLocalStorage']).factory('CollectTiles', function(storage, ModelTile) {
+  var autoSelect, exposeToModel, get, getAll, loadGame, newGame, randomSafeTile, tallyMines, tiles;
   tiles = [];
-  info = ModelBoardInfo;
   exposeToModel = function() {
     return {
       collection: {
@@ -15,7 +14,6 @@ angular.module('CollectTiles', ['ModelTile', 'ModelBoardInfo', 'angularLocalStor
             return _this.getAll(attrs);
           };
         })(this),
-        info: this.info,
         randomSafeTile: this.randomSafeTile,
         tallyMines: this.tallyMines
       }
@@ -129,7 +127,6 @@ angular.module('CollectTiles', ['ModelTile', 'ModelBoardInfo', 'angularLocalStor
     tiles: tiles,
     newGame: newGame,
     loadGame: loadGame,
-    info: info,
     randomSafeTile: randomSafeTile,
     tallyMines: tallyMines,
     get: get,

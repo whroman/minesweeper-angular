@@ -2,13 +2,11 @@ angular
 .module 'CollectTiles', [
 # Dependencies
     'ModelTile',
-    'ModelBoardInfo',
     'angularLocalStorage'
 ]
 
-.factory 'CollectTiles', (storage, ModelTile, ModelBoardInfo) ->
+.factory 'CollectTiles', (storage, ModelTile) ->
     tiles = []
-    info = ModelBoardInfo
 
     exposeToModel = () ->
         return {
@@ -17,7 +15,6 @@ angular
                     this.get(attrs)
                 getAll  : (attrs) =>
                     this.getAll(attrs)
-                info    : this.info
                 randomSafeTile  : this.randomSafeTile
                 tallyMines  : this.tallyMines
             }
@@ -116,7 +113,6 @@ angular
         tiles       : tiles
         newGame     : newGame
         loadGame    : loadGame
-        info        : info
         randomSafeTile  : randomSafeTile
         tallyMines  : tallyMines
         get         : get
