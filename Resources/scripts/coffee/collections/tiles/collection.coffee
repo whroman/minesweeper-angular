@@ -15,8 +15,6 @@ angular
                     this.get(attrs)
                 getAll  : (attrs) =>
                     this.getAll(attrs)
-                randomSafeTile  : this.randomSafeTile
-                tallyMines  : this.tallyMines
             }
         }
 
@@ -48,11 +46,12 @@ angular
             for adjacentTile in tile.adjacentTiles
                 neighborX = tile.model.x + adjacentTile[0] 
                 neighborY = tile.model.y + adjacentTile[1]
-                neighborMine = this.get({
+                neighborAttrs = {
                     isMine  : true
                     x       : neighborX
                     y       : neighborY
-                })
+                }
+                neighborMine = this.get(neighborAttrs)
                 if neighborMine isnt undefined
                     neighborMines++
             tile.model.adjacentMines = neighborMines
@@ -60,11 +59,11 @@ angular
         return this
 
     randomSafeTile = () ->
-        find = {
+        findAttrs = {
             isClear : false
             isMine  : false
         }
-        safeTiles = this.getAll find
+        safeTiles = this.getAll findAttrs
 
         randomTile = safeTiles[ Math.floor( Math.random() * safeTiles.length) ]
 
@@ -86,10 +85,7 @@ angular
                     x   : x
                     y   : y
                 }
-
-                this.tiles.push(
-                    ModelTile(attrs).extend(this.exposeToModel())
-                )
+                this.add(attrs)
 
         for mineNum in [1..numOfMines]
             tile = this.randomSafeTile()
@@ -100,14 +96,16 @@ angular
         return this
 
     loadGame = (savedTiles) ->
-        loadedTiles = []
+        console.log(this)
+        this.tiles = []
         for tile in savedTiles
-            savedTile = ModelTile(tile.model).extend(this.exposeToModel())
-            loadedTiles.push(savedTile)
-
-        this.tiles = loadedTiles
+            this.add(tile.model)
 
         return this
+
+    add = (model) ->
+        tile = ModelTile(model).extend(this.exposeToModel())
+        this.tiles.push(tile)
 
     return {
         tiles       : tiles
@@ -117,6 +115,7 @@ angular
         tallyMines  : tallyMines
         get         : get
         getAll      : getAll
+        add         : add
         autoSelect  : autoSelect
         exposeToModel  : exposeToModel
     }
