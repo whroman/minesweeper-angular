@@ -96,7 +96,6 @@ angular
         return this
 
     loadGame = (savedTiles) ->
-        console.log(this)
         this.tiles = []
         for tile in savedTiles
             this.add(tile.model)

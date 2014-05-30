@@ -46,19 +46,10 @@ gulp.task(
 gulp.task(
     'html',
     function() {
-        return gulp
-        .src(
-            path.html.index, options.gulpSrc
-        )
-        .pipe(
-            gp.htmlReplace(options.htmlReplace)
-        )
-        .pipe(
-            gp.rename(path.html.dev)
-        )
-        .pipe(
-            gulp.dest(path.cwd)
-        )
+        return gulp.src(path.html.index, options.gulpSrc)
+        .pipe(gp.htmlReplace(options.htmlReplace))
+        .pipe(gp.rename(path.html.dev))
+        .pipe(gulp.dest(path.cwd))
     }
 )
 
@@ -84,13 +75,13 @@ gulp.task(
 );
 
 gulp.task(
-    'compile',
-    ['coffee', 'build-js', 'sass']
+    'build',
+    ['coffee', 'build-js', 'sass', 'html']
 );
 
 gulp.task(
     'dev', 
-    ['compile', 'html', 'watch', 'connect']
+    ['build', 'watch', 'connect']
 );
 
 gulp.task(
