@@ -14,7 +14,7 @@ View live at: http://whroman.github.io/minesweeper-angular/
 ##Application
 
 ### Requirements
-To work on the front-end code of the application, you'll need to have the following items installed before continuing.
+To work on the front-end code of the application, you'll need to have the following packages installed before continuing.
 
 * [Node.js](http://nodejs.org): Use the installer provided on the NodeJS website.
 * [Gulp](http://gulpjs.com/): Run `[sudo] npm install -g gulp`
