@@ -1,5 +1,13 @@
 angular.module('CtrlBoard', ['ngSlider', 'CollectTiles', 'ModelSliders', 'ModelModals', 'ModelBoardInfo']).controller('CtrlBoard', function($scope, storage, CollectTiles, ModelSliders, ModelModals, ModelBoardInfo) {
-  var currentBoard, init, noMineFirstClick;
+  var currentBoard, init, noMineFirstClick, tiles;
+  noMineFirstClick = function(tile) {
+    if ($scope.info.numOfClears === 0 && tile.model.isMine === true) {
+      tile.model.isMine = false;
+      currentBoard.randomSafeTile().model.isMine = true;
+      currentBoard.tallyMines();
+    }
+    return tile;
+  };
   init = function(boardInstance, info) {
     var board;
     board = void 0;
@@ -16,45 +24,46 @@ angular.module('CtrlBoard', ['ngSlider', 'CollectTiles', 'ModelSliders', 'ModelM
   currentBoard = init(CollectTiles, $scope.sliders.info);
   $scope.tiles = currentBoard.tiles;
   $scope.info = ModelBoardInfo;
-  $scope.autoSelect = function(num) {
-    return $scope.tiles = currentBoard.autoSelect(num);
-  };
-  $scope.newGame = function(sizeX, sizeY, numOfMines) {
-    currentBoard = CollectTiles.newGame(sizeX, sizeY, numOfMines);
-    $scope.tiles = currentBoard.tiles;
-    $scope.modals.reset();
-    return currentBoard;
-  };
-  $scope.tileClick = function(event) {
-    var tile;
-    tile = this.tile;
-    if (event.shiftKey === true || event.altKey === true) {
-      tile.toggleFlag();
-    } else {
-      noMineFirstClick(tile);
-      tile.clear();
+  $scope.ui = {
+    autoSelect: function(num) {
+      return $scope.tiles = currentBoard.autoSelect(num);
+    },
+    newGame: function(sizeX, sizeY, numOfMines) {
+      currentBoard = CollectTiles.newGame(sizeX, sizeY, numOfMines);
+      $scope.tiles = currentBoard.tiles;
+      $scope.modals.reset();
+      return currentBoard;
+    },
+    tileClick: function(event, tile) {
+      if (event.shiftKey === true || event.altKey === true) {
+        tile.toggleFlag();
+      } else {
+        noMineFirstClick(tile);
+        tile.clear();
+      }
+      return tile;
     }
-    return tile;
   };
-  noMineFirstClick = function(tile) {
-    if ($scope.info.numOfClears === 0 && tile.model.isMine === true) {
-      tile.model.isMine = false;
-      currentBoard.randomSafeTile().model.isMine = true;
-      currentBoard.tallyMines();
+  tiles = {
+    watchedAttrs: ['isClear', 'isFlagged'],
+    watch: function() {
+      var tile, toWatch, watchedAttr, _i, _j, _len, _len1, _ref, _ref1;
+      toWatch = [];
+      _ref = $scope.tiles;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        tile = _ref[_i];
+        _ref1 = this.watchedAttrs;
+        for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+          watchedAttr = _ref1[_j];
+          toWatch.push(tile.model[watchedAttr]);
+        }
+      }
+      return toWatch;
+    },
+    onChange: function() {
+      $scope.info.update($scope.tiles);
+      return $scope.tiles;
     }
-    return tile;
   };
-  return $scope.$watchCollection(function() {
-    var tile, toWatch, _i, _len, _ref;
-    toWatch = [];
-    _ref = $scope.tiles;
-    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-      tile = _ref[_i];
-      toWatch.push(tile.model.isClear);
-      toWatch.push(tile.model.isFlagged);
-    }
-    return toWatch;
-  }, function() {
-    return $scope.info.update($scope.tiles);
-  });
+  return $scope.$watchCollection(tiles.watch.bind(tiles), tiles.onChange);
 });

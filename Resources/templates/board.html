@@ -16,7 +16,7 @@
             mine    : tile.model.isMine === true && tile.model.isClear === true,
             zero    : tile.model.adjacentMines == 0 && tile.model.isClear === true
         }"
-        ng-click="tileClick($event)"
+        ng-click="ui.tileClick($event, tile)"
     >
 
         <span ng-if="tile.model.isClear != true">
@@ -58,7 +58,7 @@
     </div>
     <div 
         class="select-tile button"
-        ng-click="autoSelect(1)"
+        ng-click="ui.autoSelect(1)"
         >
         clear a safe tile
     </div>

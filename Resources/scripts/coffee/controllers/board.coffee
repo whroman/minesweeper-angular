@@ -11,6 +11,15 @@ angular
 
 .controller 'CtrlBoard', 
 ($scope, storage, CollectTiles, ModelSliders, ModelModals, ModelBoardInfo) ->
+
+    noMineFirstClick = (tile) ->
+        if $scope.info.numOfClears is 0 and tile.model.isMine is true
+            tile.model.isMine = false
+            currentBoard.randomSafeTile().model.isMine = true
+            currentBoard.tallyMines()
+
+        return tile
+
     init = (boardInstance, info) ->
         board  = undefined
         if storage.get('tiles') == null
@@ -37,44 +46,47 @@ angular
     $scope.tiles = currentBoard.tiles
     $scope.info = ModelBoardInfo
 
-    $scope.autoSelect = (num) ->
-        $scope.tiles = currentBoard.autoSelect num 
+    $scope.ui = {
+        autoSelect: (num) ->
+            $scope.tiles = currentBoard.autoSelect num 
 
-    $scope.newGame = (sizeX, sizeY, numOfMines) -> 
-        currentBoard = CollectTiles.newGame sizeX, sizeY, numOfMines
+        newGame: (sizeX, sizeY, numOfMines) -> 
+            currentBoard = CollectTiles.newGame sizeX, sizeY, numOfMines
 
-        $scope.tiles = currentBoard.tiles
+            $scope.tiles = currentBoard.tiles
 
-        $scope.modals.reset()
+            $scope.modals.reset()
 
-        return currentBoard
+            return currentBoard
 
-    $scope.tileClick = (event) ->
-        tile = this.tile
-        if event.shiftKey is true or event.altKey is true
-            tile.toggleFlag()
-        else
-            noMineFirstClick(tile)
-            tile.clear()
+        tileClick: (event, tile) ->
+            if event.shiftKey is true or event.altKey is true
+                tile.toggleFlag()
+            else
+                noMineFirstClick(tile)
+                tile.clear()
 
-        return tile
+            return tile
+    }
 
-    noMineFirstClick = (tile) ->
-        if $scope.info.numOfClears is 0 and tile.model.isMine is true
-            tile.model.isMine = false
-            currentBoard.randomSafeTile().model.isMine = true
-            currentBoard.tallyMines()
 
-        return tile
+    # Update game info when change to properties listed below change for any tile
+    tiles = {
+        watchedAttrs: [
+            'isClear',
+            'isFlagged'
+        ]
 
-    # Update game info when change occurs to any tile
-    $scope.$watchCollection(
-        -> 
+        watch: () ->
             toWatch = [];
             for tile in $scope.tiles
-                toWatch.push tile.model.isClear
-                toWatch.push tile.model.isFlagged
+                for watchedAttr in this.watchedAttrs
+                    toWatch.push tile.model[watchedAttr]
             return toWatch
-        , ->
+
+        onChange: () ->
             $scope.info.update($scope.tiles)
-    )
+            return $scope.tiles            
+    }
+
+    $scope.$watchCollection tiles.watch.bind(tiles), tiles.onChange
