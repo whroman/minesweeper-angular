@@ -8,7 +8,7 @@ path.build = path.root + 'build/';
 
 path.scss = {
     watch   : path.root + 'scss/**/*.scss',
-    src     : [path.root + 'scss/index.scss'],
+    src     : [path.root + 'scss/app.scss'],
     build   : 'build.scss'
 }
 
@@ -31,7 +31,7 @@ path.js.libs = [
     path.bower + 'ng-slider/dist/ng-slider.min.js'
 ];
 
-path.js.compiled = [
+path.js.src = [
     path.coffee.dest + 'app.js',
     path.coffee.dest + 'controllers/board.js',
     path.coffee.dest + 'collections/tiles/collection.js',
@@ -42,7 +42,7 @@ path.js.compiled = [
     path.coffee.dest + 'models/boardInfo/model.js'
 ];
 
-path.js.all = path.js.libs.concat(path.js.compiled);
+path.js.all = path.js.libs.concat(path.js.src);
 
 
 path.html = {
