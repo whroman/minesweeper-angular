@@ -3,11 +3,11 @@
 
 A single-page Minesweeper app built using:
 
-  * [Angular](https://angularjs.org/)
-  * [Coffeescript](http://coffeescript.org/)
-  * [Sass](http://sass-lang.com/)
-  * [Gulp](http://gulpjs.com/)
-  * [Bower](http://bower.io)
+* [Angular](https://angularjs.org/)
+* [Coffeescript](http://coffeescript.org/)
+* [Sass](http://sass-lang.com/)
+* [Gulp](http://gulpjs.com/)
+* [Bower](http://bower.io)
   
 View live at: http://whroman.github.io/minesweeper-angular/
 
@@ -19,11 +19,11 @@ To work on the front-end code of the application, you'll need to have the follow
 * [Node.js](http://nodejs.org): Use the installer provided on the NodeJS website.
 * [Gulp](http://gulpjs.com/): Run `[sudo] npm install -g gulp`
 * [Bower](http://bower.io) **: Run `[sudo] npm install -g bower`
-* [Ruby](https://www.ruby-lang.org/en/installation/): Follow instructions in provided link. Should come pre-installed on Macs. 
-* [Sass](http://sass-lang.com/install) ***: Run `[sudo] gem install sass`. V 3.3 or higher is required (due to sourcemap support)
+* [Ruby](https://www.ruby-lang.org/en/installation/): Follow instructions in provided link. Comes installed on Macs. 
+* [Sass](http://sass-lang.com/install) *: Run `[sudo] gem install sass`. V 3.3 or higher is required (due to sourcemap support)
 
 
-** Only necessary if user wants to add third-party libraries/frameworks to project
+* Only necessary if user wants to add third-party libraries/frameworks to project
 
 ### Structure
 
