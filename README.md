@@ -1,4 +1,4 @@
-# [Single-Page Minesweeper](http://whroman.github.io/minesweeper-angular/)
+# [Angular Minesweeper](http://whroman.github.io/minesweeper-angular/)
 
 A single-page Minesweeper app built using:
 
@@ -8,7 +8,7 @@ A single-page Minesweeper app built using:
 * [Gulp](http://gulpjs.com/)
 * [Bower](http://bower.io)
   
-View live at: http://whroman.github.io/minesweeper-angular/
+View live [here](http://whroman.github.io/minesweeper-angular/).
 
 ##Application
 
@@ -60,25 +60,20 @@ minesweeper-angular
     
 * `gulp` or `gulp dev`
     * Run a local dev server located at http://localhost:8888/dev.html with unminified files or http://localhost:8888 using production-ready files. This allows for development involving HTTP and AJAX requests.
-    * Watches all \*.scss and \*.coffee files, automatically building those resources when a change is detected
+    * Watches all \*.scss and \*.coffee files, automatically compiling and building the resources when a change is detected
     
 
 ## Development
 
 ### Getting Started
 
-It is imperative to have the default `gulp` (or `gulp dev`) task running while developing.
-
-* `http://localhost:8888/Pages/prod/home.html` will serve a single, built JS file
-* `http://localhost:8888/Pages/dev/home.html` will serve individual and unminified JS files
-* Both `index` and `dev` will serve a single built css file with a sass sourcemap
-* Gulp doesn't handle sourcemaps very well across plugins. [This is a known issue](https://github.com/gulpjs/gulp/issues/356), so storing JS and Coffee in separate places will do for now.
+It is imperative to have the default `gulp` (or `gulp dev`) task running while developing. The dev server is located at `http://localhost:8888`.
 
 ### Structure
 ```
 minesweeper-angular
 └── Resources
-    ├── bower_components // Contains all third-party libraries and frameworks
+    ├── bower_components // Contains all third-party libraries
     ├── coffee        
     │   ├── app.js      // Main Angular file. Ties together routes, templates and controllers 
     │   ├── collections // Used by controllers to operate on collections of data/models
@@ -88,22 +83,24 @@ minesweeper-angular
     ├── js // Compiled 1:1 from `coffee` dir
     │
     ├── templates  //  Contains Handlebars templates
-    ├── build      // Contains `build` files of JS and CSS and SCSS sourcemap
+    ├── build      // Contains `built` versions of SCSS and Coffeescript files, along with sourcemaps
     ├── images     // Nothing special   
     └── scss
         └── app.scss    // Only scss file that is compiled. Contains `@import`s for the rest of the scss 
 ```
 
+### Adding New JS Libraries
 
-### Adding New Javascript Files
+1. Add lib to project using `bower` in the `Tasks` directory.
+2. The lib will appear in `[root]/Resources/bower_components/....`
+3. Declare the path to the lib file in `[root]/Tasks/config/paths.js` as an Array item in `path.js.libs`. The files will be concat'd in listed order.
 
-Rather than declaring new files in the html, new files are declared within `[root]/Tasks/config/paths.js`...
 
-* Declare new js bower files in `path.js.lib`.
-* Declare custom js files in `path.js.src`.
-* The files will be concatenated in the order that they are listed.
+### Adding New Coffeescript Files
+
+1. Coffeescript files are compiled to the `Resources/scripts/js` directory before being concat'd and minified, so you will need to list the path to the compiled `.js` version of your Coffeescript file.
+2. Declare the path to the lib file in `[root]/Tasks/config/paths.js` as an Array item in `path.js.src`. The files will be concat'd in listed order.
     
-`gulp` will inject these files into `dev.html` and build these files for use with `index.html`
 
 ### Adding New SCSS Files
 
