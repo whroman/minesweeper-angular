@@ -1,5 +1,4 @@
-# Single-Page Minesweeper
-===
+# [Single-Page Minesweeper](http://whroman.github.io/minesweeper-angular/)
 
 A single-page Minesweeper app built using:
 
