@@ -36,6 +36,7 @@ gulp.task(
 
 gulp.task(
     'build-js',
+    ['coffee'],
     function() {
         var js = gulp
             .src(path.js.all, options.gulpSrc)
