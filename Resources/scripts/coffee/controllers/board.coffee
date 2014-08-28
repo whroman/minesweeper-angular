@@ -11,7 +11,6 @@ angular
 
 .controller 'CtrlBoard', 
 ($scope, storage, CollectTiles, ModelSliders, ModelModals, ModelBoardInfo) ->
-
     noMineFirstClick = (tile) ->
         if $scope.info.numOfClears is 0 and tile.model.isMine is true
             tile.model.isMine = false

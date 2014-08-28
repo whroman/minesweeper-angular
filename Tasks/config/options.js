@@ -11,11 +11,6 @@ options.gulpNoRead = {
     read    : false
 };
 
-options.css = {
-    keepSpecialComments : 0,
-    removeEmpty : true,
-};
-
 options.scss    = {
     style   : 'compressed',
     sourcemap : true
@@ -26,11 +21,9 @@ options.coffee  = {
 };
 
 options.uglify = {
-    mangle: false
-};
-
-options.htmlReplace = {
-    js  : path.js.compile
+    mangle: false,
+    outSourceMap: true,
+    basePath: './Resources'
 };
 
 options.connect = {
