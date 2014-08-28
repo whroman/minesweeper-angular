@@ -1,53 +1,60 @@
-<ul id="stats">
-    <li>{{ info.numOfTiles }} tiles</li>
-    <li>{{ info.numOfMines }} mines</li>
-    <li>{{ info.numOfFlags }} flagged tiles</li>
-    <li>{{ info.numOfTiles - info.numOfMines - info.numOfClears }} left to clear</li>
-</ul>
+<div 
+    class="board-wrapper"
+    ng-style="{
+        'width': info.x * 40 + 'px'
+    }"
+>
+    <ul id="stats">
+        <li>{{ info.numOfTiles }} tiles</li>
+        <li>{{ info.numOfMines }} mines</li>
+        <li>{{ info.numOfFlags }} flagged tiles</li>
+        <li>{{ info.numOfTiles - info.numOfMines - info.numOfClears }} left to clear</li>
+    </ul>
 
-<ul id="board">
-    <li 
-        class="tile"
-        ng-repeat="tile in tiles | orderBy : x" 
-        ng-class="{
-            nth     : tile.model.x === 0,
-            flagged : tile.model.isFlagged === true,
-            clear   : tile.model.isClear === true,
-            mine    : tile.model.isMine === true && tile.model.isClear === true,
-            zero    : tile.model.adjacentMines == 0 && tile.model.isClear === true
-        }"
-        ng-click="ui.tileClick($event, tile)"
-    >
+    <ul id="board">
+        <li 
+            class="tile"
+            ng-repeat="tile in tiles | orderBy : x" 
+            ng-class="{
+                nth     : tile.model.x === 0,
+                flagged : tile.model.isFlagged === true,
+                clear   : tile.model.isClear === true,
+                mine    : tile.model.isMine === true && tile.model.isClear === true,
+                zero    : tile.model.adjacentMines == 0 && tile.model.isClear === true
+            }"
+            ng-click="ui.tileClick($event, tile)"
+        >
 
-        <span ng-if="tile.model.isClear != true">
-        </span>
+            <span ng-if="tile.model.isClear != true">
+            </span>
 
-        <span 
-            ng-if="
-                tile.model.isClear != true && 
-                tile.model.isFlagged == true"
-            >
-            ?
-        </span>
+            <span 
+                ng-if="
+                    tile.model.isClear != true && 
+                    tile.model.isFlagged == true"
+                >
+                ?
+            </span>
 
-        <span 
-            ng-if="
-                tile.model.isClear == true && 
-                tile.model.isMine == true"
-            >
-            X
-        </span>
+            <span 
+                ng-if="
+                    tile.model.isClear == true && 
+                    tile.model.isMine == true"
+                >
+                X
+            </span>
 
-        <span 
-            ng-if="
-                tile.model.isClear == true && 
-                tile.model.isMine == false"
-            >
-            {{tile.model.adjacentMines}}
-        </span>
+            <span 
+                ng-if="
+                    tile.model.isClear == true && 
+                    tile.model.isMine == false"
+                >
+                {{tile.model.adjacentMines}}
+            </span>
 
-     </li>
-</ul>
+         </li>
+    </ul>
+</div>
 
 <div id="dashboard">
     <div 
