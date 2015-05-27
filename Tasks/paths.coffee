@@ -1,8 +1,7 @@
 require 'coffee-script/register'
 
 path =
-    cwd     : '../'
-    root    : 'Resources/'
+    root    : './Resources/'
 
 path.bower = path.root + 'bower_components/'
 path.build = path.root + 'build/'

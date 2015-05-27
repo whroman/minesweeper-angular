@@ -1,16 +1,13 @@
 paths = require './paths.coffee'
 
 options =
-    gulpSrc:
-        cwd : paths.cwd
-
     gulpNoRead:
-        cwd : paths.cwd
         read : false
 
     scss:
         style : 'compressed'
         sourcemap : true
+        noCache : true
 
     coffee :
         bare : true
@@ -21,7 +18,6 @@ options =
         basePath : './Resources'
 
     connect:
-        root : [paths.cwd]
         port : '8888'
 
 module.exports = options
