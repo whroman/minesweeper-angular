@@ -1,5 +1,5 @@
 {
-  "name": "minesweeper",
+  "name": "minesweeper-angular",
   "version": "0.1.0",
   "devDependencies": {
     "gulp": "~3.8.7",
@@ -11,5 +11,8 @@
     "gulp-ruby-sass": "~0.4.0",
     "gulp-uglifyjs": "^0.4.2",
     "gulp-util": "~2.2.14"
+  },
+  "dependencies": {
+    "coffee-script": "^1.9.3"
   }
 }
