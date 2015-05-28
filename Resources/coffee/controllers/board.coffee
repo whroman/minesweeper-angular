@@ -20,21 +20,13 @@ angular
     noMineFirstClick = (tile) ->
         if $scope.info.numOfClears is 0 and tile.model.isMine is true
             tile.model.isMine = false
-            currentBoard.randomSafeTile().model.isMine = true
-            currentBoard.tallyMines()
+            $scope.tiles.randomSafeTile().model.isMine = true
+            $scope.tiles.tallyMines()
 
         return tile
 
-    init = (boardInstance, info) ->
-        board  = undefined
-        if storage.get('tiles') == null
-            board = boardInstance.newGame info.x.val, info.y.val, info.mines.val
-        else
-            board = boardInstance.loadGame storage.get('tiles')
-
-        storage.bind $scope, 'tiles'
-
-        return board
+    save = ->
+        storage.set 'tiles', $scope.tiles.all
 
     $scope.modals = ModelModals.set(
         'Resources/templates/modals/',
@@ -46,57 +38,51 @@ angular
 
     $scope.sliders = ModelSliders.init 5, 20, 10
 
-    currentBoard = init CollectTiles, $scope.sliders.info
+    # Load or Create game
+    savedGame = storage.get 'tiles'
 
-    $scope.tiles = currentBoard.tiles
+    if savedGame
+        $scope.tiles = new CollectTiles savedGame
+    else
+        $scope.tiles = new CollectTiles(
+            $scope.sliders.info.x.val,
+            $scope.sliders.info.y.val,
+            $scope.sliders.info.mines.val
+        )
+
+    save()
+
     $scope.info = ModelBoardInfo
+    $scope.info.update $scope.tiles.all
 
     $scope.ui = {
-        autoSelect: (num) ->
-            $scope.tiles = currentBoard.autoSelect num
-
         newGame: (sizeX, sizeY, numOfMines) ->
-            currentBoard = CollectTiles.newGame sizeX, sizeY, numOfMines
-
-            $scope.tiles = currentBoard.tiles
-
+            $scope.tiles = new CollectTiles sizeX, sizeY, numOfMines
+            $scope.info.update $scope.tiles.all
             $scope.modals.reset()
 
-            return currentBoard
-
         tileClick: (event, tile) ->
-            if event.shiftKey is true or event.altKey is true
+            flagKeyWasPressed = (
+                event.shiftKey is true or
+                event.altKey is true
+            )
+
+            if flagKeyWasPressed
                 tile.toggleFlag()
             else
                 noMineFirstClick(tile)
                 tile.clear()
-
-            return tile
     }
-
-    # Update game info when change to properties listed below change for any tile
-    tiles = {
-        watchedAttrs: [
-            'isClear',
-            'isFlagged'
-        ]
-
-        watch: () ->
-            toWatch = [];
-            for tile in $scope.tiles
-                for watchedAttr in this.watchedAttrs
-                    toWatch.push tile.model[watchedAttr]
-            return toWatch
-
-        onChange: () ->
-            $scope.info.update($scope.tiles)
-            return $scope.tiles
-    }
-
-    $scope.$watchCollection tiles.watch.bind(tiles), tiles.onChange
 
     $scope.$on 'Tile:Clear', ($ev, tile) ->
         $scope.tiles.clearNeighbors tile
+        $scope.info.update $scope.tiles.all
+        save()
+
+
+    $scope.$on 'Tile:Flag', ($ev, tile) ->
+        $scope.info.update $scope.tiles.all
+        save()
 
     window.logScope = () ->
         window.$scope = $scope

@@ -21,7 +21,7 @@
 
         <li 
             class="tile"
-            ng-repeat="tile in tiles | orderBy : x" 
+            ng-repeat="tile in tiles.all | orderBy : x" 
             ng-class="{
                 nth     : tile.model.x === 0,
                 flagged : tile.model.isFlagged === true,
@@ -72,7 +72,7 @@
     </div>
     <div 
         class="select-tile button"
-        ng-click="ui.autoSelect(1)"
+        ng-click="tiles.autoSelect(1)"
         >
         clear a safe tile
     </div>

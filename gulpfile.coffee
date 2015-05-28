@@ -19,7 +19,6 @@ gulp.task 'sass', ->
                 .on 'error', gp.util.log
         )
         .pipe gulp.dest paths.build
-        .pipe gp.connect.reload()
 
 gulp.task 'coffee', ->
     gulp.src paths.coffee.src
@@ -39,7 +38,7 @@ gulp.task 'build-js', ['coffee'], ->
         .pipe gp.sourcemaps.write('./maps')
         .pipe gulp.dest paths.build
 
-gulp.task 'connect', ->
+gulp.task 'server', ->
     gp.liveServer.static '.', 8888
         .start()
 
@@ -58,7 +57,7 @@ gulp.task 'build', [
 gulp.task 'dev', [
     'build'
     'watch'
-    'connect'
+    'server'
 ]
 
 gulp.task 'default', ['dev']

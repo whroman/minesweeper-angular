@@ -5,7 +5,7 @@ angular
 
 .factory 'ModelBoardInfo', () ->
 
-    info = {
+    info =
         update: (tiles) ->
             this.x = 0
             this.y = 0
@@ -55,9 +55,4 @@ angular
             if this.loss == false && this.numOfTiles - this.numOfMines - this.numOfClears == 0
                 this.win = true
 
-
-            return this
-        
-    }
-
-    return info
+            @

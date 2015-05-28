@@ -9,131 +9,116 @@ angular
     storage,
     ModelTile
 ) ->
+    class CollectTiles
+        constructor : (widthOrSavedGame, height, numOfMines) ->
+            if Array.isArray widthOrSavedGame
+                @loadGame widthOrSavedGame
+            else
+                @newGame widthOrSavedGame, height, numOfMines
+            @
 
-    tiles = []
+        get : (attrs) ->
+            return @getAll(attrs)[0]
 
-    exposeToModel = () ->
-        return {
-            collection  : {
-                get     : (attrs) =>
-                    this.get(attrs)
-                getAll  : (attrs) =>
-                    this.getAll(attrs)
-            }
-        }
+        getAll : (attrs) ->
+            matches = []
+            if attrs is undefined
+                for tile in @all
+                    matches.push tile
+            else
+                for tile in @all
+                    numOfAttrs = 0
+                    numOfMatchedAttrs = 0
+                    for key, val of attrs
+                        numOfAttrs++
+                        if tile.model[key] is val
+                            numOfMatchedAttrs++
 
-    get = (attrs) ->
-        return this.getAll(attrs)[0]
+                    if numOfMatchedAttrs is numOfAttrs
+                        matches.push tile
 
-    getAll = (attrs) ->
-        matches = []
-        if attrs is undefined
-            for tile in this.tiles
-                matches.push(tile)
-        else 
-            for tile in this.tiles
-                numOfAttrs = 0
-                numOfMatchedAttrs = 0
-                for key, val of attrs
-                    numOfAttrs++
-                    if tile.model[key] == val
-                        numOfMatchedAttrs++
+            return matches
 
-                if numOfMatchedAttrs == numOfAttrs
-                    matches.push(tile)
+        tallyMines : () ->
+            for tile in this.getAll()
+                neighborMines = 0
+                for adjacentTile in tile.adjacentTiles
+                    neighborX = tile.model.x + adjacentTile[0] 
+                    neighborY = tile.model.y + adjacentTile[1]
+                    neighborAttrs = {
+                        isMine  : true
+                        x       : neighborX
+                        y       : neighborY
+                    }
+                    neighborMine = this.get(neighborAttrs)
+                    if neighborMine isnt undefined
+                        neighborMines++
+                tile.model.adjacentMines = neighborMines
 
-        return matches
+            @
 
-    tallyMines = () ->
-        for tile in this.getAll()
-            neighborMines = 0
-            for adjacentTile in tile.adjacentTiles
-                neighborX = tile.model.x + adjacentTile[0] 
-                neighborY = tile.model.y + adjacentTile[1]
-                neighborAttrs = {
-                    isMine  : true
-                    x       : neighborX
-                    y       : neighborY
-                }
-                neighborMine = this.get(neighborAttrs)
-                if neighborMine isnt undefined
-                    neighborMines++
-            tile.model.adjacentMines = neighborMines
+        randomSafeTile : () ->
+            findAttrs =
+                isClear : false
+                isMine  : false
 
-        return this
+            safeTiles = @getAll findAttrs
+            randomIndex = Math.floor Math.random() * safeTiles.length
+            return safeTiles[ randomIndex ]
 
-    randomSafeTile = () ->
-        findAttrs = {
-            isClear : false
-            isMine  : false
-        }
-        safeTiles = this.getAll findAttrs
+        autoSelect : (num) ->
+            while num--
+                @randomSafeTile().clear()
 
-        randomTile = safeTiles[ Math.floor( Math.random() * safeTiles.length) ]
+            @all
 
-        return randomTile
+        newGame : (sizeX, sizeY, numOfMines) ->
+            @reset()
+            for y in [0..sizeY - 1]
+                for x in [0..sizeX - 1]
+                    attrs = {
+                        x   : x
+                        y   : y
+                    }
+                    @add attrs
 
+            for mineNum in [1..numOfMines]
+                tile = @randomSafeTile()
+                tile.model.isMine = true
 
-    autoSelect = (num) ->
-        while num--
-            tile = this.randomSafeTile()
-            console.log tile
-            tile.clear()
+            @tallyMines()
 
-        return this.tiles
+        loadGame : (savedTiles) ->
+            @reset()
+            for tile in savedTiles
+                foo = @add tile.model
+                console.log foo
+            @
 
-    newGame = (sizeX, sizeY, numOfMines) ->
-        this.tiles = []
-        for y in [0..sizeY - 1]
-            for x in [0..sizeX - 1]
-                attrs = {
-                    x   : x
-                    y   : y
-                }
-                this.add(attrs)
+        reset : ->
+            @all = []
+            @
 
-        for mineNum in [1..numOfMines]
-            tile = this.randomSafeTile()
-            tile.model.isMine = true
-        
-        this.tallyMines()
+        add : (model) ->
+            tile = new ModelTile model
+            @all.push tile
+            tile
 
-        return this
+        clearNeighbors : (tile) ->
+            shouldClearNeighbors = tile.model.adjacentMines is 0 and tile.model.isMine is false
+            if shouldClearNeighbors
+                for adjacentTile in tile.adjacentTiles
+                    neighbor = @get(
+                        x : tile.model.x + adjacentTile[0]
+                        y : tile.model.y + adjacentTile[1]
+                    )
 
-    loadGame = (savedTiles) ->
-        this.tiles = []
-        for tile in savedTiles
-            this.add(tile.model)
-
-        return this
-
-    add = (model) ->
-        tile = new ModelTile model
-        @tiles.push(tile)
-
-    clearNeighbors = (tile) ->
-        if tile.model.adjacentMines is 0 and tile.model.isMine is false
-            console.log @
-            for adjacentTile in tile.adjacentTiles
-                neighbor = @get(
-                    x : tile.model.x + adjacentTile[0]
-                    y : tile.model.y + adjacentTile[1]
-                )
-
-                if neighbor isnt undefined
-                    if neighbor.model.isClear is false and neighbor.model.isMine is false
+                    shouldClearNeighbor = (
+                        neighbor and
+                        neighbor.model.isClear is false and
+                        neighbor.model.isMine is false
+                    )
+                    if shouldClearNeighbor
                         neighbor.clear()
 
-    return {
-        tiles       : tiles
-        newGame     : newGame
-        loadGame    : loadGame
-        randomSafeTile  : randomSafeTile
-        tallyMines  : tallyMines
-        get         : get
-        getAll      : getAll
-        add         : add
-        autoSelect  : autoSelect
-        exposeToModel  : exposeToModel
-        clearNeighbors: clearNeighbors
-    }
+            @

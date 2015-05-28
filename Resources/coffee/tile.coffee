@@ -2,7 +2,6 @@ angular
 .module 'tile', []
 
 .directive 'tile', ($parse) ->
-    console.log('foo')
     return {
         link: ($scope, el, attrs) ->
             console.log 'adsf'
@@ -40,6 +39,21 @@ angular
             if $scope.tile.model.x is 0
                 $el.addClass 'nth'
 
+            updateClasses = ->
+                elClasses = {
+                    flagged : $scope.tile.model.isFlagged is true
+                    clear   : $scope.tile.model.isClear is true
+                    mine    : $scope.tile.model.isMine is true and $scope.tile.model.isClear is true
+                    zero    : $scope.tile.model.adjacentMines is 0 and $scope.tile.model.isClear is true
+                }
+                for elClass, shouldAttach of elClasses
+                    console.log 'key, val'
+                    console.log elClass, shouldAttach
+                    if (shouldAttach)
+                        $el.addClass elClass
+                    else
+                        $el.removeClass elClass
+
             onClick = ($event) ->
                 flagKeyIsSet = (
                     $event &&
@@ -55,21 +69,6 @@ angular
                     console.log 's'
                     # noMineFirstClick $scope.tile
                     $scope.tile.clear()
-
-                elClasses = {
-                    flagged : $scope.tile.model.isFlagged is true
-                    clear   : $scope.tile.model.isClear is true
-                    mine    : $scope.tile.model.isMine is true and $scope.tile.model.isClear is true
-                    zero    : $scope.tile.model.adjacentMines is 0 and $scope.tile.model.isClear is true
-                }
-
-                for elClass, shouldAttach of elClasses
-                    console.log 'key, val'
-                    console.log elClass, shouldAttach
-                    if (shouldAttach)
-                        $el.addClass elClass
-                    else
-                        $el.removeClass elClass
 
 
             $el.bind 'click', onClick

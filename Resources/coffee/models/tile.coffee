@@ -27,17 +27,16 @@ angular
         set: (attrs) ->
             for key, attr of attrs
                 @model[key] = attr
+                @model.uid = String(attrs.x) + '-' + String(attrs.y)
             @
 
         toggleFlag: ->
-            if @model.isFlagged is true
-                @model.isFlagged = false
-            else
-                @model.isFlagged = true
+            @model.isFlagged = !@model.isFlagged
+            $rootScope.$broadcast 'Tile:Flag', @
             @
 
         clear: ->
             @model.isClear = true
             @model.isFlagged = false
-            $rootScope.$emit 'Tile:Clear', @
+            $rootScope.$broadcast 'Tile:Clear', @
             @
