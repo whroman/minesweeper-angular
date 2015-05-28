@@ -40,7 +40,8 @@ gulp.task 'build-js', ['coffee'], ->
         .pipe gulp.dest paths.build
 
 gulp.task 'connect', ->
-    gp.connect.server options.connect
+    gp.liveServer.static '.', 8888
+        .start()
 
 
 gulp.task 'watch', ->
