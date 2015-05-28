@@ -13,13 +13,13 @@
 
     <ul id="board">
 
-<!--         <li
-            ng-repeat="tile in tiles | orderBy : x"
+        <li
+            ng-repeat="tile in tiles.all | orderBy : x"
             class="tile"
             tile="tile"
-        > -->
+        >
 
-        <li 
+<!--         <li 
             class="tile"
             ng-repeat="tile in tiles.all | orderBy : x" 
             ng-class="{
@@ -59,7 +59,7 @@
                 {{tile.model.adjacentMines}}
             </span>
 
-         </li>
+         </li> -->
     </ul>
 </div>
 

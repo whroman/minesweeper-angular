@@ -54,7 +54,7 @@ angular
                 @y = height
                 @numOfMines = numOfMines
 
-            @
+            @update()
 
         add : (model) ->
             tile = new @model model
