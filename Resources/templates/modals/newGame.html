@@ -2,21 +2,21 @@
     class="border-bottom">
     <span
         class="title"
-        ng-if="modals.show.newGame == true && info.win == false && info.loss == false"
+        ng-if="modals.show.newGame == true && tiles.win == false && tiles.loss == false"
     >
         new game?
     </span>
 
     <span
         class="title"
-        ng-if="info.win == true && info.loss == false"
+        ng-if="tiles.win == true && tiles.loss == false"
     >
         you won!
     </span>
 
     <span
         class="title"
-        ng-if="info.win == false && info.loss == true"
+        ng-if="tiles.win == false && tiles.loss == true"
     >
         you lost...
     </span>
@@ -77,7 +77,7 @@
 <div>
     <div 
         class="button"
-        ng-click="ui.newGame(sliders.info.x.val, sliders.info.y.val, sliders.info.mines.val)"
+        ng-click="tiles.newGame(sliders.info.x.val, sliders.info.y.val, sliders.info.mines.val)"
         >
         start!
     </div>

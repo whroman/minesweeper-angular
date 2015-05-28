@@ -29,7 +29,7 @@
                 mine    : tile.model.isMine === true && tile.model.isClear === true,
                 zero    : tile.model.adjacentMines == 0 && tile.model.isClear === true
             }"
-            ng-click="ui.tileClick($event, tile)"
+            ng-click="tile.click($event)"
         >
 
             <span ng-if="tile.model.isClear != true">

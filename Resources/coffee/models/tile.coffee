@@ -3,7 +3,7 @@ angular
 # Dependencies
 ]
 .factory 'ModelTile', (
-    $rootScope
+
 ) ->
     class ModelTile
         constructor: (attrs) ->
@@ -32,11 +32,20 @@ angular
 
         toggleFlag: ->
             @model.isFlagged = !@model.isFlagged
-            $rootScope.$broadcast 'Tile:Flag', @
             @
 
         clear: ->
             @model.isClear = true
             @model.isFlagged = false
-            $rootScope.$broadcast 'Tile:Clear', @
             @
+
+        click: ($event) ->
+            flagKeyWasPressed = (
+                $event.shiftKey is true or
+                $event.altKey is true
+            )
+
+            if flagKeyWasPressed
+                @toggleFlag()
+            else
+                @clear()

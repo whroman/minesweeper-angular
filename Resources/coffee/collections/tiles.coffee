@@ -5,7 +5,8 @@ angular
 ]
 
 .factory 'CollectTiles', (
-    ModelTile
+    ModelTile,
+    $rootScope
 ) ->
     class CollectTiles
         constructor : (widthOrSavedGame, height, numOfMines) ->
@@ -16,6 +17,16 @@ angular
                 clear: ->
                     super()
                     collection.clearNeighbors @
+                    collection.update()
+
+                toggleFlag: ->
+                    super()
+                    collection.update()
+
+                click: ($event) ->
+                    collection.noMineFirstClick @
+                    super $event
+
 
             # Load or Create new game
             if Array.isArray widthOrSavedGame
@@ -43,10 +54,7 @@ angular
                 @y = height
                 @numOfMines = numOfMines
 
-            @update()
-
             @
-
 
         add : (model) ->
             tile = new @model model
@@ -75,6 +83,11 @@ angular
             # Check Game Win
             if this.loss == false && @all.length - this.numOfMines - this.numOfClears == 0
                 this.win = true
+
+            $rootScope.$broadcast 'Tiles:Updated'
+
+            @
+
 
         get : (attrs) ->
             return @getAll(attrs)[0]
@@ -146,16 +159,27 @@ angular
                 tile.model.isMine = true
 
             @tallyMines()
+            @update()
+            $rootScope.$broadcast 'Tiles:NewGame'
+            @
 
         loadGame : (savedTiles) ->
             @reset()
             for tile in savedTiles
                 @add tile.model
-            @
+            @update()
 
         reset : ->
             @all = []
             @
+
+        noMineFirstClick: (tile) ->
+            if @numOfClears is 0 and tile.model.isMine is true
+                tile.model.isMine = false
+                @randomSafeTile().model.isMine = true
+                @tallyMines()
+
+            return tile
 
         clearNeighbors : (tile) ->
             shouldClearNeighbors = tile.model.adjacentMines is 0 and tile.model.isMine is false
