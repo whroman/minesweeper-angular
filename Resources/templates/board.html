@@ -1,14 +1,14 @@
-<div 
+<div
     class="board-wrapper"
-    ng-style="{
-        'width': info.x * 40 + 'px'
+    style="{
+        'width': {{tiles.x}} * 40 + 'px'
     }"
 >
     <ul id="stats">
-        <li>{{ info.numOfTiles }} tiles</li>
-        <li>{{ info.numOfMines }} mines</li>
-        <li>{{ info.numOfFlags }} flagged tiles</li>
-        <li>{{ info.numOfTiles - info.numOfMines - info.numOfClears }} left to clear</li>
+        <li>{{ tiles.all.length }} tiles</li>
+        <li>{{ tiles.numOfMines }} mines</li>
+        <li>{{ tiles.numOfFlags }} flagged tiles</li>
+        <li>{{ tiles.all.length - tiles.numOfMines - tiles.numOfClears }} left to clear</li>
     </ul>
 
     <ul id="board">
@@ -86,7 +86,7 @@
 
 <div 
     id="overlay"
-    ng-if="modals.show.instructions == true || modals.show.newGame == true || info.win == true || info.loss == true"
+    ng-if="modals.show.instructions == true || modals.show.newGame == true || tiles.win == true || tiles.loss == true"
     ng-click="modals.reset()"
     >
 
@@ -100,6 +100,6 @@
 
 <ng-include 
     src="modals.path.newGame"
-    ng-if="info.win == true || info.loss == true || modals.show.newGame == true"
+    ng-if="tiles.win == true || tiles.loss == true || modals.show.newGame == true"
     class="message"
 ></ng-include>

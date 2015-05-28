@@ -20,15 +20,61 @@ angular
             # Load or Create new game
             if Array.isArray widthOrSavedGame
                 @loadGame widthOrSavedGame
+
+                @x = Math.max.apply @, @all.map (tile) ->
+                    tile.model.x
+
+                @y = Math.max.apply @, @all.map (tile) ->
+                    tile.model.y
+
+                # Offset by 1 to account for 0 index
+                @x = @x--
+                @y = @y--
+
+
+                @numOfMines = 0
+                for tile in @all
+                    if tile.model.isMine is true
+                        @numOfMines++
+
             else
                 @newGame widthOrSavedGame, height, numOfMines
+                @x = widthOrSavedGame
+                @y = height
+                @numOfMines = numOfMines
+
+            @update()
 
             @
+
 
         add : (model) ->
             tile = new @model model
             @all.push tile
             tile
+
+        update : ->
+            this.loss    = false
+            this.win     = false
+            this.numOfClears = 0
+            this.numOfFlags  = 0
+
+            for tile in @all
+                # Cleared Tiles
+                if tile.model.isClear == true
+                    this.numOfClears++
+
+                # Flagged Tiles
+                if tile.model.isFlagged == true
+                    this.numOfFlags++
+
+                # Check Game Loss
+                if tile.model.isMine == true && tile.model.isClear == true
+                    this.loss = true
+
+            # Check Game Win
+            if this.loss == false && @all.length - this.numOfMines - this.numOfClears == 0
+                this.win = true
 
         get : (attrs) ->
             return @getAll(attrs)[0]

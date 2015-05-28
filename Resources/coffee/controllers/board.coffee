@@ -5,7 +5,6 @@ angular
     'CollectTiles'
     'ModelSliders'
     'ModelModals'
-    'ModelBoardInfo'
     'angularLocalStorage'
 ]
 .controller 'CtrlBoard', (
@@ -14,10 +13,9 @@ angular
     CollectTiles,
     ModelSliders,
     ModelModals,
-    ModelBoardInfo
 ) ->
     noMineFirstClick = (tile) ->
-        if $scope.info.numOfClears is 0 and tile.model.isMine is true
+        if $scope.tiles.numOfClears is 0 and tile.model.isMine is true
             tile.model.isMine = false
             $scope.tiles.randomSafeTile().model.isMine = true
             $scope.tiles.tallyMines()
@@ -25,6 +23,7 @@ angular
         return tile
 
     save = ->
+        $scope.tiles.update()
         storage.set 'tiles', $scope.tiles.all
 
     $scope.modals = ModelModals.set(
@@ -49,15 +48,13 @@ angular
             $scope.sliders.info.mines.val
         )
 
-    save()
 
-    $scope.info = ModelBoardInfo
-    $scope.info.update $scope.tiles.all
+    save()
 
     $scope.ui = {
         newGame: (sizeX, sizeY, numOfMines) ->
             $scope.tiles = new CollectTiles sizeX, sizeY, numOfMines
-            $scope.info.update $scope.tiles.all
+            # $scope.info.update $scope.tiles.all
             $scope.modals.reset()
 
         tileClick: (event, tile) ->
@@ -74,13 +71,13 @@ angular
     }
 
     $scope.$on 'Tile:Clear', ($ev, tile) ->
-        $scope.info.update $scope.tiles.all
         save()
+
 
 
     $scope.$on 'Tile:Flag', ($ev, tile) ->
-        $scope.info.update $scope.tiles.all
         save()
+
 
     window.logScope = () ->
         window.$scope = $scope
