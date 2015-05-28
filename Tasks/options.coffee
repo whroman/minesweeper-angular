@@ -14,10 +14,9 @@ options =
 
     uglify:
         mangle : false
-        outSourceMap : true
-        basePath : './Resources'
 
     connect:
+        root : './'
         port : '8888'
 
 module.exports = options

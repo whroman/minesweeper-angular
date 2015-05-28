@@ -21,21 +21,26 @@ gulp.task 'sass', ->
         .pipe gulp.dest paths.build
         .pipe gp.connect.reload()
 
-
 gulp.task 'coffee', ->
     gulp.src paths.coffee.src
-        .pipe(
-            gp.coffee options.coffee
-                .on 'error', gp.util.log
-        )
+        .pipe gp.sourcemaps.init()
+            .pipe(gp.coffee(options.coffee)
+                .on 'error', (error) ->
+                    console.log error
+            )
+            .pipe gp.uglify options.uglify
+        .pipe gp.sourcemaps.write()
         .pipe gulp.dest paths.coffee.dest
 
 gulp.task 'build-js', ['coffee'], ->
     gulp.src paths.js.all
-        .pipe gp.uglifyjs 'build.js', options.uglify
+        .pipe gp.sourcemaps.init(loadMaps : true)
+            .pipe gp.concat 'build.js'
+        .pipe gp.sourcemaps.write('./maps')
         .pipe gulp.dest paths.build
 
-gulp.task 'connect', gp.connect.server options.connect
+gulp.task 'connect', ->
+    gp.connect.server options.connect
 
 
 gulp.task 'watch', ->
