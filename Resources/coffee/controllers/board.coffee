@@ -1,14 +1,13 @@
 angular
-.module 'CtrlBoard',
+.module 'CtrlBoard', [
 # Dependencies
-[
-    'ngSlider',
-    'CollectTiles',
-    'ModelSliders',
-    'ModelModals',
+    'ngSlider'
+    'CollectTiles'
+    'ModelSliders'
+    'ModelModals'
     'ModelBoardInfo'
+    'angularLocalStorage'
 ]
-
 .controller 'CtrlBoard', (
     $scope,
     storage,
@@ -75,7 +74,6 @@ angular
     }
 
     $scope.$on 'Tile:Clear', ($ev, tile) ->
-        $scope.tiles.clearNeighbors tile
         $scope.info.update $scope.tiles.all
         save()
 

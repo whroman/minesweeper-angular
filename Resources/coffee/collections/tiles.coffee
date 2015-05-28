@@ -2,20 +2,31 @@ angular
 .module 'CollectTiles', [
 # Dependencies
     'ModelTile',
-    'angularLocalStorage'
 ]
 
 .factory 'CollectTiles', (
-    storage,
     ModelTile
 ) ->
     class CollectTiles
         constructor : (widthOrSavedGame, height, numOfMines) ->
+            # Binding Collection to Model so that instances of Model can call Collection methods
+            collection = @
+            @model = class Model extends ModelTile
+                collection: collection
+
+            # Load or Create new game
             if Array.isArray widthOrSavedGame
                 @loadGame widthOrSavedGame
             else
                 @newGame widthOrSavedGame, height, numOfMines
             @
+
+        # Bind Collection methods that take `tile` as input to require no arg if called by
+        # `tile.collection[methodName]`
+        add : (model) ->
+            tile = new @model model
+            @all.push tile
+            tile
 
         get : (attrs) ->
             return @getAll(attrs)[0]
@@ -40,7 +51,7 @@ angular
             return matches
 
         tallyMines : () ->
-            for tile in this.getAll()
+            for tile in @getAll()
                 neighborMines = 0
                 for adjacentTile in tile.adjacentTiles
                     neighborX = tile.model.x + adjacentTile[0] 
@@ -98,11 +109,6 @@ angular
             @all = []
             @
 
-        add : (model) ->
-            tile = new ModelTile model
-            @all.push tile
-            tile
-
         clearNeighbors : (tile) ->
             shouldClearNeighbors = tile.model.adjacentMines is 0 and tile.model.isMine is false
             if shouldClearNeighbors
@@ -117,6 +123,7 @@ angular
                         neighbor.model.isClear is false and
                         neighbor.model.isMine is false
                     )
+
                     if shouldClearNeighbor
                         neighbor.clear()
 
