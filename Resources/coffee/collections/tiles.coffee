@@ -91,8 +91,7 @@ angular
         loadGame : (savedTiles) ->
             @reset()
             for tile in savedTiles
-                foo = @add tile.model
-                console.log foo
+                @add tile.model
             @
 
         reset : ->

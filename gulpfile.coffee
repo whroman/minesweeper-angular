@@ -1,6 +1,8 @@
 require 'coffee-script/register'
 
 gulp = require 'gulp'
+del = require 'del'
+vinylPaths = require 'vinyl-paths'
 
 # Loads all gulp plugins located in package.json
 # > Call plugins using `gp.<camelizedPluginName>
@@ -20,7 +22,12 @@ gulp.task 'sass', ->
         )
         .pipe gulp.dest paths.build
 
-gulp.task 'coffee', ->
+gulp.task 'js:clean', (cb) ->
+    del paths.coffee.dest, cb
+    # gulp.src paths.js.all
+    #     .pipe vinylPaths del
+
+gulp.task 'js:coffee', ['js:clean'], ->
     gulp.src paths.coffee.src
         .pipe gp.sourcemaps.init()
             .pipe(gp.coffee(options.coffee)
@@ -31,7 +38,7 @@ gulp.task 'coffee', ->
         .pipe gp.sourcemaps.write()
         .pipe gulp.dest paths.coffee.dest
 
-gulp.task 'build-js', ['coffee'], ->
+gulp.task 'js:build', ['js:coffee'], ->
     gulp.src paths.js.all
         .pipe gp.sourcemaps.init(loadMaps : true)
             .pipe gp.concat 'build.js'
@@ -46,11 +53,11 @@ gulp.task 'server', ->
 gulp.task 'watch', ->
     gulp.watch paths.scss.watch, options.gulpNoRead, ['sass']
 
-    gulp.watch paths.coffee.src, options.gulpNoRead, ['coffee', 'build-js']
+    gulp.watch paths.coffee.src, options.gulpNoRead, ['js:coffee', 'js:build']
 
 gulp.task 'build', [
-    'coffee'
-    'build-js'
+    'js:coffee'
+    'js:build'
     'sass'
 ]
 
