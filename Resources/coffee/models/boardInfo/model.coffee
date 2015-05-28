@@ -11,7 +11,7 @@ angular
             this.y = 0
             this.loss    = false
             this.win     = false
-            this.numOfTiles  = 0
+            this.numOfTiles  = tiles.length
             this.numOfClears = 0
             this.numOfFlags  = 0
             this.numOfMines  = 0
@@ -20,10 +20,6 @@ angular
             yTiles = []
 
             for tile in tiles
-
-                # All Tiles
-                this.numOfTiles++
-
                 # X Tiles
                 if xTiles.indexOf(tile.model.x) == -1
                     xTiles.push(tile.model.x)
@@ -52,7 +48,7 @@ angular
             this.y = yTiles.length
 
             # Check Game Win
-            if this.loss == false && this.numOfTiles - this.numOfMines - this.numOfClears == 0
+            if this.loss == false && tiles.length - this.numOfMines - this.numOfClears == 0
                 this.win = true
 
             @

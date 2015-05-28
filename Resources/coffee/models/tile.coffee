@@ -38,7 +38,5 @@ angular
         clear: ->
             @model.isClear = true
             @model.isFlagged = false
-            @collection.clearNeighbors(@)
-
             $rootScope.$broadcast 'Tile:Clear', @
             @

@@ -9,20 +9,22 @@ angular
 ) ->
     class CollectTiles
         constructor : (widthOrSavedGame, height, numOfMines) ->
-            # Binding Collection to Model so that instances of Model can call Collection methods
+
+            # Extend ModelTile so that it can execute some collection logic
             collection = @
             @model = class Model extends ModelTile
-                collection: collection
+                clear: ->
+                    super()
+                    collection.clearNeighbors @
 
             # Load or Create new game
             if Array.isArray widthOrSavedGame
                 @loadGame widthOrSavedGame
             else
                 @newGame widthOrSavedGame, height, numOfMines
+
             @
 
-        # Bind Collection methods that take `tile` as input to require no arg if called by
-        # `tile.collection[methodName]`
         add : (model) ->
             tile = new @model model
             @all.push tile
