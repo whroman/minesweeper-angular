@@ -11,6 +11,9 @@
     margin: 10px 0 38px 0;
 }
 
+#board::selection { background: transparent; }
+#board::-moz-selection { background: transparent; }
+
 .tile {
     width: 32px;
     height: 32px;

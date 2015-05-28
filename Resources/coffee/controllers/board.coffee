@@ -9,8 +9,14 @@ angular
     'ModelBoardInfo'
 ]
 
-.controller 'CtrlBoard', 
-($scope, storage, CollectTiles, ModelSliders, ModelModals, ModelBoardInfo) ->
+.controller 'CtrlBoard', (
+    $scope,
+    storage,
+    CollectTiles,
+    ModelSliders,
+    ModelModals,
+    ModelBoardInfo
+) ->
     noMineFirstClick = (tile) ->
         if $scope.info.numOfClears is 0 and tile.model.isMine is true
             tile.model.isMine = false
@@ -31,7 +37,7 @@ angular
         return board
 
     $scope.modals = ModelModals.set(
-        'Resources/templates/modals/', 
+        'Resources/templates/modals/',
         [
             'instructions',
             'newGame'
@@ -47,9 +53,9 @@ angular
 
     $scope.ui = {
         autoSelect: (num) ->
-            $scope.tiles = currentBoard.autoSelect num 
+            $scope.tiles = currentBoard.autoSelect num
 
-        newGame: (sizeX, sizeY, numOfMines) -> 
+        newGame: (sizeX, sizeY, numOfMines) ->
             currentBoard = CollectTiles.newGame sizeX, sizeY, numOfMines
 
             $scope.tiles = currentBoard.tiles
@@ -68,7 +74,6 @@ angular
             return tile
     }
 
-
     # Update game info when change to properties listed below change for any tile
     tiles = {
         watchedAttrs: [
@@ -85,7 +90,13 @@ angular
 
         onChange: () ->
             $scope.info.update($scope.tiles)
-            return $scope.tiles            
+            return $scope.tiles
     }
 
     $scope.$watchCollection tiles.watch.bind(tiles), tiles.onChange
+
+    $scope.$on 'Tile:Clear', ($ev, tile) ->
+        $scope.tiles.clearNeighbors tile
+
+    window.logScope = () ->
+        window.$scope = $scope

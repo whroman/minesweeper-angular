@@ -1,7 +1,8 @@
 angular
 .module 'msApp', [
-    'ngRoute',
+    'ngRoute'
     'CtrlBoard'
+    'tile'
 ]
 .config ($routeProvider, $locationProvider) ->
     $routeProvider

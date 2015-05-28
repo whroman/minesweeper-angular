@@ -5,7 +5,11 @@ angular
     'angularLocalStorage'
 ]
 
-.factory 'CollectTiles', (storage, ModelTile) ->
+.factory 'CollectTiles', (
+    storage,
+    ModelTile
+) ->
+
     tiles = []
 
     exposeToModel = () ->
@@ -73,8 +77,9 @@ angular
     autoSelect = (num) ->
         while num--
             tile = this.randomSafeTile()
+            console.log tile
             tile.clear()
-        
+
         return this.tiles
 
     newGame = (sizeX, sizeY, numOfMines) ->
@@ -103,8 +108,21 @@ angular
         return this
 
     add = (model) ->
-        tile = ModelTile(model).extend(this.exposeToModel())
-        this.tiles.push(tile)
+        tile = new ModelTile model
+        @tiles.push(tile)
+
+    clearNeighbors = (tile) ->
+        if tile.model.adjacentMines is 0 and tile.model.isMine is false
+            console.log @
+            for adjacentTile in tile.adjacentTiles
+                neighbor = @get(
+                    x : tile.model.x + adjacentTile[0]
+                    y : tile.model.y + adjacentTile[1]
+                )
+
+                if neighbor isnt undefined
+                    if neighbor.model.isClear is false and neighbor.model.isMine is false
+                        neighbor.clear()
 
     return {
         tiles       : tiles
@@ -117,4 +135,5 @@ angular
         add         : add
         autoSelect  : autoSelect
         exposeToModel  : exposeToModel
+        clearNeighbors: clearNeighbors
     }
