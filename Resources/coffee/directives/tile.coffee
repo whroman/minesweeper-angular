@@ -6,7 +6,7 @@ angular
     $rootScope
 ) ->
     return {
-        templateUrl: "/Resources/templates/tile.html"
+        templateUrl: "Resources/templates/tile.html"
         restrict: 'A'
         replace: true
         $scope:
