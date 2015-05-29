@@ -15,11 +15,13 @@ options = Tasks.options
 
 gulp.task 'sass', ->
     gulp.src paths.scss.src
-        .pipe gp.rename 'build.scss'
-        .pipe(
-            gp.rubySass options.scss
-                .on 'error', gp.util.log
-        )
+        .pipe gp.sourcemaps.init()
+            .pipe gp.rename 'build.scss'
+            .pipe(
+                gp.sass options.scss
+                    .on 'error', gp.sass.logError
+            )
+        .pipe gp.sourcemaps.write('./sass-maps')
         .pipe gulp.dest paths.build
 
 gulp.task 'js:clean', (cb) ->
