@@ -7,13 +7,78 @@
     <link rel="stylesheet" href="Resources/build/build.css"/>
 
 </head>
-<body>
+<body
+    ng-app="msApp"
+>
     <h1 class="title">minesweeper</h1>
     <br>
     <div
-        ng-view
-        ng-app="msApp"
+        ng-controller="Controller:Board"
+        ng-cloak
+    >
+        <div
+            class="board-wrapper"
+            style="{
+                'width': {{tiles.x}} * 40 + 'px'
+            }"
         >
+            <ul id="stats">
+                <li>{{ tiles.all.length }} tiles</li>
+                <li>{{ tiles.numOfMines }} mines</li>
+                <li>{{ tiles.numOfFlags }} flagged tiles</li>
+                <li>{{ tiles.all.length - tiles.numOfMines - tiles.numOfClears }} left to clear</li>
+            </ul>
+
+            <ul id="board">
+                <li
+                    ng-repeat="tile in tiles.all | orderBy : x"
+                    ng-cloak
+                    class="tile"
+                    tile="tile"
+                >
+            </ul>
+        </div>
+
+        <div id="dashboard">
+            <div
+                class="new-game button"
+                ng-click="modals.toggle('newGame')"
+                >
+                new game
+            </div>
+            <div
+                class="select-tile button"
+                ng-click="tiles.autoSelect(1)"
+                >
+                clear a safe tile
+            </div>
+            <div
+                class="instructions button"
+                ng-click="modals.toggle('instructions')"
+                >
+                instructions
+            </div>
+        </div>
+
+        <div 
+            id="overlay"
+            ng-if="modals.show.instructions == true || modals.show.newGame == true || tiles.win == true || tiles.loss == true"
+            ng-click="modals.reset()"
+            >
+
+        </div>
+
+        <ng-include
+            src="modals.path.instructions"
+            ng-if="modals.show.instructions == true"
+            class="message"
+        ></ng-include>
+
+        <ng-include
+            src="modals.path.newGame"
+            ng-if="tiles.win == true || tiles.loss == true || modals.show.newGame == true"
+            class="message"
+        ></ng-include>
     </div>
 
     <script type="text/javascript" src="Resources/build/build.js "></script>

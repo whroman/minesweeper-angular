@@ -6,7 +6,11 @@ angular
     $rootScope
 ) ->
     return {
-        templateUrl: "Resources/templates/tile.html"
+        template: [
+            '<li>'
+                '<span>{{text}}</span>'
+            '</li>'
+        ].join('')
         restrict: 'A'
         replace: true
         $scope:

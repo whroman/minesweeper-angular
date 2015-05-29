@@ -1,5 +1,5 @@
 angular
-.module 'CtrlBoard', [
+.module 'Controller:Board', [
 # Dependencies
     'ngSlider'
     'CollectTiles'
@@ -7,7 +7,7 @@ angular
     'ModelModals'
     'angularLocalStorage'
 ]
-.controller 'CtrlBoard', (
+.controller 'Controller:Board', (
     $scope,
     storage,
     CollectTiles,
