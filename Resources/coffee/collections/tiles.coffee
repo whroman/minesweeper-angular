@@ -17,11 +17,11 @@ angular
                 clear: ->
                     super()
                     collection.clearNeighbors @
-                    collection.update()
+                    collection.moveUpdate()
 
                 toggleFlag: ->
                     super()
-                    collection.update()
+                    collection.moveUpdate()
 
                 click: ($event) ->
                     collection.noMineFirstClick @
@@ -32,36 +32,39 @@ angular
             if Array.isArray widthOrSavedGame
                 @loadGame widthOrSavedGame
 
-                @x = Math.max.apply @, @all.map (tile) ->
-                    tile.model.x
-
-                @y = Math.max.apply @, @all.map (tile) ->
-                    tile.model.y
-
-                # Offset by 1 to account for 0 index
-                @x = @x--
-                @y = @y--
-
-
-                @numOfMines = 0
-                for tile in @all
-                    if tile.model.isMine is true
-                        @numOfMines++
-
             else
                 @newGame widthOrSavedGame, height, numOfMines
                 @x = widthOrSavedGame
                 @y = height
                 @numOfMines = numOfMines
 
-            @update()
+            @moveUpdate()
 
         add : (model) ->
             tile = new @model model
             @all.push tile
             tile
 
-        update : ->
+        gameUpdate : ->
+            @x = Math.max.apply @, @all.map (tile) ->
+                tile.model.x
+
+            @y = Math.max.apply @, @all.map (tile) ->
+                tile.model.y
+
+            # Offset by 1 to account for 0 index
+            @x = @x--
+            @y = @y--
+
+
+            @numOfMines = 0
+            for tile in @all
+                if tile.model.isMine is true
+                    @numOfMines++
+
+            @moveUpdate();
+
+        moveUpdate : ->
             this.loss    = false
             this.win     = false
             this.numOfClears = 0
@@ -88,26 +91,24 @@ angular
 
             @
 
-
         get : (attrs) ->
             return @getAll(attrs)[0]
 
         getAll : (attrs) ->
             matches = []
-            if attrs is undefined
-                for tile in @all
-                    matches.push tile
-            else
-                for tile in @all
-                    numOfAttrs = 0
-                    numOfMatchedAttrs = 0
-                    for key, val of attrs
-                        numOfAttrs++
-                        if tile.model[key] is val
-                            numOfMatchedAttrs++
+            if !attrs
+                return @all
 
-                    if numOfMatchedAttrs is numOfAttrs
-                        matches.push tile
+            for tile in @all
+                numOfAttrs = 0
+                numOfMatchedAttrs = 0
+                for key, val of attrs
+                    numOfAttrs++
+                    if tile.model[key] is val
+                        numOfMatchedAttrs++
+
+                if numOfMatchedAttrs is numOfAttrs
+                    matches.push tile
 
             return matches
 
@@ -159,7 +160,7 @@ angular
                 tile.model.isMine = true
 
             @tallyMines()
-            @update()
+            @gameUpdate()
             $rootScope.$broadcast 'Tiles:NewGame'
             @
 
@@ -167,7 +168,8 @@ angular
             @reset()
             for tile in savedTiles
                 @add tile.model
-            @update()
+
+            @gameUpdate()
 
         reset : ->
             @all = []
